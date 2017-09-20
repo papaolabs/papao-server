@@ -1,11 +1,11 @@
-package com.papaolabs.api.controller;
+package com.papaolabs.api.interfaces.v1.controller;
 
-import com.papaolabs.api.controller.dto.AnimalRequest;
-import com.papaolabs.api.restapi.dto.AnimalApiResponse;
-import com.papaolabs.api.restapi.dto.AnimalKindApiResponse;
-import com.papaolabs.api.restapi.dto.RegionApiResponse;
-import com.papaolabs.api.restapi.dto.ShelterApiResponse;
-import com.papaolabs.api.service.AnimalServiceImpl;
+import com.papaolabs.api.domain.service.AnimalServiceImpl;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalKindApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.ShelterApiResponse;
+import com.papaolabs.api.interfaces.v1.dto.AnimalRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

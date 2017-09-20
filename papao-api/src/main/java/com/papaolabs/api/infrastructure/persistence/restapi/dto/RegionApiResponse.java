@@ -1,4 +1,4 @@
-package com.papaolabs.api.restapi.dto;
+package com.papaolabs.api.infrastructure.persistence.restapi.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @XmlRootElement(name = "response")
 @RequiredArgsConstructor
-public class ShelterApiResponse {
+public class RegionApiResponse {
     private Header header;
     private Body body;
 
@@ -25,12 +25,13 @@ public class ShelterApiResponse {
 
         @Data
         public static class Items {
-            List<ShelterItemDTO> item;
+            List<RegionItemDTO> item;
 
             @Data
-            public static class ShelterItemDTO {
-                private String careRegNo;
-                private String careNm;
+            public static class RegionItemDTO {
+                private String uprCd;
+                private String orgCd;
+                private String orgdownNm;
             }
         }
     }

@@ -1,6 +1,6 @@
-package com.papaolabs.api;
+package com.papaolabs.api.infrastructure.persistence.restapi;
 
-import com.papaolabs.api.restapi.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.AnimalApiClient;
 import feign.Feign;
 import feign.gson.GsonEncoder;
 import feign.jaxb.JAXBContextFactory;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import static org.apache.commons.lang.CharEncoding.UTF_8;
 
 @Configuration
-public class ApiConfig {
+public class AnimalApiConfig {
     @Value("${seoul.api.animal.url}")
     private String animalApiUrl;
 

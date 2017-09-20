@@ -1,7 +1,6 @@
 jasypt:
   encryptor:
     password:
-    algorithm: PBEWITHMD5ANDDES
 
 seoul:
   api:

@@ -1,4 +1,4 @@
-package com.papaolabs.api.controller.dto;
+package com.papaolabs.api.interfaces.v1.dto;
 
 import lombok.Data;
 
