@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>pawpawly</title>
+    <meta name="description" content="pawapwly sample page">
+    <meta name="author" content="Inhwan Lee">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+        th {
+            width: 1px;
+            white-space: nowrap;
+        }
+
+        td {
+            width: 1px;
+            white-space: nowrap;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <h4><a href="https://github.com/papaolabs/papao-server/issues">Issues Link</a></h4>
+            <p></p>
+            <div class="form-group">
+                <label for="sido">지역</label>
+                <select class="form-control" id="sido">
+                    <option value="" selected="selected">전체</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sigungu">상세지역</label>
+                <select class="form-control" id="sigungu">
+                    <option value="" selected="selected">전체</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="shelter">보호소</label>
+                <select class="form-control" id="shelter">
+                    <option value="" selected="selected">전체</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="kind">품종</label>
+                <select class="form-control" id="kind">
+                    <option value="">전체</option>
+                    <option value="417000">개</option>
+                    <option value="422400">고양이</option>
+                    <option value="429900">기타</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="kindResult">상세품종</label>
+                <select class="form-control" id="kindResult">
+                    <option value="" selected="selected">전체</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="state">상태</label>
+                <select class="form-control" id="state">
+                    <option value="" selected="selected">전체</option>
+                    <option value="notice">공고중</option>
+                    <option value="protect">보호중</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bgnde">페이지번호</label>
+                <input type="text" class="form-control" id="pageNo" value="1">
+            </div>
+            <div class="form-group">
+                <label for="bgnde">출력개수</label>
+                <input type="text" class="form-control" id="numOfRows" value="100">
+            </div>
+            <div class="form-group">
+                <label for="bgnde">시작일</label>
+                <input type="text" class="form-control" id="bgnde" value="20170701">
+            </div>
+            <div class="form-group">
+                <label for="endde">종료일</label>
+                <input type="text" class="form-control" id="endde" value="20170731">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="searchBtn">조회</button>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <h5>조회 결과</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>위치</th>
+                    <th>보호소</th>
+                    <th>전화번호</th>
+                    <th>색상</th>
+                    <th>접수일</th>
+                    <th>발견장소</th>
+                    <th>품종</th>
+                    <th>중성화</th>
+                    <th>특징</th>
+                    <th>공고종료일</th>
+                    <th>공고시작일</th>
+                    <th>담당자</th>
+                    <th>담당자연락처</th>
+                    <th>관할기관</th>
+                    <th>사진</th>
+                    <th>나이</th>
+                    <th>상태</th>
+                    <th>성별</th>
+                    <th>특징</th>
+                    <th>체중</th>
+                </tr>
+                </thead>
+                <tbody id="animalResult">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="output-form" class="container">
+
+</div>
+<script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log("Init..");
+        init();
+    });
+
+    let init = function () {
+        sido();
+
+        $('#bgnde').val(new Date().yyyymmdd());
+        $('#endde').val(new Date().yyyymmdd());
+
+        $('#sido').change(function () {
+            let sidoCode = $("#sido option:selected").val();
+            sigungu(sidoCode);
+        });
+
+        $('#sigungu').change(function () {
+            let sidoCode = $("#sido option:selected").val();
+            let sigunguCode = $("#sigungu option:selected").val();
+
+            shelter(sidoCode, sigunguCode);
+        })
+
+        $('#kind').change(function () {
+            let kindCode = $("#kind option:selected").val();
+
+            animalKind(kindCode);
+        });
+
+        $('#searchBtn').click(function () {
+            let bgnde = $('#bgnde').val();
+            let endde = $('#endde').val();
+            let uprCd = $('#sido option:selected').val();
+            let orgCd = $('#sigungu option:selected').val();
+            let kind = $('#kind option:selected').val();
+            let kindDetail = $('#kindResult option:selected').val();
+            let careRegNo = $('#shelter option:selected').val();
+            let state = $('#state option:selected').val();
+            let pageNo = $('#pageNo').val();
+            let numOfRows = $('#numOfRows').val();
+
+            let data = {
+                bgnde: bgnde,
+                endde: endde,
+                kind: kindDetail,
+                upkind: kind,
+                upr_cd: uprCd,
+                org_cd: orgCd,
+                careRegNo: careRegNo,
+                state: state,
+                pageNo: pageNo,
+                numOfRows: numOfRows
+            };
+
+            animal(data);
+        });
+    }
+
+    let sido = function () {
+        $.get({
+            url: '/v1/test/locations/city',
+            success: function (result) {
+                let items = result.body.items.item;
+
+                let html = '<option value="">전체</option>';
+
+                items.forEach(item => {
+                    html += '<option value="' + item.orgCd + '">' + item.orgdownNm + '</option>';
+                });
+
+                $('#sido').html(html);
+            }
+        });
+    };
+
+    let sigungu = function (cityCode) {
+        if (cityCode != '') {
+            $.get({
+                url: '/v1/test/locations/city/' + cityCode,
+                success: function (result) {
+                    let items = result.body.items.item;
+
+                    let html = '<option value="">전체</option>';
+
+                    if (items != null && items.length > 0) {
+                        items.forEach(item => {
+                            html += '<option value="' + item.orgCd + '">' + item.orgdownNm + '</option>';
+                        });
+                    }
+                    $('#sigungu').html(html);
+                }
+            });
+        }
+        else {
+            $('#sigungu').html('<option value="" selected="selected">전체</option>');
+            $('#shelter').html('<option value="" selected="selected">전체</option>');
+        }
+    };
+
+    let shelter = function (cityCode, districtCode) {
+        if (cityCode != '' && districtCode != '') {
+            $.get({
+                url: '/v1/test/shelters/city/' + cityCode + '/district/' + districtCode,
+                success: function (result) {
+                    let items = result.body.items.item;
+
+                    let html = '<option value="">전체</option>';
+                    if (items != null && items.length > 0) {
+                        items.forEach(item => {
+                            html += '<option value="' + item.careRegNo + '">' + item.careNm + '</option>';
+                        });
+                    }
+                    $('#shelter').html(html);
+                }
+            });
+        }
+        else {
+            $('#shelter').html('<option value="" selected="selected">전체</option>');
+        }
+    };
+
+    let animalKind = function (kindCode) {
+        if (kindCode != '') {
+            $.get({
+                url: '/v1/test/animals/kind/' + kindCode,
+                success: function (result) {
+                    let items = result.body.items.item;
+
+                    let html = '<option value="">전체</option>';
+                    if (items != null && items.length > 0) {
+                        items.forEach(item => {
+                            html += '<option value="' + item.kindCd + '">' + item.knm + '</option>';
+                        });
+                    }
+                    $('#kindResult').html(html);
+                }
+            });
+        }
+        else {
+            $('#kindResult').html('<option value="" selected="selected">전체</option>');
+        }
+    }
+
+    let animal = function (data) {
+        $.get({
+            url: '/v1/test/animals',
+            data: data,
+            success: function (result) {
+                let items = result.body.items.item;
+
+                console.log(items);
+
+                let html = ''
+                if (items != null && items.length > 0) {
+                    items.forEach(item => {
+                        html += '<tr>';
+                    html += '<td>' + item.careAddr + '</td>';
+                    html += '<td>' + item.careNm + '</td>';
+                    html += '<td>' + item.careTel + '</td>';
+                    html += '<td>' + item.colorCd + '</td>';
+                    html += '<td>' + item.happenDt + '</td>';
+                    html += '<td>' + item.happenPlace + '</td>';
+                    html += '<td>' + item.kindCd + '</td>';
+                    html += '<td>' + item.neuterYn + '</td>';
+                    html += '<td>' + item.noticeComment + '</td>';
+                    html += '<td>' + item.noticeEdt + '</td>';
+                    html += '<td>' + item.noticeSdt + '</td>';
+                    html += '<td>' + item.chargeNm + '</td>';
+                    html += '<td>' + item.officetel + '</td>';
+                    html += '<td>' + item.orgNm + '</td>';
+                    html += '<td>' + item.age + '</td>';
+                    html += '<td><img src="' + item.filename + '"></td>';
+                    html += '<td>' + item.processState + '</td>';
+                    html += '<td>' + item.sexCd + '</td>';
+                    html += '<td>' + item.specialMark + '</td>';
+                    html += '<td>' + item.weight + '</td>';
+                    html += '</tr>';
+                    });
+                }
+
+                $('#animalResult').html(html);
+            }
+        });
+    }
+
+    Date.prototype.yyyymmdd = function () {
+        var yyyy = this.getFullYear().toString();
+        var mm = (this.getMonth() + 1).toString();
+        var dd = this.getDate().toString();
+
+        return yyyy + (mm[1] ? mm : '0' + mm[0]) + (dd[1] ? dd : '0' + dd[0]);
+    }
+</script>
+</body>
+</html>
