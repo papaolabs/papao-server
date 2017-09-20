@@ -1,0 +1,10 @@
+jasypt:
+  encryptor:
+    password:
+    algorithm: PBEWITHMD5ANDDES
+
+seoul:
+  api:
+    animal:
+      appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
+      url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
