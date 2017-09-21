@@ -1,8 +1,8 @@
-package com.papaolabs.api.service;
+package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.controller.dto.StatsDTO;
-import com.papaolabs.api.restapi.AnimalApiClient;
-import com.papaolabs.api.restapi.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
+import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

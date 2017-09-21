@@ -1,9 +1,9 @@
-package com.papaolabs.api.restapi;
+package com.papaolabs.api.infrastructure.persistence.restapi;
 
-import com.papaolabs.api.restapi.dto.AnimalApiResponse;
-import com.papaolabs.api.restapi.dto.AnimalKindApiResponse;
-import com.papaolabs.api.restapi.dto.RegionApiResponse;
-import com.papaolabs.api.restapi.dto.ShelterApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalKindApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.dto.ShelterApiResponse;
 import feign.Param;
 import feign.RequestLine;
 import org.springframework.cloud.netflix.feign.FeignClient;
