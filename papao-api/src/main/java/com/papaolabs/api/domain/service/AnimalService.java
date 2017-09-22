@@ -16,4 +16,6 @@ public interface AnimalService {
     AnimalKindApiResponse getKindList(String upKindCd);
 
     AnimalApiResponse getAnimalList(AnimalRequest animalRequest);
+
+    void printRegionSql();
 }

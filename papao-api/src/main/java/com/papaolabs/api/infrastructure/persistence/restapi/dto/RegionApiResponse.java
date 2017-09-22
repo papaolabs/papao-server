@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -25,7 +26,7 @@ public class RegionApiResponse {
 
         @Data
         public static class Items {
-            List<RegionItemDTO> item;
+            List<RegionItemDTO> item = new ArrayList<>();
 
             @Data
             public static class RegionItemDTO {
