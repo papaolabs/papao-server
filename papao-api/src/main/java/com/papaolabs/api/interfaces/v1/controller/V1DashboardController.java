@@ -30,8 +30,8 @@ public class V1DashboardController {
     private final StatsService statsService;
 
     @GetMapping("/stats")
-    public StatsDTO intro(@PathVariable String beginDate,
-                          @PathVariable String endDate) {
+    public StatsDTO intro(@PathVariable(required = false) String beginDate,
+                          @PathVariable(required = false) String endDate) {
         return statsService.getStats(beginDate, endDate);
     }
 
