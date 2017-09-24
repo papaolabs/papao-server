@@ -1,6 +1,6 @@
-package com.papaolabs.api.interfaces.v1;
+package com.papaolabs.api.interfaces;
 
-import com.papaolabs.api.DomainConfiguration;
+import com.papaolabs.api.domain.DomainConfiguration;
 import com.papaolabs.api.infrastructure.InfrastructureConfiguration;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.SpringApplication;
