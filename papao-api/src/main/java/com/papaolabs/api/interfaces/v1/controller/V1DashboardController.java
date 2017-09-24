@@ -1,14 +1,21 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
+import com.papaolabs.api.domain.service.AnimalService;
+import com.papaolabs.api.domain.service.ShelterService;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.AnimalRequest;
+import com.papaolabs.api.interfaces.v1.dto.KindDTO;
+import com.papaolabs.api.interfaces.v1.dto.ShelterDTO;
 import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
 import com.papaolabs.api.domain.service.StatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/dashboard")
@@ -16,10 +23,30 @@ import javax.validation.constraints.NotNull;
 public class V1DashboardController {
 
     @NotNull
+    private final AnimalService animalService;
+    @NotNull
+    private final ShelterService shelterService;
+    @NotNull
     private final StatsService statsService;
 
     @GetMapping("/stats")
-    public StatsDTO intro(AnimalRequest animalRequest) {
-        return statsService.getStats(animalRequest.getBgnde(), animalRequest.getEndde());
+    public StatsDTO intro(@PathVariable String beginDate,
+                          @PathVariable String endDate) {
+        return statsService.getStats(beginDate, endDate);
+    }
+
+    @GetMapping("/shelters")
+    public List<ShelterDTO> shelters() {
+        return shelterService.getRegions();
+    }
+
+    @GetMapping("/kinds")
+    public List<KindDTO> kinds() {
+        return animalService.getKindList();
+    }
+
+    @GetMapping("/animals")
+    public AnimalApiResponse animal(AnimalRequest animalRequest) {
+        return animalService.getAnimalList(animalRequest);
     }
 }

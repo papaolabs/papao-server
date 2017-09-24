@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.dto;
+package com.papaolabs.api.infrastructure.persistence.restapi.feign.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

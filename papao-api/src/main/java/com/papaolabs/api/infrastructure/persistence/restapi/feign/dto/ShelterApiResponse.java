@@ -1,15 +1,16 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.dto;
+package com.papaolabs.api.infrastructure.persistence.restapi.feign.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @XmlRootElement(name = "response")
 @RequiredArgsConstructor
-public class AnimalKindApiResponse {
+public class ShelterApiResponse {
     private Header header;
     private Body body;
 
@@ -25,12 +26,12 @@ public class AnimalKindApiResponse {
 
         @Data
         public static class Items {
-            List<KindItemDTO> item;
+            List<ShelterItemDTO> item = new ArrayList();
 
             @Data
-            public static class KindItemDTO {
-                private String kindCd;
-                private String kNm;
+            public static class ShelterItemDTO {
+                private String careRegNo;
+                private String careNm;
             }
         }
     }
