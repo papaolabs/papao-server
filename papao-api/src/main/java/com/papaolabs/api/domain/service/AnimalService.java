@@ -1,19 +1,16 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalKindApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.RegionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.ShelterApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalKindApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.AnimalRequest;
+import com.papaolabs.api.interfaces.v1.dto.KindDTO;
+
+import java.util.List;
 
 public interface AnimalService {
-    RegionApiResponse getSidoList();
-
-    RegionApiResponse getSigunguList(String uprCd);
-
-    ShelterApiResponse getShelterList(String uprCd, String orgCd);
-
-    AnimalKindApiResponse getKindList(String upKindCd);
+    List<KindDTO> getKindList();
 
     AnimalApiResponse getAnimalList(AnimalRequest animalRequest);
 }

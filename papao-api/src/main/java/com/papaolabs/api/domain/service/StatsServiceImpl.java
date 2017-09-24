@@ -1,9 +1,8 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.AnimalApiClient;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
@@ -20,6 +18,10 @@ public class StatsServiceImpl implements StatsService {
     private static final String EUTHANASIA_STATE = "종료(안락사)";
     @NotNull
     private final AnimalApiClient animalApiClient;
+
+    public StatsServiceImpl(AnimalApiClient animalApiClient) {
+        this.animalApiClient = animalApiClient;
+    }
 
     @Override
     public StatsDTO getStats(String beginDate, String endDate) {

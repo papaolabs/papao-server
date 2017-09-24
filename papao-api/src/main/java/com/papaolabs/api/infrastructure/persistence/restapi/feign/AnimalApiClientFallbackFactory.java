@@ -1,10 +1,10 @@
-package com.papaolabs.api.infrastructure.persistence.restapi;
+package com.papaolabs.api.infrastructure.persistence.restapi.feign;
 
 import com.netflix.hystrix.exception.HystrixRuntimeException;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.AnimalKindApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.RegionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.dto.ShelterApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalKindApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApiResponse;
 import feign.Param;
 import feign.hystrix.FallbackFactory;
 import org.springframework.util.MultiValueMap;
