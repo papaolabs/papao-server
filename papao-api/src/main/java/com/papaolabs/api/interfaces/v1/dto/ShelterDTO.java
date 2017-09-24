@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class ShelterDTO {
-    private String cityCode;
+    private Long cityCode;
     private String cityName;
-    private String townCode;
+    private Long townCode;
     private String townName;
-    private String shelterCode;
+    private Long shelterCode;
     private String shelterName;
 }

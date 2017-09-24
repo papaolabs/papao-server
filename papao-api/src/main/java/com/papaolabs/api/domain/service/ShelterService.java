@@ -14,9 +14,9 @@ public interface ShelterService {
 
     ShelterApiResponse getShelterList(String uprCd, String orgCd);
 
-    ShelterDTO getCities(String cityCode);
+    List<ShelterDTO> getCities(Long cityCode);
 
-    ShelterDTO getTowns(String townCode);
+    List<ShelterDTO> getTowns(Long townCode);
 
-    List<ShelterDTO> getRegions();
+    List<ShelterDTO> getShelters();
 }

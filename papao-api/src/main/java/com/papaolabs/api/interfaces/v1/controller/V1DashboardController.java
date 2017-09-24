@@ -37,7 +37,17 @@ public class V1DashboardController {
 
     @GetMapping("/shelters")
     public List<ShelterDTO> shelters() {
-        return shelterService.getRegions();
+        return shelterService.getShelters();
+    }
+
+    @GetMapping("/cities/{cityCode}/shelters")
+    public List<ShelterDTO> sheltersByCityCode(@PathVariable Long cityCode) {
+        return shelterService.getCities(cityCode);
+    }
+
+    @GetMapping("/towns/{townCode}/shelters")
+    public List<ShelterDTO> sheltersByTownCode(@PathVariable Long townCode) {
+        return shelterService.getTowns(townCode);
     }
 
     @GetMapping("/kinds")

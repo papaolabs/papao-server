@@ -15,10 +15,10 @@ public class Shelter {
     @Id
     @GeneratedValue
     private Long id;
-    private String cityCode;
+    private Long cityCode;
     private String cityName;
-    private String townCode;
+    private Long townCode;
     private String townName;
-    private String shelterCode;
+    private Long shelterCode;
     private String shelterName;
 }

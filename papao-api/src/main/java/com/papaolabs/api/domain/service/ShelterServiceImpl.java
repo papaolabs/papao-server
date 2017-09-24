@@ -20,11 +20,11 @@ public class ShelterServiceImpl implements ShelterService {
     @NotNull
     private final AnimalApiClient animalApiClient;
     @NotNull
-    private final ShelterRepository regionRepository;
+    private final ShelterRepository shelterRepository;
 
-    public ShelterServiceImpl(AnimalApiClient animalApiClient, ShelterRepository regionRepository) {
+    public ShelterServiceImpl(AnimalApiClient animalApiClient, ShelterRepository shelterRepository) {
         this.animalApiClient = animalApiClient;
-        this.regionRepository = regionRepository;
+        this.shelterRepository = shelterRepository;
     }
 
     @Override
@@ -43,46 +43,34 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    public ShelterDTO getCities(String cityCode) {
-        Shelter shelter = regionRepository.findByCityCode(cityCode);
-
-        ShelterDTO shelterDTO = new ShelterDTO();
-        shelterDTO.setCityCode(shelter.getCityCode());
-        shelterDTO.setCityName(shelter.getCityName());
-        shelterDTO.setTownCode(shelter.getTownCode());
-        shelterDTO.setTownName(shelter.getTownName());
-        shelterDTO.setShelterCode(shelter.getShelterCode());
-        shelterDTO.setShelterName(shelter.getShelterName());
-        return shelterDTO;
-    }
-
-    @Override
-    public ShelterDTO getTowns(String townCode) {
-        Shelter shelter = regionRepository.findByTownCode(townCode);
-
-        ShelterDTO shelterDTO = new ShelterDTO();
-        shelterDTO.setCityCode(shelter.getCityCode());
-        shelterDTO.setCityName(shelter.getCityName());
-        shelterDTO.setTownCode(shelter.getTownCode());
-        shelterDTO.setTownName(shelter.getTownName());
-        shelterDTO.setShelterCode(shelter.getShelterCode());
-        shelterDTO.setShelterName(shelter.getShelterName());
-        return shelterDTO;
-    }
-
-    @Override
-    public List<ShelterDTO> getRegions() {
-        return regionRepository.findAll().stream()
-                .map(x -> {
-                    ShelterDTO shelterDTO = new ShelterDTO();
-                    shelterDTO.setCityCode(x.getCityCode());
-                    shelterDTO.setCityName(x.getCityName());
-                    shelterDTO.setTownCode(x.getTownCode());
-                    shelterDTO.setTownName(x.getTownName());
-                    shelterDTO.setShelterCode(x.getShelterCode());
-                    shelterDTO.setShelterName(x.getShelterName());
-                    return shelterDTO;
-                })
+    public List<ShelterDTO> getCities(Long cityCode) {
+        return shelterRepository.findByCityCode(cityCode).stream()
+                .map(this::transform)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShelterDTO> getTowns(Long townCode) {
+        return shelterRepository.findByTownCode(townCode).stream()
+                .map(this::transform)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ShelterDTO> getShelters() {
+        return shelterRepository.findAll().stream()
+                .map(this::transform)
+                .collect(Collectors.toList());
+    }
+
+    private ShelterDTO transform(Shelter shelter) {
+        ShelterDTO shelterDTO = new ShelterDTO();
+        shelterDTO.setCityCode(shelter.getCityCode());
+        shelterDTO.setCityName(shelter.getCityName());
+        shelterDTO.setTownCode(shelter.getTownCode());
+        shelterDTO.setTownName(shelter.getTownName());
+        shelterDTO.setShelterCode(shelter.getShelterCode());
+        shelterDTO.setShelterName(shelter.getShelterName());
+        return shelterDTO;
     }
 }
