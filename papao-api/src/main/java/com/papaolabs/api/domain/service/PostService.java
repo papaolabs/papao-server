@@ -1,12 +1,11 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.domain.model.Post;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 
 import java.util.List;
 
 public interface PostService {
-    Post create(String imageUrl,
+    PostDTO create(String imageUrl,
                 String state,
                 String gender,
                 String neuterYn,

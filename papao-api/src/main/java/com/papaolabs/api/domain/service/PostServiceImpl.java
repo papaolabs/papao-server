@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post create(String imageUrl,
+    public PostDTO create(String imageUrl,
                        String type,
                        String gender,
                        String neuterYn,
@@ -78,7 +78,7 @@ public class PostServiceImpl implements PostService {
         post.setWeight(isNotEmpty(weight) ? Float.valueOf(weight) : -1);
         post.setIntroduction(introduction);
         post.setFeature(feature);
-        return postRepository.save(post);
+        return transform(postRepository.save(post));
     }
 
     @Override
