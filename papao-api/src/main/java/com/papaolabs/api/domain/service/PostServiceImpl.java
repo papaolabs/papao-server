@@ -199,11 +199,19 @@ public class PostServiceImpl implements PostService {
             .type(PostType.SYSTEM.getCode())
             .imageUrl(animalItemDTO.getPopfile())
             .happenDate(animalItemDTO.getHappenDt())
-            .happenPlace(animalItemDTO.getHappenPlace())
-            .kind(animalItemDTO.getKindCd())
+            .happenPlace(animalItemDTO.getOrgNm())
+            .kind(convertKindName(animalItemDTO.getKindCd()))
             .gender(animalItemDTO.getSexCd())
             .state(animalItemDTO.getProcessState())
             .build();
+    }
+
+    private String convertKindName(String kindName) {
+        if(kindName.contains("[개] "))
+            return kindName.replace("[개] ", "");
+        if(kindName.contains("[기타축종] "))
+            return kindName.replace("[기타축종] ", "");
+        return kindName.substring(1, kindName.length()-1);
     }
 
     private String convertDateToString(Date date) {
