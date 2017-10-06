@@ -60,17 +60,17 @@ public class V1PostController {
     }
 
     @GetMapping
-    public List<PostDTO> read(@RequestParam(required = false) String beginDate,
+    public ResponseEntity<List<PostDTO>> read(@RequestParam(required = false) String beginDate,
                               @RequestParam(required = false) String endDate,
                               @RequestParam(required = false) String upKindCode,
                               @RequestParam(required = false) String uprCode,
                               @RequestParam(required = false) String orgCode
     ) {
-        return postService.readPosts(beginDate, endDate, upKindCode, uprCode, orgCode);
+        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, upKindCode, uprCode, orgCode), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
-    public PostDTO read(@PathVariable("postId") String postId) {
-        return postService.readPost(postId);
+    public ResponseEntity read(@PathVariable("postId") String postId) {
+        return new ResponseEntity<>(postService.readPost(postId), HttpStatus.OK);
     }
 }
