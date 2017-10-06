@@ -9,7 +9,7 @@ import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
-import com.papaolabs.api.interfaces.v1.dto.type.YesNoType;
+import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +67,7 @@ public class PostServiceImpl implements PostService {
         post.setType(type);
         post.setState(StateType.PROCESS.name());
         post.setGender(isEmpty(gender) ? GenderType.Q.name() : gender);
-        post.setNeuter(isEmpty(neuterYn) ? YesNoType.U.name() : neuterYn);
+        post.setNeuter(isEmpty(neuterYn) ? NeuterType.U.name() : neuterYn);
         post.setUid(uid);
         post.setContracts(contracts);
         post.setHappenDate(convertStringToDate(happenDate));
