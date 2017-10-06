@@ -31,6 +31,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Service
 public class PostServiceImpl implements PostService {
     private static final String UNKNOWN = "UNKNOWN";
+    private static final String DATE_FORMAT = "yyyyMMdd";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -97,7 +98,7 @@ public class PostServiceImpl implements PostService {
                                        String pageNo,
                                        String size) {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         if (isEmpty(beginDate)) {
             beginDate = now.format(formatter);
         }
@@ -123,7 +124,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode) {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         if (isEmpty(beginDate)) {
             beginDate = now.format(formatter);
         }
@@ -197,12 +198,12 @@ public class PostServiceImpl implements PostService {
     }
 
     private String convertDateToString(Date date) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         return transFormat.format(date);
     }
 
     private Date convertStringToDate(String from) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
             return transFormat.parse(from);
         } catch (ParseException e) {
