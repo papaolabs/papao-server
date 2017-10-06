@@ -5,8 +5,13 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepositor
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostType;
+import com.papaolabs.api.interfaces.v1.dto.type.PostType;
+import com.papaolabs.api.interfaces.v1.dto.type.StateType;
+import com.papaolabs.api.interfaces.v1.dto.type.YesNoType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +25,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
+    private static final String UNKNOWN = "UNKNOWN";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -40,31 +48,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(String imageUrl,
-                       String state,
+                       String type,
                        String gender,
                        String neuterYn,
-                       String description,
-                       String managerName,
-                       String managerTel,
+                       String uid,
+                       String contracts,
                        String happenDate,
                        String happenPlace,
+                       String kindUpCode,
                        String kindCode,
                        String age,
-                       String weight) {
+                       String weight,
+                       String introduction,
+                       String feature) {
         Post post = new Post();
         post.setImageUrl(imageUrl);
-        post.setState(state);
-        post.setGender(gender);
-        post.setNeuterYn(neuterYn);
-        post.setDescription(description);
-        post.setManagerName(managerName);
-        post.setManagerTel(managerTel);
+        post.setType(type);
+        post.setState(StateType.PROCESS.name());
+        post.setGender(isEmpty(gender) ? GenderType.Q.name() : gender);
+        post.setNeuter(isEmpty(neuterYn) ? YesNoType.U.name() : neuterYn);
+        post.setUid(uid);
+        post.setContracts(contracts);
         post.setHappenDate(convertStringToDate(happenDate));
-        post.setHappenPlace(convertStringToDate(happenPlace));
-        post.setKindUpCode(String.valueOf(kindRepository.findByKindCode(kindCode).getUpKindCode()));
-        post.setKindCode(kindCode);
-        post.setAge(Integer.valueOf(age));
-        post.setWeight(Float.valueOf(weight));
+        post.setHappenPlace(isNotEmpty(happenPlace) ? happenPlace : UNKNOWN);
+        post.setKindUpCode(kindUpCode);
+        post.setKindCode(isNotEmpty(kindCode) ? kindCode : StringUtils.EMPTY);
+        post.setAge(isNotEmpty(age) ? Integer.valueOf(age) : -1);
+        post.setWeight(isNotEmpty(weight) ? Float.valueOf(weight) : -1);
+        post.setIntroduction(introduction);
+        post.setFeature(feature);
         return postRepository.save(post);
     }
 
@@ -128,35 +140,69 @@ public class PostServiceImpl implements PostService {
                               .collect(Collectors.toList());
     }
 
+    @Override
+    public PostDTO readPost(String postId) {
+        Post post = postRepository.findOne(Long.valueOf(postId));
+        if(post == null) {
+            log.debug("[NotFound] readPost - postId : {postId}", postId);
+            return PostDTO.builder()
+                          .id(-1L)
+                          .build();
+        }
+        return transform(post);
+    }
+
+    private PostDTO transform(Post post) {
+        return PostDTO.builder()
+                      .id(post.getId())
+                      .type(post.getType())
+                      .imageUrl(post.getImageUrl())
+                      .kind(post.getKindUpCode())
+                      .happenDate(convertDateToString(post.getHappenDate()))
+                      .happenPlace(post.getHappenPlace())
+                      .contracts(post.getContracts())
+                      .weight(String.valueOf(post.getWeight()))
+                      .gender(post.getGender())
+                      .state(post.getState())
+                      .neuter(post.getNeuter())
+                      .feature(post.getFeature())
+                      .introduction(post.getIntroduction())
+                      .build();
+    }
+
     private PostDTO transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
-        return PostDTO.builder().id(Long.valueOf(animalItemDTO.getDesertionNo()))
-            .type(PostType.SYSTEM.getCode())
-            .imageUrl(animalItemDTO.getPopfile())
-            .happenDate(animalItemDTO.getHappenDt())
-            .happenPlace(animalItemDTO.getOrgNm())
-            .kind(convertKindName(animalItemDTO.getKindCd()))
-            .gender(animalItemDTO.getSexCd())
-            .state(animalItemDTO.getProcessState())
-            .build();
+        return PostDTO.builder()
+                      .id(Long.valueOf(animalItemDTO.getDesertionNo()))
+                      .type(PostType.SYSTEM.getCode())
+                      .imageUrl(animalItemDTO.getPopfile())
+                      .happenDate(animalItemDTO.getHappenDt())
+                      .happenPlace(animalItemDTO.getOrgNm())
+                      .kind(convertKindName(animalItemDTO.getKindCd()))
+                      .gender(animalItemDTO.getSexCd())
+                      .state(animalItemDTO.getProcessState())
+                      .build();
     }
 
     private String convertKindName(String kindName) {
-        if(kindName.contains("[개] "))
+        if (kindName.contains("[개] ")) {
             return kindName.replace("[개] ", "");
-        if(kindName.contains("[기타축종] "))
+        }
+        if (kindName.contains("[기타축종] ")) {
             return kindName.replace("[기타축종] ", "");
-        if(kindName.contains("[고양이]"))
+        }
+        if (kindName.contains("[고양이]")) {
             return kindName.replace("[고양이]", "고양이");
+        }
         return kindName;
     }
 
     private String convertDateToString(Date date) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
         return transFormat.format(date);
     }
 
     private Date convertStringToDate(String from) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return transFormat.parse(from);
         } catch (ParseException e) {

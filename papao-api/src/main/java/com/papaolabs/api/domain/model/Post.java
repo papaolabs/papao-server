@@ -29,18 +29,20 @@ public class Post {
     private String state;
     @Column(name = "GENDER")
     private String gender;
-    @Column(name = "NEUTER_YN")
-    private String neuterYn;
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "MANAGER_NAME")
-    private String managerName;
-    @Column(name = "MANAGER_TEL")
-    private String managerTel;
+    @Column(name = "NEUTER")
+    private String neuter;
+    @Column(name = "FEATURE")
+    private String feature;
+    @Column(name = "INTRODUCTION")
+    private String introduction;
+    @Column(name = "UID")
+    private String uid;
+    @Column(name = "CONTRACTS")
+    private String contracts;
     @Column(name = "HAPPEN_DATE")
     private Date happenDate;
     @Column(name = "HAPPEN_PLACE")
-    private Date happenPlace;
+    private String happenPlace;
     @Column(name = "KIND_UP_CODE")
     private String kindUpCode;
     @Column(name = "KIND_CODE")

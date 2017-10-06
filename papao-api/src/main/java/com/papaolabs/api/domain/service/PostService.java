@@ -10,14 +10,16 @@ public interface PostService {
                 String state,
                 String gender,
                 String neuterYn,
-                String description,
                 String managerName,
                 String managerTel,
                 String happenDate,
                 String happenPlace,
+                String kindUpCode,
                 String kindCode,
                 String age,
-                String weight
+                String weight,
+                String introduction,
+                String feature
     );
 
     void delete(String id);
@@ -34,4 +36,6 @@ public interface PostService {
                                 String numOfRows);
 
     List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode);
+
+    PostDTO readPost(String postId);
 }
