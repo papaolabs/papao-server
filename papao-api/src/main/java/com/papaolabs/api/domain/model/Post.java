@@ -16,8 +16,8 @@ import java.util.Date;
 @Data
 @Entity
 @EntityListeners(value = {AuditingEntityListener.class})
-@Table(name = "FEED_INFO_TB")
-public class Feed {
+@Table(name = "POST_INFO_TB")
+public class Post {
     @Id
     @GeneratedValue
     private Long id;

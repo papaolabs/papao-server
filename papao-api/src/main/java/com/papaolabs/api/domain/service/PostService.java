@@ -1,9 +1,12 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.domain.model.Feed;
+import com.papaolabs.api.domain.model.Post;
+import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 
-public interface FeedService {
-    Feed create(String noticeBeginDate,
+import java.util.List;
+
+public interface PostService {
+    Post create(String noticeBeginDate,
                 String noticeEndDate,
                 String imageUrl,
                 String thumbImageUrl,
@@ -27,7 +30,7 @@ public interface FeedService {
                 String weight
     );
 
-    Feed update(String id,
+    Post update(String id,
                 String noticeBeginDate,
                 String noticeEndDate,
                 String imageUrl,
@@ -53,4 +56,17 @@ public interface FeedService {
     );
 
     void delete(String id);
+
+    List<PostDTO> getAnimalList(String beginDate,
+                                String endDate,
+                                String upKindCode,
+                                String kindCode,
+                                String uprCode,
+                                String orgCode,
+                                String shelterCode,
+                                String state,
+                                String pageNo,
+                                String numOfRows);
+
+    List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode);
 }
