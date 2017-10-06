@@ -1,6 +1,7 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.domain.model.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
@@ -28,107 +29,40 @@ public class PostServiceImpl implements PostService {
     private final AnimalApiClient animalApiClient;
     @NotNull
     private final PostRepository postRepository;
+    @NotNull
+    private final KindRepository kindRepository;
 
-    public PostServiceImpl(AnimalApiClient animalApiClient, PostRepository postRepository) {
+    public PostServiceImpl(AnimalApiClient animalApiClient, PostRepository postRepository, KindRepository kindRepository) {
         this.animalApiClient = animalApiClient;
         this.postRepository = postRepository;
+        this.kindRepository = kindRepository;
     }
 
     @Override
-    public Post create(String noticeBeginDate,
-                       String noticeEndDate,
-                       String imageUrl,
-                       String thumbImageUrl,
+    public Post create(String imageUrl,
                        String state,
                        String gender,
                        String neuterYn,
                        String description,
-                       String shelterName,
-                       String shelterTel,
-                       String shelterAddress,
-                       String department,
                        String managerName,
                        String managerTel,
-                       String note,
-                       String desertionNo,
                        String happenDate,
                        String happenPlace,
                        String kindCode,
-                       String colorCode,
                        String age,
                        String weight) {
         Post post = new Post();
-        post.setNoticeBeginDate(convertStringToDate(noticeBeginDate));
-        post.setNoticeEndDate(convertStringToDate(noticeEndDate));
         post.setImageUrl(imageUrl);
-        post.setThumbImageUrl(thumbImageUrl);
         post.setState(state);
         post.setGender(gender);
         post.setNeuterYn(neuterYn);
         post.setDescription(description);
-        post.setShelterName(shelterName);
-        post.setShelterAddress(shelterAddress);
-        post.setShelterTel(shelterTel);
-        post.setDepartment(department);
         post.setManagerName(managerName);
         post.setManagerTel(managerTel);
-        post.setNote(note);
-        post.setDesertionNo(desertionNo);
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(convertStringToDate(happenPlace));
+        post.setKindUpCode(String.valueOf(kindRepository.findByKindCode(kindCode).getUpKindCode()));
         post.setKindCode(kindCode);
-        post.setColorCode(colorCode);
-        post.setAge(Integer.valueOf(age));
-        post.setWeight(Float.valueOf(weight));
-        return postRepository.save(post);
-    }
-
-    @Override
-    public Post update(String id,
-                       String noticeBeginDate,
-                       String noticeEndDate,
-                       String imageUrl,
-                       String thumbImageUrl,
-                       String state,
-                       String gender,
-                       String neuterYn,
-                       String description,
-                       String shelterName,
-                       String shelterTel,
-                       String shelterAddress,
-                       String department,
-                       String managerName,
-                       String managerTel,
-                       String note,
-                       String desertionNo,
-                       String happenDate,
-                       String happenPlace,
-                       String kindCode,
-                       String colorCode,
-                       String age,
-                       String weight) {
-        Post post = new Post();
-        post.setId(Long.valueOf(id));
-        post.setNoticeBeginDate(convertStringToDate(noticeBeginDate));
-        post.setNoticeEndDate(convertStringToDate(noticeEndDate));
-        post.setImageUrl(imageUrl);
-        post.setThumbImageUrl(thumbImageUrl);
-        post.setState(state);
-        post.setGender(gender);
-        post.setNeuterYn(neuterYn);
-        post.setDescription(description);
-        post.setShelterName(shelterName);
-        post.setShelterAddress(shelterAddress);
-        post.setShelterTel(shelterTel);
-        post.setDepartment(department);
-        post.setManagerName(managerName);
-        post.setManagerTel(managerTel);
-        post.setNote(note);
-        post.setDesertionNo(desertionNo);
-        post.setHappenDate(convertStringToDate(happenDate));
-        post.setHappenPlace(convertStringToDate(happenPlace));
-        post.setKindCode(kindCode);
-        post.setColorCode(colorCode);
         post.setAge(Integer.valueOf(age));
         post.setWeight(Float.valueOf(weight));
         return postRepository.save(post);
@@ -211,7 +145,9 @@ public class PostServiceImpl implements PostService {
             return kindName.replace("[개] ", "");
         if(kindName.contains("[기타축종] "))
             return kindName.replace("[기타축종] ", "");
-        return kindName.substring(1, kindName.length()-1);
+        if(kindName.contains("[고양이]"))
+            return kindName.replace("[고양이]", "고양이");
+        return kindName;
     }
 
     private String convertDateToString(Date date) {

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KindRepository extends JpaRepository<Kind, Long> {
+    Kind findByKindCode(String kindCode);
 }
