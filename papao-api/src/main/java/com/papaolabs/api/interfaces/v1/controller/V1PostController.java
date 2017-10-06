@@ -1,9 +1,7 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
-import com.papaolabs.api.domain.service.AnimalService;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/posts")
-@RequiredArgsConstructor
 public class V1PostController {
     @NotNull
-    private final AnimalService animalService;
-    @NotNull
     private final PostService postService;
+
+    public V1PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     @PostMapping
     public ResponseEntity create(@RequestParam(required = false) String happenDate,
@@ -61,10 +60,10 @@ public class V1PostController {
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> read(@RequestParam(required = false) String beginDate,
-                              @RequestParam(required = false) String endDate,
-                              @RequestParam(required = false) String upKindCode,
-                              @RequestParam(required = false) String uprCode,
-                              @RequestParam(required = false) String orgCode
+                                              @RequestParam(required = false) String endDate,
+                                              @RequestParam(required = false) String upKindCode,
+                                              @RequestParam(required = false) String uprCode,
+                                              @RequestParam(required = false) String orgCode
     ) {
         return new ResponseEntity<>(postService.readPosts(beginDate, endDate, upKindCode, uprCode, orgCode), HttpStatus.OK);
     }
