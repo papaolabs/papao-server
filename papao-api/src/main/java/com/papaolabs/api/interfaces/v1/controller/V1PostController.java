@@ -27,6 +27,8 @@ public class V1PostController {
     @PostMapping
     public ResponseEntity create(@RequestParam(required = false) String happenDate,
                                  @RequestParam(required = false) String happenPlace,
+                                 @RequestParam(required = false) String uprCode,
+                                 @RequestParam(required = false) String orgCode,
                                  @RequestParam(required = false) String uid,
                                  @RequestParam(required = false) String contacts,
                                  @RequestParam(required = false) String postType,
@@ -49,6 +51,8 @@ public class V1PostController {
             contacts,
             happenDate,
             happenPlace,
+            uprCode,
+            orgCode,
             kindUpCode,
             kindCode,
             age,
@@ -61,11 +65,11 @@ public class V1PostController {
     @GetMapping
     public ResponseEntity<List<PostDTO>> read(@RequestParam(required = false) String beginDate,
                                               @RequestParam(required = false) String endDate,
-                                              @RequestParam(required = false) String upKindCode,
+                                              @RequestParam(required = false) String kindUpCode,
                                               @RequestParam(required = false) String uprCode,
                                               @RequestParam(required = false) String orgCode
     ) {
-        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, upKindCode, uprCode, orgCode), HttpStatus.OK);
+        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, kindUpCode, uprCode, orgCode), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")

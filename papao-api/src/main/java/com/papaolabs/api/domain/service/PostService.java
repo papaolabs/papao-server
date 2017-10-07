@@ -13,6 +13,8 @@ public interface PostService {
                 String managerTel,
                 String happenDate,
                 String happenPlace,
+                String uprCode,
+                String orgCode,
                 String kindUpCode,
                 String kindCode,
                 String age,

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.*;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -32,6 +33,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class PostServiceImpl implements PostService {
     private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String MAX_SIZE = "1000000";
+    private static final String START_INDEX = "1";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -49,19 +52,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO create(String imageUrl,
-                       String type,
-                       String gender,
-                       String neuterYn,
-                       String uid,
-                       String contracts,
-                       String happenDate,
-                       String happenPlace,
-                       String kindUpCode,
-                       String kindCode,
-                       String age,
-                       String weight,
-                       String introduction,
-                       String feature) {
+                          String type,
+                          String gender,
+                          String neuterYn,
+                          String uid,
+                          String contracts,
+                          String happenDate,
+                          String happenPlace,
+                          String uprCode,
+                          String orgCode,
+                          String kindUpCode,
+                          String kindCode,
+                          String age,
+                          String weight,
+                          String introduction,
+                          String feature) {
         Post post = new Post();
         post.setImageUrl(imageUrl);
         post.setType(type);
@@ -72,6 +77,8 @@ public class PostServiceImpl implements PostService {
         post.setContracts(contracts);
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(isNotEmpty(happenPlace) ? happenPlace : UNKNOWN);
+        post.setUprCode(uprCode);
+        post.setOrgCode(orgCode);
         post.setKindUpCode(kindUpCode);
         post.setKindCode(isNotEmpty(kindCode) ? kindCode : StringUtils.EMPTY);
         post.setAge(isNotEmpty(age) ? Integer.valueOf(age) : -1);
@@ -122,7 +129,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode) {
+    public List<PostDTO> readPosts(String beginDate, String endDate, String kindUpCode, String uprCode, String orgCode) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         if (isEmpty(beginDate)) {
@@ -131,20 +138,28 @@ public class PostServiceImpl implements PostService {
         if (isEmpty(endDate)) {
             endDate = now.format(formatter);
         }
-        return animalApiClient.animal(appKey, beginDate, endDate, upKindCode, null,
-                                      uprCode, orgCode, null, null, String.valueOf(1), String.valueOf(100000))
-                              .getBody()
-                              .getItems()
-                              .getItem()
-                              .stream()
-                              .map(this::transform)
-                              .collect(Collectors.toList());
+/*        List<PostDTO> posts = animalApiClient.animal(appKey, beginDate, endDate, kindUpCode, null,
+                                                     uprCode, orgCode, null, null, START_INDEX, MAX_SIZE)
+                                             .getBody()
+                                             .getItems()
+                                             .getItem()
+                                             .stream()
+                                             .map(this::transform)
+                                             .collect(Collectors.toList());*/
+        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
+                                                                                         convertStringToDate(endDate))
+                             .stream()
+                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
+                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
+                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)
+                             .map((this::transform))
+                             .collect(Collectors.toList());
     }
 
     @Override
     public PostDTO readPost(String postId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-        if(post == null) {
+        if (post == null) {
             log.debug("[NotFound] readPost - postId : {postId}", postId);
             return PostDTO.builder()
                           .id(-1L)

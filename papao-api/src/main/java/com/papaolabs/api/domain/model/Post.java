@@ -43,6 +43,10 @@ public class Post {
     private Date happenDate;
     @Column(name = "HAPPEN_PLACE")
     private String happenPlace;
+    @Column(name = "UPR_CODE")
+    private String uprCode;
+    @Column(name = "ORG_CODE")
+    private String orgCode;
     @Column(name = "KIND_UP_CODE")
     private String kindUpCode;
     @Column(name = "KIND_CODE")
