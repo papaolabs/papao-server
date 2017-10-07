@@ -5,11 +5,11 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepositor
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
-import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
+import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
-import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,11 +20,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.lang.Boolean.*;
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -138,22 +141,26 @@ public class PostServiceImpl implements PostService {
         if (isEmpty(endDate)) {
             endDate = now.format(formatter);
         }
-/*        List<PostDTO> posts = animalApiClient.animal(appKey, beginDate, endDate, kindUpCode, null,
-                                                     uprCode, orgCode, null, null, START_INDEX, MAX_SIZE)
-                                             .getBody()
-                                             .getItems()
-                                             .getItem()
-                                             .stream()
-                                             .map(this::transform)
-                                             .collect(Collectors.toList());*/
-        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
-                                                                                         convertStringToDate(endDate))
-                             .stream()
-                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
-                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
-                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)
-                             .map((this::transform))
-                             .collect(Collectors.toList());
+        List<PostDTO> systemPosts = animalApiClient.animal(appKey, beginDate, endDate, kindUpCode, null,
+                                                           uprCode, orgCode, null, null, START_INDEX, MAX_SIZE)
+                                                   .getBody()
+                                                   .getItems()
+                                                   .getItem()
+                                                   .stream()
+                                                   .map(this::transform)
+                                                   .collect(Collectors.toList());
+        List<PostDTO> userPosts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
+                                                                                                            convertStringToDate(endDate))
+                                                .stream()
+                                                .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
+                                                .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
+                                                .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)
+                                                .map((this::transform))
+                                                .collect(Collectors.toList());
+        return Stream.of(systemPosts, userPosts)
+                     .flatMap(Collection::stream)
+                     .sorted(Comparator.comparing(PostDTO::getHappenDate))
+                     .collect(Collectors.toList());
     }
 
     @Override
