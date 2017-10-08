@@ -36,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class PostServiceImpl implements PostService {
     private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
-    private static final String MAX_SIZE = "1000000";
+    private static final String MAX_SIZE = "100000";
     private static final String START_INDEX = "1";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
@@ -198,11 +198,16 @@ public class PostServiceImpl implements PostService {
                       .id(Long.valueOf(animalItemDTO.getDesertionNo()))
                       .type(PostType.SYSTEM.getCode())
                       .imageUrl(animalItemDTO.getPopfile())
+                      .kind(convertKindName(animalItemDTO.getKindCd()))
                       .happenDate(animalItemDTO.getHappenDt())
                       .happenPlace(animalItemDTO.getOrgNm())
-                      .kind(convertKindName(animalItemDTO.getKindCd()))
+                      .contracts(animalItemDTO.getCareTel())
+                      .weight(animalItemDTO.getWeight())
                       .gender(animalItemDTO.getSexCd())
                       .state(animalItemDTO.getProcessState())
+                      .neuter(animalItemDTO.getNeuterYn())
+                      .feature(animalItemDTO.getSpecialMark())
+                      .introduction(animalItemDTO.getNoticeComment())
                       .build();
     }
 
