@@ -2,11 +2,15 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.AnimalService;
 import com.papaolabs.api.domain.service.ShelterService;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
-import com.papaolabs.api.interfaces.v1.dto.*;
 import com.papaolabs.api.domain.service.StatsService;
+import com.papaolabs.api.interfaces.v1.dto.KindDTO;
+import com.papaolabs.api.interfaces.v1.dto.ShelterDTO;
+import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -15,7 +19,6 @@ import java.util.List;
 @RequestMapping("/v1/dashboard")
 @RequiredArgsConstructor
 public class V1DashboardController {
-
     @NotNull
     private final AnimalService animalService;
     @NotNull
@@ -49,19 +52,7 @@ public class V1DashboardController {
         return animalService.getKindList();
     }
 
-    @GetMapping("/animals")
-    public List<FeedDTO> animal(@RequestParam(required = false) String beginDate,
-                                @RequestParam(required = false) String endDate,
-                                @RequestParam(required = false) String upKindCode,
-                                @RequestParam(required = false) String kindCode,
-                                @RequestParam(required = false) String uprCode,
-                                @RequestParam(required = false) String orgCode,
-                                @RequestParam(required = false) String shelterCode,
-                                @RequestParam(required = false) String state,
-                                @RequestParam(defaultValue = "1") String pageNo,
-                                @RequestParam(defaultValue = "100000") String numOfRows
-                                    ) {
-        return animalService.getAnimalList(beginDate, endDate, upKindCode, kindCode, uprCode, orgCode,
-        shelterCode, state, pageNo, numOfRows);
-    }
+
+
+
 }
