@@ -23,20 +23,9 @@ public interface PostService {
                 String feature
     );
 
-    void delete(String id);
-
-    List<PostDTO> getAnimalList(String beginDate,
-                                String endDate,
-                                String upKindCode,
-                                String kindCode,
-                                String uprCode,
-                                String orgCode,
-                                String shelterCode,
-                                String state,
-                                String pageNo,
-                                String numOfRows);
-
     List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode);
 
     PostDTO readPost(String postId);
+
+    void delete(String id);
 }

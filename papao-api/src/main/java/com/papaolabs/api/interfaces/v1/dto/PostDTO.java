@@ -13,7 +13,8 @@ public class PostDTO {
     private Long id;
     private String type;
     private String imageUrl;
-    private String kind;
+    private String kindUpCode;
+    private String kindCode;
     private String happenDate;
     private String happenPlace;
     private String contracts;

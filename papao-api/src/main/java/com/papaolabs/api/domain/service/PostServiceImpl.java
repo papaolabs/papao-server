@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
@@ -92,54 +93,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void delete(String id) {
-        postRepository.delete(Long.valueOf(id));
-    }
-
-    @Override
-    public List<PostDTO> getAnimalList(String beginDate,
-                                       String endDate,
-                                       String upKindCode,
-                                       String kindCode,
-                                       String uprCode,
-                                       String orgCode,
-                                       String shelterCode,
-                                       String state,
-                                       String pageNo,
-                                       String size) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        if (isEmpty(beginDate)) {
-            beginDate = now.format(formatter);
-        }
-        if (isEmpty(endDate)) {
-            endDate = now.format(formatter);
-        }
-/*
-        postRepository.filter(kindCode, uprCode, orgCode, shelterCode, state)
-                      .stream()
-                      .map(this::transform)
-                      .collect(Collectors.toList());
-*/
-        return animalApiClient.animal(appKey, beginDate, endDate, upKindCode, kindCode,
-                                      uprCode, orgCode, shelterCode, state, pageNo, size)
-                              .getBody()
-                              .getItems()
-                              .getItem()
-                              .stream()
-                              .map(this::transform)
-                              .collect(Collectors.toList());
-    }
-
-    @Override
     public List<PostDTO> readPosts(String beginDate, String endDate, String kindUpCode, String uprCode, String orgCode) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         if (isEmpty(beginDate)) {
-            beginDate = now.format(formatter);
+            beginDate = getDefaultDate(DATE_FORMAT);
         }
         if (isEmpty(endDate)) {
-            endDate = now.format(formatter);
+            beginDate = getDefaultDate(DATE_FORMAT);
         }
         List<PostDTO> systemPosts = animalApiClient.animal(appKey, beginDate, endDate, kindUpCode, null,
                                                            uprCode, orgCode, null, null, START_INDEX, MAX_SIZE)
@@ -175,12 +134,18 @@ public class PostServiceImpl implements PostService {
         return transform(post);
     }
 
+    @Override
+    public void delete(String id) {
+        postRepository.delete(Long.valueOf(id));
+    }
+
     private PostDTO transform(Post post) {
         return PostDTO.builder()
                       .id(post.getId())
                       .type(post.getType())
                       .imageUrl(post.getImageUrl())
-                      .kind(post.getKindUpCode())
+                      .kindUpCode(post.getKindUpCode())
+                      .kindCode(convertKindName(post.getKindCode()))
                       .happenDate(convertDateToString(post.getHappenDate()))
                       .happenPlace(post.getHappenPlace())
                       .contracts(post.getContracts())
@@ -194,11 +159,13 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDTO transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
+        Kind kind = kindRepository.findByKindName(convertKindName(animalItemDTO.getKindCd()));
         return PostDTO.builder()
                       .id(Long.valueOf(animalItemDTO.getDesertionNo()))
                       .type(PostType.SYSTEM.getCode())
                       .imageUrl(animalItemDTO.getPopfile())
-                      .kind(convertKindName(animalItemDTO.getKindCd()))
+                      .kindUpCode(kind != null ? String.valueOf(kind.getUpKindCode()) : StringUtils.EMPTY)
+                      .kindCode(kind != null ? kind.getKindName() : convertKindName(animalItemDTO.getKindCd()))
                       .happenDate(animalItemDTO.getHappenDt())
                       .happenPlace(animalItemDTO.getOrgNm())
                       .contracts(animalItemDTO.getCareTel())
@@ -222,6 +189,12 @@ public class PostServiceImpl implements PostService {
             return kindName.replace("[고양이]", "고양이");
         }
         return kindName;
+    }
+
+    private String getDefaultDate(String format) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return now.format(formatter);
     }
 
     private String convertDateToString(Date date) {
