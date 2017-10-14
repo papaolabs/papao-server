@@ -2,6 +2,7 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,5 +76,10 @@ public class V1PostController {
     @GetMapping("/{postId}")
     public ResponseEntity read(@PathVariable("postId") String postId) {
         return new ResponseEntity<>(postService.readPost(postId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{postId}/state")
+    public ResponseEntity status(@PathVariable("postId") String postId, @RequestParam StateType state) {
+        return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
 }

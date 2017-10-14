@@ -1,6 +1,7 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface PostService {
     PostDTO readPost(String postId);
 
     void delete(String id);
+
+    PostDTO setState(String postId, StateType state);
 }

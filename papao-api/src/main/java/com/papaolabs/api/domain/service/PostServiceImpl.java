@@ -139,6 +139,13 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(Long.valueOf(id));
     }
 
+    @Override
+    public PostDTO setState(String postId, StateType state) {
+        Post post = postRepository.findOne(Long.valueOf(postId));
+        post.setState(state.name());
+        return transform(post);
+    }
+
     private PostDTO transform(Post post) {
         return PostDTO.builder()
                       .id(post.getId())
