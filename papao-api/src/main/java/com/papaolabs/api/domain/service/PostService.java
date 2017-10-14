@@ -28,7 +28,7 @@ public interface PostService {
 
     PostDTO readPost(String postId);
 
-    void delete(String id);
+    PostDTO delete(String id);
 
     PostDTO setState(String postId, StateType state);
 }
