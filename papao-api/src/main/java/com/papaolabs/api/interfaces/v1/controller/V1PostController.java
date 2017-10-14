@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/posts")
+@RequestMapping("/api/v1/posts")
 public class V1PostController {
     @NotNull
     private final PostService postService;

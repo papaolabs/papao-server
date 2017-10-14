@@ -6,7 +6,6 @@ import com.papaolabs.api.domain.service.StatsService;
 import com.papaolabs.api.interfaces.v1.dto.KindDTO;
 import com.papaolabs.api.interfaces.v1.dto.ShelterDTO;
 import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/dashboard")
-@RequiredArgsConstructor
-public class V1DashboardController {
+@RequestMapping("/api/v1/sample")
+public class V1SampleController {
     @NotNull
     private final AnimalService animalService;
     @NotNull
@@ -26,8 +24,14 @@ public class V1DashboardController {
     @NotNull
     private final StatsService statsService;
 
+    public V1SampleController(AnimalService animalService, ShelterService shelterService, StatsService statsService) {
+        this.animalService = animalService;
+        this.shelterService = shelterService;
+        this.statsService = statsService;
+    }
+
     @GetMapping("/stats")
-    public StatsDTO intro(@PathVariable(required = false) String beginDate,
+    public StatsDTO stats(@PathVariable(required = false) String beginDate,
                           @PathVariable(required = false) String endDate) {
         return statsService.getStats(beginDate, endDate);
     }
@@ -51,8 +55,4 @@ public class V1DashboardController {
     public List<KindDTO> kinds() {
         return animalService.getKindList();
     }
-
-
-
-
 }

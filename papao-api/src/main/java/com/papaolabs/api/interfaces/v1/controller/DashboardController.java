@@ -3,20 +3,20 @@ package com.papaolabs.api.interfaces.v1.controller;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
 
-@Controller
-@RequestMapping("/view")
-public class V1ViewController {
+@RestController
+@RequestMapping("/dashboard")
+public class DashboardController {
     @NotNull
     private final PostService postService;
 
-    public V1ViewController(PostService postService) {
+    public DashboardController(PostService postService) {
         this.postService = postService;
     }
 
