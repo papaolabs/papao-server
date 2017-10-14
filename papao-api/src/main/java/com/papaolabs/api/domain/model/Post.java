@@ -21,7 +21,9 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "type")
+    @Column(name = "DESERTION_NO")
+    private Long desertionNo;
+    @Column(name = "TYPE")
     private String type;
     @Column(name = "IMAGE_URL")
     private String imageUrl;

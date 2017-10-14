@@ -1,0 +1,151 @@
+package com.papaolabs.api.infrastructure.persistence.scheduler;
+
+import com.papaolabs.api.domain.model.Kind;
+import com.papaolabs.api.domain.model.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
+import com.papaolabs.api.interfaces.v1.dto.type.PostType;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import javax.validation.constraints.NotNull;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang3.StringUtils.isAllBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+@Slf4j
+@Component
+public class PostJob {
+    private static final String UNKNOWN = "UNKNOWN";
+    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String MAX_SIZE = "100000";
+    private static final String START_INDEX = "1";
+    @Value("${seoul.api.animal.appKey}")
+    private String appKey;
+    @NotNull
+    private final AnimalApiClient animalApiClient;
+    @NotNull
+    private final PostRepository postRepository;
+    @NotNull
+    private final KindRepository kindRepository;
+
+    public PostJob(AnimalApiClient animalApiClient, PostRepository postRepository, KindRepository kindRepository) {
+        this.animalApiClient = animalApiClient;
+        this.postRepository = postRepository;
+        this.kindRepository = kindRepository;
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void posts() {
+        AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), null, null,
+                                                            null, null, null, null, START_INDEX, MAX_SIZE);
+        if (response != null) {
+            List<Post> postDTOs = response.getBody()
+                                          .getItems()
+                                          .getItem()
+                                          .stream()
+                                          .map(this::transform)
+                                          .collect(Collectors.toList());
+            postDTOs.forEach(x -> System.out.println(x));
+        }
+    }
+
+    private String getDefaultDate(String format) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return "20170901";
+    }
+
+    private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
+        Kind kind = kindRepository.findByKindName(convertKindName(animalItemDTO.getKindCd()));
+        Post post = new Post();
+        post.setDesertionNo(Long.valueOf(animalItemDTO.getDesertionNo()));
+        post.setImageUrl(animalItemDTO.getPopfile());
+        post.setType(PostType.SYSTEM.getCode());
+        post.setState(animalItemDTO.getProcessState());
+        post.setGender(animalItemDTO.getSexCd());
+        post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
+        post.setUid(animalItemDTO.getCareNm());
+        post.setContracts(animalItemDTO.getCareTel());
+        post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
+        post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
+/*        post.setUprCode(animalItemDTO.getOrgNm());
+        post.setOrgCode(animalItemDTO.getOrgNm());*/
+        post.setKindUpCode(kind != null ? String.valueOf(kind.getUpKindCode()) : StringUtils.EMPTY);
+        post.setKindCode(kind != null ? kind.getKindName() : convertKindName(animalItemDTO.getKindCd()));
+        post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
+        post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
+        post.setIntroduction(animalItemDTO.getNoticeComment());
+        post.setFeature(animalItemDTO.getSpecialMark());
+        post.setIsDisplay(TRUE);
+        return post;
+    }
+
+    private String convertWeight(String weight) {
+        if (isEmpty(weight)) {
+            return "-1";
+        }
+        if (weight.contains("(Kg)")) {
+            weight = weight.replace("(Kg)", "");
+            try {
+                Float.valueOf(weight);
+            } catch (NumberFormatException nfe) {
+                weight = "-1";
+            }
+        }
+        return weight;
+    }
+
+    private String convertAge(String age) {
+        if (isEmpty(age) || isAllBlank(age)) {
+            return "-1";
+        }
+        if (age.contains("(년생)")) {
+            return age.replace("(년생)", "");
+        }
+        return age;
+    }
+
+    private String convertKindName(String kindName) {
+        if (kindName.contains("[개] ")) {
+            return kindName.replace("[개] ", "");
+        }
+        if (kindName.contains("[기타축종] ")) {
+            return kindName.replace("[기타축종] ", "");
+        }
+        if (kindName.contains("[고양이]")) {
+            return kindName.replace("[고양이]", "고양이");
+        }
+        return kindName;
+    }
+
+    private String convertDateToString(Date date) {
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
+        return transFormat.format(date);
+    }
+
+    private Date convertStringToDate(String from) {
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            return transFormat.parse(from);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+}
