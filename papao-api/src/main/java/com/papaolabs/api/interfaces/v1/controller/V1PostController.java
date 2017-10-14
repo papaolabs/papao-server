@@ -31,7 +31,7 @@ public class V1PostController {
                                  @RequestParam(required = false) String uprCode,
                                  @RequestParam(required = false) String orgCode,
                                  @RequestParam(required = false) String uid,
-                                 @RequestParam(required = false) String contacts,
+                                 @RequestParam(required = false) String contracts,
                                  @RequestParam(required = false) String postType,
                                  @RequestParam(required = false) String imageUrl,
                                  @RequestParam(required = false) String gender,
@@ -39,7 +39,7 @@ public class V1PostController {
                                  @RequestParam(required = false) String kindUpCode,
                                  @RequestParam(required = false) String kindCode,
                                  @RequestParam(required = false) String age,
-                                 @RequestParam(required = false) String weight,
+                                 @RequestParam(required = false) Float weight,
                                  @RequestParam(required = false) String introduction,
                                  @RequestParam(required = false) String feature
     ) {
@@ -49,7 +49,7 @@ public class V1PostController {
             gender,
             neuter,
             uid,
-            contacts,
+            contracts,
             happenDate,
             happenPlace,
             uprCode,

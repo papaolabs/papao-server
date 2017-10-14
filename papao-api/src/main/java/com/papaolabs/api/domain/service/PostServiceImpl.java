@@ -69,7 +69,7 @@ public class PostServiceImpl implements PostService {
                           String kindUpCode,
                           String kindCode,
                           String age,
-                          String weight,
+                          Float weight,
                           String introduction,
                           String feature) {
         Post post = new Post();
@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
         post.setKindUpCode(kindUpCode);
         post.setKindCode(isNotEmpty(kindCode) ? kindCode : StringUtils.EMPTY);
         post.setAge(isNotEmpty(age) ? Integer.valueOf(age) : -1);
-        post.setWeight(isNotEmpty(weight) ? Float.valueOf(weight) : -1);
+        post.setWeight(weight);
         post.setIntroduction(introduction);
         post.setFeature(feature);
         post.setIsDisplay(TRUE);
@@ -170,9 +170,11 @@ public class PostServiceImpl implements PostService {
                       .imageUrl(post.getImageUrl())
                       .kindUpCode(post.getKindUpCode())
                       .kindCode(convertKindName(post.getKindCode()))
+                      .kindName(kindRepository.findByKindCode(Long.valueOf(post.getKindCode())).getKindName())
                       .happenDate(convertDateToString(post.getHappenDate()))
                       .happenPlace(post.getHappenPlace())
-                      .contracts(post.getContracts())
+                      .userName(post.getUid())
+                      .userContracts(post.getContracts())
                       .weight(String.valueOf(post.getWeight()))
                       .gender(post.getGender())
                       .state(post.getState())
@@ -192,7 +194,7 @@ public class PostServiceImpl implements PostService {
                       .kindCode(kind != null ? kind.getKindName() : convertKindName(animalItemDTO.getKindCd()))
                       .happenDate(animalItemDTO.getHappenDt())
                       .happenPlace(animalItemDTO.getOrgNm())
-                      .contracts(animalItemDTO.getCareTel())
+                      .userContracts(animalItemDTO.getCareTel())
                       .weight(animalItemDTO.getWeight())
                       .gender(animalItemDTO.getSexCd())
                       .state(animalItemDTO.getProcessState())
