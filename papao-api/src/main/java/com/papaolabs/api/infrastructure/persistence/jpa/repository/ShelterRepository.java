@@ -10,4 +10,6 @@ import java.util.List;
 public interface ShelterRepository extends JpaRepository<Shelter, Long> {
     List<Shelter> findByCityCode(Long cityCode);
     List<Shelter> findByTownCode(Long townCode);
+    List<Shelter> findByCityName(String cityName);
+    List<Shelter> findByTownName(String townName);
 }

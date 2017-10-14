@@ -4,12 +4,12 @@ import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -43,11 +47,17 @@ public class PostJob {
     private final PostRepository postRepository;
     @NotNull
     private final KindRepository kindRepository;
+    @NotNull
+    private final ShelterRepository shelterRepository;
 
-    public PostJob(AnimalApiClient animalApiClient, PostRepository postRepository, KindRepository kindRepository) {
+    public PostJob(AnimalApiClient animalApiClient,
+                   PostRepository postRepository,
+                   KindRepository kindRepository,
+                   ShelterRepository shelterRepository) {
         this.animalApiClient = animalApiClient;
         this.postRepository = postRepository;
         this.kindRepository = kindRepository;
+        this.shelterRepository = shelterRepository;
     }
 
     @Scheduled(fixedRate = 10000)
@@ -59,10 +69,16 @@ public class PostJob {
                                           .getItems()
                                           .getItem()
                                           .stream()
+                                          .filter(distinctByKey(x -> x.getDesertionNo()))
                                           .map(this::transform)
                                           .collect(Collectors.toList());
             postDTOs.forEach(x -> System.out.println(x));
         }
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     private String getDefaultDate(String format) {
@@ -72,9 +88,11 @@ public class PostJob {
     }
 
     private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
+        String[] orgNames = animalItemDTO.getOrgNm()
+                                         .split(" ");
         Kind kind = kindRepository.findByKindName(convertKindName(animalItemDTO.getKindCd()));
         Post post = new Post();
-        post.setDesertionNo(Long.valueOf(animalItemDTO.getDesertionNo()));
+        post.setId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
         post.setType(PostType.SYSTEM.getCode());
         post.setState(animalItemDTO.getProcessState());
@@ -84,10 +102,12 @@ public class PostJob {
         post.setContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
-/*        post.setUprCode(animalItemDTO.getOrgNm());
-        post.setOrgCode(animalItemDTO.getOrgNm());*/
-        post.setKindUpCode(kind != null ? String.valueOf(kind.getUpKindCode()) : StringUtils.EMPTY);
-        post.setKindCode(kind != null ? kind.getKindName() : convertKindName(animalItemDTO.getKindCd()));
+        if(orgNames.length > 2){
+            post.setUprCode(String.valueOf(shelterRepository.findByCityName(orgNames[0]).get(0).getCityCode()));
+//            post.setOrgCode(String.valueOf(shelterRepository.findByTownName(orgNames[1]).get(0).getTownCode()));
+        }
+        post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
+        post.setKindCode(String.valueOf(kind.getKindCode()));
         post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
         post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
         post.setIntroduction(animalItemDTO.getNoticeComment());
