@@ -82,4 +82,9 @@ public class V1PostController {
     public ResponseEntity status(@PathVariable("postId") String postId, @RequestParam StateType state) {
         return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
+
+    @PostMapping("/{postId}")
+    public ResponseEntity<PostDTO> delete(@PathVariable("postId") String postId) {
+        return new ResponseEntity<>(postService.delete(postId), HttpStatus.OK);
+    }
 }

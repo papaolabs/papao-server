@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -89,6 +90,7 @@ public class PostServiceImpl implements PostService {
         post.setWeight(isNotEmpty(weight) ? Float.valueOf(weight) : -1);
         post.setIntroduction(introduction);
         post.setFeature(feature);
+        post.setIsDisplay(TRUE);
         return transform(postRepository.save(post));
     }
 
@@ -111,6 +113,7 @@ public class PostServiceImpl implements PostService {
         List<PostDTO> userPosts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
                                                                                                             convertStringToDate(endDate))
                                                 .stream()
+                                                .filter(Post::getIsDisplay)
                                                 .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
                                                 .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
                                                 .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)
@@ -135,8 +138,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void delete(String id) {
-        postRepository.delete(Long.valueOf(id));
+    public PostDTO delete(String postId) {
+        Post post = postRepository.findOne(Long.valueOf(postId));
+        if (post == null) {
+            log.debug("[NotFound] delete - postId : {postId}", postId);
+            return PostDTO.builder()
+                          .id(-1L)
+                          .build();
+        } else if (!post.getIsDisplay()) {
+            log.debug("[NotValid] delete - isDisplay : {isDisplay}, postId : {postId}", post.getIsDisplay(), postId);
+            return PostDTO.builder()
+                          .id(-1L)
+                          .build();
+        }
+        post.setIsDisplay(FALSE);
+        postRepository.save(post);
+        return transform(post);
     }
 
     @Override

@@ -61,4 +61,6 @@ public class Post {
     @Column(name = "UPDATED_DATE")
     @LastModifiedDate
     private Date lastModifiedDate;
+    @Column(name = "DISPLAY_STATE")
+    private Boolean isDisplay;
 }
