@@ -19,7 +19,7 @@ public interface PostService {
                 String kindUpCode,
                 String kindCode,
                 String age,
-                String weight,
+                Float weight,
                 String introduction,
                 String feature
     );

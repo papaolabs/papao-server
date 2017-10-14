@@ -17,9 +17,12 @@ public class PostDTO {
     private String imageUrl;
     private String kindUpCode;
     private String kindCode;
+    private String kindName;
     private String happenDate;
     private String happenPlace;
-    private String contracts;
+    private String userName;
+    private String userAddress;
+    private String userContracts;
     private String weight;
     private String gender;
     private String state;
