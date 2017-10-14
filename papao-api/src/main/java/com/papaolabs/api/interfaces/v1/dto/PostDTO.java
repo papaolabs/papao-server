@@ -2,11 +2,13 @@ package com.papaolabs.api.interfaces.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Value;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Builder
+@Getter
 @Value
 @JsonInclude(NON_NULL)
 public class PostDTO {
