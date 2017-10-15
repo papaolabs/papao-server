@@ -31,7 +31,7 @@ public class V1PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> create(@RequestParam(required = false) String happenDate,
+    public ResponseEntity<PostDTO> createPost(@RequestParam(required = false) String happenDate,
                                           @RequestParam(required = false) String happenPlace,
                                           @RequestParam(required = false) String uprCode,
                                           @RequestParam(required = false) String orgCode,
@@ -69,7 +69,7 @@ public class V1PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDTO>> read(@RequestParam(required = false) String beginDate,
+    public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) String beginDate,
                                               @RequestParam(required = false) String endDate,
                                               @RequestParam(required = false) String kindUpCode,
                                               @RequestParam(required = false) String uprCode,
@@ -79,17 +79,17 @@ public class V1PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> read(@PathVariable("postId") String postId) {
+    public ResponseEntity<PostDTO> readPost(@PathVariable("postId") String postId) {
         return new ResponseEntity<>(postService.readPost(postId), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/state")
-    public ResponseEntity<PostDTO> status(@PathVariable("postId") String postId, @RequestParam StateType state) {
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam StateType state) {
         return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<PostDTO> delete(@PathVariable("postId") String postId) {
+    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") String postId) {
         return new ResponseEntity<>(postService.delete(postId), HttpStatus.OK);
     }
 
@@ -116,6 +116,6 @@ public class V1PostController {
     @GetMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> readComment(@PathVariable("postId") String postId,
                                                   @PathVariable("commentId") String commentId) {
-        return new ResponseEntity<>(commentService.readComment(postId, commentId));
+        return new ResponseEntity<>(commentService.readComment(postId, commentId), HttpStatus.OK);
     }
 }
