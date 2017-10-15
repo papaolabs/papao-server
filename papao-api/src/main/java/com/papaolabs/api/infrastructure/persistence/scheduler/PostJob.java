@@ -91,6 +91,12 @@ public class PostJob {
         String[] orgNames = animalItemDTO.getOrgNm()
                                          .split(" ");
         Kind kind = kindRepository.findByKindName(convertKindName(animalItemDTO.getKindCd()));
+        if (kind == null) {
+            kind = new Kind();
+            kind.setUpKindCode(-1L);
+            kind.setKindCode(-1L);
+            kind.setKindName(convertKindName(animalItemDTO.getKindCd()));
+        }
         Post post = new Post();
         post.setId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
@@ -102,9 +108,13 @@ public class PostJob {
         post.setContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
-        if(orgNames.length > 2){
-            post.setUprCode(String.valueOf(shelterRepository.findByCityName(orgNames[0]).get(0).getCityCode()));
-//            post.setOrgCode(String.valueOf(shelterRepository.findByTownName(orgNames[1]).get(0).getTownCode()));
+        post.setUprCode(String.valueOf(shelterRepository.findByCityName(orgNames[0])
+                                                        .get(0)
+                                                        .getCityCode()));
+        if (orgNames.length == 2) {
+            post.setOrgCode(String.valueOf(shelterRepository.findByTownName(orgNames[1])
+                                                            .get(0)
+                                                            .getTownCode()));
         }
         post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
         post.setKindCode(String.valueOf(kind.getKindCode()));
