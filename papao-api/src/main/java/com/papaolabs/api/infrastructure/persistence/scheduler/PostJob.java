@@ -61,7 +61,7 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 100000)
     public void posts() {
         AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
@@ -70,22 +70,18 @@ public class PostJob {
                                           .getItems()
                                           .getItem()
                                           .stream()
-//                                          .filter(distinctByKey(x -> x.getDesertionNo()))
                                           .map(this::transform)
                                           .collect(Collectors.toList());
-            postDTOs.forEach(x -> System.out.println(x));
+            postRepository.save(postDTOs);
+            postRepository.findAll()
+                          .forEach(x -> System.out.println(x));
         }
     }
-
-/*    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }*/
 
     private String getDefaultDate(String format) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        return "20170902";
+        return DATE_FORMAT;
     }
 
     private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
