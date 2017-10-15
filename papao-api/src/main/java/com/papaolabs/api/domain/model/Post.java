@@ -21,6 +21,8 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "DESERTION_ID")
+    private Long desertionId;
     @Column(name = "TYPE")
     private String type;
     @Column(name = "IMAGE_URL")

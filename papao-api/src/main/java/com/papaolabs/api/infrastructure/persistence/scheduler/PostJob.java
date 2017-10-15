@@ -2,6 +2,7 @@ package com.papaolabs.api.infrastructure.persistence.scheduler;
 
 import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
+import com.papaolabs.api.domain.model.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
@@ -19,15 +20,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -84,21 +88,29 @@ public class PostJob {
     private String getDefaultDate(String format) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        return "20170901";
+        return "20170902";
     }
 
     private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
+        String kindName = convertKindName(animalItemDTO.getKindCd());
+        Kind kind = Optional.ofNullable(kindRepository.findByKindName(kindName))
+                            .orElse(new Kind());
         String[] orgNames = animalItemDTO.getOrgNm()
-                                         .split(" ");
-        Kind kind = kindRepository.findByKindName(convertKindName(animalItemDTO.getKindCd()));
-        if (kind == null) {
-            kind = new Kind();
-            kind.setUpKindCode(-1L);
-            kind.setKindCode(-1L);
-            kind.setKindName(convertKindName(animalItemDTO.getKindCd()));
+                                         .split(SPACE);
+        List<Shelter> shelterList = new ArrayList<>();
+        switch (orgNames.length) {
+            case 1:
+                shelterList = shelterRepository.findByCityName(orgNames[0]);
+                break;
+            case 2:
+                shelterList = shelterRepository.findByTownName(orgNames[1]);
+                break;
         }
+        Shelter shelter = shelterList.stream()
+                                     .findFirst()
+                                     .orElse(new Shelter());
         Post post = new Post();
-        post.setId(Long.valueOf(animalItemDTO.getDesertionNo()));
+        post.setDesertionId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
         post.setType(PostType.SYSTEM.getCode());
         post.setState(animalItemDTO.getProcessState());
@@ -108,14 +120,8 @@ public class PostJob {
         post.setContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
-        post.setUprCode(String.valueOf(shelterRepository.findByCityName(orgNames[0])
-                                                        .get(0)
-                                                        .getCityCode()));
-        if (orgNames.length == 2) {
-            post.setOrgCode(String.valueOf(shelterRepository.findByTownName(orgNames[1])
-                                                            .get(0)
-                                                            .getTownCode()));
-        }
+        post.setUprCode(String.valueOf(shelter.getCityCode()));
+        post.setOrgCode(String.valueOf(shelter.getTownCode()));
         post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
         post.setKindCode(String.valueOf(kind.getKindCode()));
         post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
