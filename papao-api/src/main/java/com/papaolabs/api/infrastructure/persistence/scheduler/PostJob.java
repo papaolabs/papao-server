@@ -81,7 +81,7 @@ public class PostJob {
     private String getDefaultDate(String format) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        return DATE_FORMAT;
+        return now.format(formatter);
     }
 
     private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
