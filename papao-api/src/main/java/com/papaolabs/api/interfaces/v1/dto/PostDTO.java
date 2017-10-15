@@ -13,6 +13,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class PostDTO {
     private Long id;
+    private Long desertionId;
     private String type;
     private String imageUrl;
     private String kindUpCode;

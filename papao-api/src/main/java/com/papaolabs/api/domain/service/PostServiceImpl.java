@@ -135,6 +135,7 @@ public class PostServiceImpl implements PostService {
     private PostDTO transform(Post post) {
         return PostDTO.builder()
                       .id(post.getId())
+                      .desertionId(post.getDesertionId())
                       .type(post.getType())
                       .imageUrl(post.getImageUrl())
                       .kindUpCode(post.getKindUpCode())

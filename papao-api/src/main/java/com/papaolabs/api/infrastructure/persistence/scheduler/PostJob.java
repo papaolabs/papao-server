@@ -61,20 +61,26 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = 1800000L)
+    @Scheduled(fixedRate = 5000L)
     public void posts() {
         AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
-            List<Post> postDTOs = response.getBody()
-                                          .getItems()
-                                          .getItem()
-                                          .stream()
-                                          .map(this::transform)
-                                          .collect(Collectors.toList());
-            postRepository.save(postDTOs);
-            postRepository.findAll()
-                          .forEach(x -> System.out.println(x));
+            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(getDefaultDate(
+                DATE_FORMAT)),
+                                                                                                         convertStringToDate(getDefaultDate(
+                                                                                                             DATE_FORMAT)));
+            postRepository.save(response.getBody()
+                                        .getItems()
+                                        .getItem()
+                                        .stream()
+                                        .filter(x ->
+                                                    posts.stream()
+                                                         .noneMatch(y ->
+                                                                        y.getDesertionId() == Long.valueOf(x.getDesertionNo())
+                                                         ))
+                                        .map(this::transform)
+                                        .collect(Collectors.toList()));
         }
     }
 
