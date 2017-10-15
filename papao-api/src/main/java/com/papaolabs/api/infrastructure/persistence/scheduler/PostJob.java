@@ -76,9 +76,8 @@ public class PostJob {
                                         .stream()
                                         .filter(x ->
                                                     posts.stream()
-                                                         .noneMatch(y ->
-                                                                        y.getDesertionId() == Long.valueOf(x.getDesertionNo())
-                                                         ))
+                                                         .noneMatch(y -> y.getDesertionId()
+                                                                          .equals(Long.valueOf(x.getDesertionNo()))))
                                         .map(this::transform)
                                         .collect(Collectors.toList()));
         }
