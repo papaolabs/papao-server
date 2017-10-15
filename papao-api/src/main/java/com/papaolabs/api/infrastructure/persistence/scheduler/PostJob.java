@@ -23,11 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -73,17 +69,17 @@ public class PostJob {
                                           .getItems()
                                           .getItem()
                                           .stream()
-                                          .filter(distinctByKey(x -> x.getDesertionNo()))
+//                                          .filter(distinctByKey(x -> x.getDesertionNo()))
                                           .map(this::transform)
                                           .collect(Collectors.toList());
             postDTOs.forEach(x -> System.out.println(x));
         }
     }
 
-    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+/*    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
+    }*/
 
     private String getDefaultDate(String format) {
         LocalDateTime now = LocalDateTime.now();
