@@ -40,6 +40,7 @@ public class PostJob {
     private static final String DATE_FORMAT = "yyyyMMdd";
     private static final String MAX_SIZE = "100000";
     private static final String START_INDEX = "1";
+    private static final Long BATCH_FIXED_RATE = 1800000L;
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -61,7 +62,7 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = BATCH_FIXED_RATE)
     public void posts() {
         AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
