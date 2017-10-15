@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -37,15 +36,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO delete(String commentId) {
+    public CommentDTO delete(String postId, String commentId, String userId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
         if (comment != null) {
-            comment.setIsDisplay(FALSE);
-            commentRepository.save(comment);
-        } else {
-            comment = new Comment();
-            comment.setId(-1L);
+            if (comment.getPostId()
+                       .equals(postId) && comment.getUserId()
+                                                 .equals(userId)) {
+                comment.setIsDisplay(FALSE);
+                commentRepository.save(comment);
+                return transform(comment);
+            }
         }
+        comment = new Comment();
+        comment.setId(-1L);
         return transform(comment);
     }
 
@@ -59,9 +62,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO readComment(String commentId) {
-        return transform(Optional.ofNullable(commentRepository.findOne(Long.valueOf(commentId)))
-                                 .orElse(new Comment()));
+    public CommentDTO readComment(String postId, String commentId) {
+        Comment comment = commentRepository.findOne(Long.valueOf(commentId));
+        if (comment != null) {
+            if (comment.getPostId()
+                       .equals(postId)) {
+                return transform(comment);
+            }
+        }
+        comment = new Comment();
+        comment.setId(-1L);
+        return transform(comment);
     }
 
     private CommentDTO transform(Comment comment) {

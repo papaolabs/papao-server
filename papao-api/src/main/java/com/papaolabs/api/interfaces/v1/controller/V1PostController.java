@@ -105,7 +105,7 @@ public class V1PostController {
     public ResponseEntity<CommentDTO> deleteComment(@PathVariable("postId") String postId,
                                                     @PathVariable("commentId") String commentId,
                                                     @RequestParam("userId") String userId) {
-        return new ResponseEntity<>(commentService.delete(commentId), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.delete(postId, commentId, userId), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/comments")
@@ -116,6 +116,6 @@ public class V1PostController {
     @GetMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> readComment(@PathVariable("postId") String postId,
                                                   @PathVariable("commentId") String commentId) {
-        return new ResponseEntity<>(commentService.readComment(commentId));
+        return new ResponseEntity<>(commentService.readComment(postId, commentId));
     }
 }
