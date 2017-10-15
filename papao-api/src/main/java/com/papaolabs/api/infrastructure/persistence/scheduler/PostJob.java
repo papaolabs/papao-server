@@ -40,7 +40,6 @@ public class PostJob {
     private static final String DATE_FORMAT = "yyyyMMdd";
     private static final String MAX_SIZE = "100000";
     private static final String START_INDEX = "1";
-    private static final Long BATCH_FIXED_RATE = 1800000L;
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -62,7 +61,7 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = BATCH_FIXED_RATE)
+    @Scheduled(fixedRate = 1800000L)
     public void posts() {
         AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
@@ -110,10 +109,10 @@ public class PostJob {
         post.setState(animalItemDTO.getProcessState());
         post.setGender(animalItemDTO.getSexCd());
         post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
-        post.setUid(PostType.SYSTEM.getCode());
-        post.setManagerName(animalItemDTO.getCareNm());
-        post.setManagerAddress(animalItemDTO.getCareAddr());
-        post.setContracts(animalItemDTO.getCareTel());
+        post.setUserId(PostType.SYSTEM.getCode());
+        post.setUserName(animalItemDTO.getCareNm());
+        post.setUserAddress(animalItemDTO.getCareAddr());
+        post.setUserContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
         post.setUprCode(String.valueOf(shelter.getCityCode()));

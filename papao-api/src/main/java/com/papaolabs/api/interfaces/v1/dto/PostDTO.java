@@ -20,6 +20,7 @@ public class PostDTO {
     private String kindName;
     private String happenDate;
     private String happenPlace;
+    private String userId;
     private String userName;
     private String userAddress;
     private String userContracts;
