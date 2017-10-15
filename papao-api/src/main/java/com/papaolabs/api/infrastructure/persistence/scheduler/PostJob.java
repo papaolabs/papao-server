@@ -113,6 +113,7 @@ public class PostJob {
         post.setState(animalItemDTO.getProcessState());
         post.setGender(animalItemDTO.getSexCd());
         post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
+        post.setUid(PostType.SYSTEM.getCode());
         post.setManagerName(animalItemDTO.getCareNm());
         post.setManagerAddress(animalItemDTO.getCareAddr());
         post.setContracts(animalItemDTO.getCareTel());
