@@ -21,7 +21,9 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "type")
+    @Column(name = "DESERTION_ID")
+    private Long desertionId;
+    @Column(name = "TYPE")
     private String type;
     @Column(name = "IMAGE_URL")
     private String imageUrl;
@@ -37,6 +39,10 @@ public class Post {
     private String introduction;
     @Column(name = "UID")
     private String uid;
+    @Column(name = "MANAGER_NAME")
+    private String managerName;
+    @Column(name = "MANAGER_ADDRESS")
+    private String managerAddress;
     @Column(name = "CONTRACTS")
     private String contracts;
     @Column(name = "HAPPEN_DATE")
