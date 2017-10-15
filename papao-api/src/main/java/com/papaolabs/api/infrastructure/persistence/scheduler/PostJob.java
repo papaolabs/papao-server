@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -62,8 +63,8 @@ public class PostJob {
 
     @Scheduled(fixedRate = 10000)
     public void posts() {
-        AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), null, null,
-                                                            null, null, null, null, START_INDEX, MAX_SIZE);
+        AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
+                                                            EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
             List<Post> postDTOs = response.getBody()
                                           .getItems()
@@ -112,7 +113,8 @@ public class PostJob {
         post.setState(animalItemDTO.getProcessState());
         post.setGender(animalItemDTO.getSexCd());
         post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
-        post.setUid(animalItemDTO.getCareNm());
+        post.setManagerName(animalItemDTO.getCareNm());
+        post.setManagerAddress(animalItemDTO.getCareAddr());
         post.setContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);

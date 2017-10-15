@@ -39,6 +39,10 @@ public class Post {
     private String introduction;
     @Column(name = "UID")
     private String uid;
+    @Column(name = "MANAGER_NAME")
+    private String managerName;
+    @Column(name = "MANAGER_ADDRESS")
+    private String managerAddress;
     @Column(name = "CONTRACTS")
     private String contracts;
     @Column(name = "HAPPEN_DATE")
