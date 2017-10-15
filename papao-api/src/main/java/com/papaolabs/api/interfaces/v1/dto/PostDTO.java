@@ -13,6 +13,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class PostDTO {
     private Long id;
+    private Long desertionId;
     private String type;
     private String imageUrl;
     private String kindUpCode;
@@ -20,6 +21,7 @@ public class PostDTO {
     private String kindName;
     private String happenDate;
     private String happenPlace;
+    private String userId;
     private String userName;
     private String userAddress;
     private String userContracts;

@@ -40,7 +40,6 @@ public class PostJob {
     private static final String DATE_FORMAT = "yyyyMMdd";
     private static final String MAX_SIZE = "100000";
     private static final String START_INDEX = "1";
-    private static final Long BATCH_FIXED_RATE = 1800000L;
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     @NotNull
@@ -62,20 +61,30 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = BATCH_FIXED_RATE)
+    @Scheduled(fixedRate = 1800000L)
     public void posts() {
         AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
-            List<Post> postDTOs = response.getBody()
-                                          .getItems()
-                                          .getItem()
-                                          .stream()
-                                          .map(this::transform)
-                                          .collect(Collectors.toList());
-            postRepository.save(postDTOs);
-            postRepository.findAll()
-                          .forEach(x -> System.out.println(x));
+            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(getDefaultDate(
+                DATE_FORMAT)),
+                                                                                                         convertStringToDate(getDefaultDate(
+                                                                                                             DATE_FORMAT)));
+            postRepository.save(response.getBody()
+                                        .getItems()
+                                        .getItem()
+                                        .stream()
+                                        .map(this::transform)
+                                        .map(x -> {
+                                            posts.forEach(y -> {
+                                                if (y.getDesertionId()
+                                                     .equals(x.getDesertionId())) {
+                                                    x.setId(y.getId());
+                                                }
+                                            });
+                                            return x;
+                                        })
+                                        .collect(Collectors.toList()));
         }
     }
 
@@ -87,8 +96,11 @@ public class PostJob {
 
     private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
         String kindName = convertKindName(animalItemDTO.getKindCd());
+        Kind mockKind = new Kind();
+        mockKind.setUpKindCode(-1L);
+        mockKind.setKindCode(-1L);
         Kind kind = Optional.ofNullable(kindRepository.findByKindName(kindName))
-                            .orElse(new Kind());
+                            .orElse(mockKind);
         String[] orgNames = animalItemDTO.getOrgNm()
                                          .split(SPACE);
         List<Shelter> shelterList = new ArrayList<>();
@@ -100,9 +112,16 @@ public class PostJob {
                 shelterList = shelterRepository.findByTownName(orgNames[1]);
                 break;
         }
+        Shelter mockShelter = new Shelter();
+        mockShelter.setCityCode(-1L);
+        mockShelter.setCityName(UNKNOWN);
+        mockShelter.setTownCode(-1L);
+        mockShelter.setTownName(UNKNOWN);
+        mockShelter.setShelterCode(-1L);
+        mockShelter.setShelterName(UNKNOWN);
         Shelter shelter = shelterList.stream()
                                      .findFirst()
-                                     .orElse(new Shelter());
+                                     .orElse(mockShelter);
         Post post = new Post();
         post.setDesertionId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
@@ -110,10 +129,10 @@ public class PostJob {
         post.setState(animalItemDTO.getProcessState());
         post.setGender(animalItemDTO.getSexCd());
         post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
-        post.setUid(PostType.SYSTEM.getCode());
-        post.setManagerName(animalItemDTO.getCareNm());
-        post.setManagerAddress(animalItemDTO.getCareAddr());
-        post.setContracts(animalItemDTO.getCareTel());
+        post.setUserId(PostType.SYSTEM.getCode());
+        post.setUserName(animalItemDTO.getCareNm());
+        post.setUserAddress(animalItemDTO.getCareAddr());
+        post.setUserContracts(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
         post.setUprCode(String.valueOf(shelter.getCityCode()));
