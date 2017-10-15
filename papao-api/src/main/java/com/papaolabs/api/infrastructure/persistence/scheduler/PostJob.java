@@ -74,11 +74,16 @@ public class PostJob {
                                         .getItems()
                                         .getItem()
                                         .stream()
-                                        .filter(x ->
-                                                    posts.stream()
-                                                         .noneMatch(y -> y.getDesertionId()
-                                                                          .equals(Long.valueOf(x.getDesertionNo()))))
                                         .map(this::transform)
+                                        .map(x -> {
+                                            posts.forEach(y -> {
+                                                if (y.getDesertionId()
+                                                     .equals(x.getDesertionId())) {
+                                                    x.setId(y.getId());
+                                                }
+                                            });
+                                            return x;
+                                        })
                                         .collect(Collectors.toList()));
         }
     }
