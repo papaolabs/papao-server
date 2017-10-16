@@ -62,8 +62,28 @@ public class PostJob {
     }
 
     @Scheduled(fixedRate = 1800000L)
-    public void posts() {
-        AnimalApiResponse response = animalApiClient.animal(appKey, getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT), EMPTY, EMPTY,
+    public void today() {
+        posts(getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT));
+    }
+
+    @Scheduled(fixedRate = 86400000L)
+    public void yesterDay() {
+        LocalDateTime now = LocalDateTime.now()
+                                         .minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        posts(now.format(formatter), now.format(formatter));
+    }
+
+    public void posts(String beginDate, String endDate) {
+        String beginDateParam = beginDate;
+        String endDateParam = endDate;
+        if(isEmpty(beginDate)) {
+            beginDateParam = getDefaultDate(DATE_FORMAT);
+        }
+        if(isEmpty(endDate)) {
+            endDateParam = getDefaultDate(DATE_FORMAT);
+        }
+        AnimalApiResponse response = animalApiClient.animal(appKey, beginDateParam, endDateParam, EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
             List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(getDefaultDate(

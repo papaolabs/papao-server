@@ -192,37 +192,28 @@
                 <#--<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">
                     View Updates
                 </a>-->
+                    <span class="mdl-list__item-primary-content">
+                                <form action="/dashboard/comment?postId=${post.id}" method="post">
+                                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                       style="width:100% !important;">
+                                    <input class="mdl-textfield__input" type="text" name="text">
+                                    <label class="mdl-textfield__label" for="sample3">댓글달기</label>
+                                  </div>
+                                </form>
+                            </span>
                     <ul class="demo-list-two mdl-list">
-                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
-    <span class="mdl-list__item-primary-content">
-      <i class="material-icons mdl-list__item-avatar">person</i>
-      <span>User 1</span>
-      <span class="mdl-list__item-sub-title">body</span>
-    </span>
-    <span class="mdl-list__item-secondary-content">
-      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
-    </span>
+                        <!-- Simple Textfield -->
+
+                    <#list comments as comment>
+                        <li class="mdl-list__item mdl-list__item--two-line"
+                            style="border-bottom:1px solid #f5f5f5;">
+                            <span class="mdl-list__item-primary-content">
+                              <i class="material-icons mdl-list__item-avatar">person</i>
+                              <span>${comment.userName}</span>
+                              <span class="mdl-list__item-sub-title">${comment.text}</span>
+                            </span>
                         </li>
-                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
-    <span class="mdl-list__item-primary-content">
-      <i class="material-icons mdl-list__item-avatar">person</i>
-      <span>User 2</span>
-      <span class="mdl-list__item-sub-title">body</span>
-    </span>
-    <span class="mdl-list__item-secondary-content">
-      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
-    </span>
-                        </li>
-                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
-    <span class="mdl-list__item-primary-content">
-      <i class="material-icons mdl-list__item-avatar">person</i>
-      <span>User 3</span>
-      <span class="mdl-list__item-sub-title">body</span>
-    </span>
-    <span class="mdl-list__item-secondary-content">
-      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
-    </span>
-                        </li>
+                    </#list>
                     </ul>
                 </div>
             </div>
