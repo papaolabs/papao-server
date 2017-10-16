@@ -193,7 +193,7 @@
                     View Updates
                 </a>-->
                     <ul class="demo-list-two mdl-list">
-                        <li class="mdl-list__item mdl-list__item--two-line">
+                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
     <span class="mdl-list__item-primary-content">
       <i class="material-icons mdl-list__item-avatar">person</i>
       <span>User 1</span>
@@ -203,7 +203,7 @@
       <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
     </span>
                         </li>
-                        <li class="mdl-list__item mdl-list__item--two-line">
+                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
     <span class="mdl-list__item-primary-content">
       <i class="material-icons mdl-list__item-avatar">person</i>
       <span>User 2</span>
@@ -213,7 +213,7 @@
       <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
     </span>
                         </li>
-                        <li class="mdl-list__item mdl-list__item--two-line">
+                        <li class="mdl-list__item mdl-list__item--two-line" style="border-bottom:1px solid #f5f5f5;">
     <span class="mdl-list__item-primary-content">
       <i class="material-icons mdl-list__item-avatar">person</i>
       <span>User 3</span>
