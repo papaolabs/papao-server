@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-pink.min.css"/>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <style>
         .mdl-card__media {
             background-color: #f5f5f5 !important;
@@ -77,24 +78,29 @@
         </div>
         <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
             <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link is-active" href="/dashboard">Home</a>
-                <a class="mdl-navigation__link" href="#">About</a>
-                <a class="mdl-navigation__link" href="#">Contact</a>
+                <a class="mdl-navigation__link"
+                   href="/dashboard">Home</a>
+                <a class="mdl-navigation__link"
+                   href="#">About</a>
+                <a class="mdl-navigation__link"
+                   href="#">Contact</a>
             </nav>
         </div>
     </header>
     <div class="mdl-layout__drawer mdl-layout--small-screen-only">
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-            <a class="mdl-navigation__link is-active" href="/dashboard">Home</a>
-            <a class="mdl-navigation__link" href="#">About</a>
-            <a class="mdl-navigation__link" href="#">Contact</a>
+            <a class="mdl-navigation__link is-active"
+               href="/dashboard">Home</a>
+            <a class="mdl-navigation__link"
+               href="#">About</a>
+            <a class="mdl-navigation__link"
+               href="#">Contact</a>
         </nav>
     </div>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
-        <#list posts as post>
-            <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-                <div class="mdl-card__media">
+            <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-card mdl-shadow--8dp">
+                <div class="mdl-card__media mdl-cell mdl-cell--12-col-tablet">
                     <div class="thumbnail-wrapper">
                         <div class="thumbnail">
                             <div class="centered">
@@ -103,11 +109,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="mdl-card__title">
+                <div class="mdl-cell mdl-cell--8-col">
                     <h2 class="mdl-card__title-text">${post.kindName}</h2>
-                </div>
-                <div class="mdl-card__supporting-text">
-                    <div style="margin-bottom:15px;">
+                    <div class="mdl-card__supporting-text padding-top">
+                        <div style="margin-bottom:15px;">
                         <#if post.type == '01'>
                             <span class="mdl-chip">
                                 <span class="mdl-chip__text">기관</span>
@@ -164,24 +169,63 @@
                                 <span class="mdl-chip__text">중성화 안함</span>
                             </span>
                         </#if>
-                        <span class="mdl-chip">
+                            <span class="mdl-chip">
                             <span class="mdl-chip__text">${post.weight} kg</span>
                         </span>
+                        </div>
+                        <div id="tt1" class=" icon material-icons portfolio-share-btn">share</div>
+                        <div class="mdl-tooltip" for="tt1">
+                            Share via social media
+                        </div>
                     </div>
-                    <div>
-                    ${post.happenDate} ${post.happenPlace} 에서 발견됨<br/>
-                        현재 <a href="#" class="post-author">${post.userName}</a> 님이 보호중<br/>
-                        연락처 : ${post.userContracts}<br/>
-                    ${post.feature}<br/><br/>
-                    ${post.introduction}
+                    <div class="mdl-card__supporting-text no-left-padding">
+                        <p>
+                        ${post.happenDate} ${post.happenPlace} 에서 발견됨<br/>
+                            현재 <a href="#" class="post-author">${post.userName}</a> 님이 보호중<br/>
+                            연락처 : ${post.userContracts}<br/>
+                        ${post.feature}<br/><br/>
+                        ${post.introduction}
+                        </p>
                     </div>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-                       href="/dashboard/detail?pageId=${post.id}">Read more</a>
+                <#--<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+                    View Updates
+                </a>-->
+                    <ul class="demo-list-two mdl-list">
+                        <li class="mdl-list__item mdl-list__item--two-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons mdl-list__item-avatar">person</i>
+      <span>User 1</span>
+      <span class="mdl-list__item-sub-title">body</span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+                        </li>
+                        <li class="mdl-list__item mdl-list__item--two-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons mdl-list__item-avatar">person</i>
+      <span>User 2</span>
+      <span class="mdl-list__item-sub-title">body</span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+                        </li>
+                        <li class="mdl-list__item mdl-list__item--two-line">
+    <span class="mdl-list__item-primary-content">
+      <i class="material-icons mdl-list__item-avatar">person</i>
+      <span>User 3</span>
+      <span class="mdl-list__item-sub-title">body</span>
+    </span>
+    <span class="mdl-list__item-secondary-content">
+      <a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">star</i></a>
+    </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </#list>
         </div>
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer__left-section">

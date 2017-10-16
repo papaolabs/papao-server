@@ -29,7 +29,7 @@ public class DashboardController {
         return model;
     }
 
-    @GetMapping("/share")
+    @GetMapping("/detail")
     public ModelAndView getDetailPage(HttpServletRequest request, ModelAndView model) {
         model.setViewName("pages/detail");
         PostDTO postDTO = postService.readPost(request.getParameter("pageId"));
