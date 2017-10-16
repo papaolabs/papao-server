@@ -64,6 +64,16 @@
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
         }
+
+        #view-source {
+            position: fixed;
+            display: block;
+            right: 0;
+            bottom: 0;
+            margin-right: 40px;
+            margin-bottom: 40px;
+            z-index: 900;
+        }
     </style>
 </head>
 
@@ -90,6 +100,7 @@
             <a class="mdl-navigation__link" href="#">Contact</a>
         </nav>
     </div>
+
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
         <#list posts as post>
@@ -195,6 +206,11 @@
             </div>
         </footer>
     </main>
+    <a href="#" target="_blank"
+       id="view-source"
+       class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--white"
+       data-upgraded=",MaterialButton,MaterialRipple">Filter<span class="mdl-button__ripple-container"><span
+            class="mdl-ripple"></span></span></a>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </body>
