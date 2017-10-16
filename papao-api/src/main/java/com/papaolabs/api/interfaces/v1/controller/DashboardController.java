@@ -10,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 @RestController
 @RequestMapping("/dashboard")
 public class DashboardController {
@@ -20,9 +22,15 @@ public class DashboardController {
         this.postService = postService;
     }
 
+    @GetMapping
+    public ModelAndView main(HttpServletRequest request, ModelAndView model) {
+        model.setViewName("pages/index");
+        model.addObject("posts", postService.readPosts(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY));
+        return model;
+    }
+
     @GetMapping("/share")
     public ModelAndView getDetailPage(HttpServletRequest request, ModelAndView model) {
-        System.out.println("/share/pages/detail");
         model.setViewName("pages/detail");
         PostDTO postDTO = postService.readPost(request.getParameter("pageId"));
         System.out.println(postDTO.getId());

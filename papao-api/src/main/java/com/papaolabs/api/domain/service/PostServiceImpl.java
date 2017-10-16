@@ -82,6 +82,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDTO> readPosts(String beginDate, String endDate, String kindUpCode, String uprCode, String orgCode) {
+        if(isEmpty(beginDate)) {
+            beginDate = getDefaultDate(DATE_FORMAT);
+        }
+        if(isEmpty(endDate)) {
+            endDate = getDefaultDate(DATE_FORMAT);
+        }
         return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
                                                                                          convertStringToDate(endDate))
                              .stream()
@@ -144,12 +150,10 @@ public class PostServiceImpl implements PostService {
                                               .getKindName())
                       .happenDate(convertDateToString(post.getHappenDate()))
                       .happenPlace(post.getHappenPlace())
-
                       .userId(post.getUserId())
                       .userName(post.getUserName())
                       .userAddress(post.getUserAddress())
                       .userContracts(post.getUserContracts())
-
                       .weight(String.valueOf(post.getWeight()))
                       .gender(post.getGender())
                       .state(post.getState())
