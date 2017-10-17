@@ -232,7 +232,7 @@
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
                     <label for="sample" class="mdl-textfield__label">검색기간</label>
                     <input id="search-period" class="mdl-slider mdl-js-slider" type="range"
-                           min="0" max="30" value="0" tabindex="0">
+                           min="0" max="30" value="${endDate}" tabindex="0">
                 </div>
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
                     <input class="mdl-textfield__input" type="text" id="sample1" readonly tabIndex="-1">
@@ -274,9 +274,11 @@
             </div>
             <div class="mdl-card__actions mdl-card--border" style="text-align:center;">
                 <form id="searchForm">
-                    <input type="hidden" id="cityCode" name="cityCode" value="">
-                    <input type="hidden" id="upKindCode" name="upKindCode" value="">
-                    <input type="hidden" id="endDate" name="endDate" value="">
+                    <input type="hidden" id="cityCode" name="cityCode" value="${cityCode}">
+                    <input type="hidden" id="cityName" name="cityName" value="${cityName}">
+                    <input type="hidden" id="upKindCode" name="upKindCode" value="${upKindCode}">
+                    <input type="hidden" id="upKindName" name="upKindName" value="${upKindName}">
+                    <input type="hidden" id="endDate" name="endDate" value="${endDate}">
                     <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
                             data-upgraded=",MaterialButton,MaterialRipple" id="search-btn">
                         SEARCH
@@ -288,7 +290,8 @@
                     <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
             </div>
         </dialog>
-        <button id="demo-show-snackbar" class="mdl-button mdl-js-button mdl-button--raised" type="button" style="display:none;">
+        <button id="demo-show-snackbar" class="mdl-button mdl-js-button mdl-button--raised" type="button"
+                style="display:none;">
         </button>
         <div id="demo-snackbar-example" class="mdl-js-snackbar mdl-snackbar">
             <div class="mdl-snackbar__text"></div>
@@ -332,27 +335,6 @@
 <script>
     (function () {
         'use strict';
-        // snackbar
-        var snackbarContainer = document.querySelector('#demo-snackbar-example');
-        var showSnackbarButton = document.querySelector('#demo-show-snackbar');
-        var handler = function (event) {
-            showSnackbarButton.style.backgroundColor = '';
-        };
-        showSnackbarButton.addEventListener('click', function () {
-            'use strict';
-            var msg = document.querySelector('#filter-list').innerText;
-            msg = msg.replace('들을 보여주세요', '들 입니다');
-            var data = {
-                message: msg,
-                timeout: 3000
-            };
-            snackbarContainer.MaterialSnackbar.showSnackbar(data);
-        });
-        window.onload = function () {
-            showSnackbarButton.click();
-        };
-
-        // snackbar end
         var dialog = document.querySelector('#modal-example');
         var formEl = document.querySelector('#searchForm');
         var searchButton = dialog.querySelector('#search-btn');
@@ -367,12 +349,31 @@
         var closeClickHandler = function (event) {
             dialog.close();
         };
+        var generateMessage = function () {
+            let cityName = document.querySelector('#cityName').value;
+            if(cityName != ''){
+                document.querySelector('#city-filter').innerHTML = '<a href="#">' + cityName + '</a>에서 ';
+            }
+            let endDate = document.querySelector('#endDate').value;
+            if(endDate != ''){
+                document.querySelector('#period-filter').innerHTML = '<a href="#">' + endDate + '</a>일전부터 ';
+            }
+            let upKindName = document.querySelector('#upKindName').value;
+            if(upKindName != ''){
+                document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">' + upKindName + '</a>들을 보여주세요';
+            }
+            else{
+                document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">동물</a>들을 보여주세요';
+            }
+        }
         var showClickHandler = function (event) {
+            generateMessage();
             dialog.showModal();
         };
         var cityListClickHandler = function (event) {
             let cityName = event.target.innerHTML;
             document.querySelector('#cityCode').value = event.target.value;
+            document.querySelector('#cityName').value = event.target.innerText;
             if (cityName == '전체') {
                 document.querySelector('#city-filter').innerHTML = '';
             }
@@ -383,6 +384,7 @@
         var animalListClickHandler = function (event) {
             let animalName = event.target.innerHTML;
             document.querySelector('#upKindCode').value = event.target.value;
+            document.querySelector('#upKindName').value = event.target.innerText;
             document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">' + animalName + '</a>들을 보여주세요';
         };
         var periodChangeHandler = function (event) {
@@ -405,6 +407,28 @@
             animal.addEventListener('click', animalListClickHandler);
         }
         period.addEventListener('change', periodChangeHandler);
+
+        // snackbar
+        var snackbarContainer = document.querySelector('#demo-snackbar-example');
+        var showSnackbarButton = document.querySelector('#demo-show-snackbar');
+        var handler = function (event) {
+            showSnackbarButton.style.backgroundColor = '';
+        };
+        showSnackbarButton.addEventListener('click', function () {
+            'use strict';
+            generateMessage();
+            var msg = document.querySelector('#filter-list').innerText;
+            msg = msg.replace('들을 보여주세요', '들 입니다');
+            var data = {
+                message: msg,
+                timeout: 3000
+            };
+            snackbarContainer.MaterialSnackbar.showSnackbar(data);
+        });
+        window.onload = function () {
+            showSnackbarButton.click();
+        };
+        // snackbar end
     }());
 </script>
 </body>

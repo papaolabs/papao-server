@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Controller
@@ -36,13 +37,21 @@ public class DashboardController {
                                  .orElse("");
         String upKindCode = Optional.ofNullable(request.getParameter("upKindCode"))
                                     .orElse(EMPTY);
+        upKindCode = upKindCode.equals("0") ? "" : upKindCode;
+        String upKindName = Optional.ofNullable(request.getParameter("upKindName"))
+                                    .orElse(EMPTY);
         String cityCode = Optional.ofNullable(request.getParameter("cityCode"))
+                                  .orElse(EMPTY);
+        cityCode = cityCode.equals("0") ? "" : cityCode;
+        String cityName = Optional.ofNullable(request.getParameter("cityName"))
                                   .orElse(EMPTY);
         model.setViewName("pages/index");
         model.addObject("posts", postService.readPosts(EMPTY, getDefaultDate(endDate), upKindCode, cityCode, EMPTY));
-        model.addObject("endDate", endDate);
+        model.addObject("endDate", isEmpty(endDate) ? "0" : endDate);
         model.addObject("upKindCode", upKindCode);
+        model.addObject("upKindName", upKindName);
         model.addObject("cityCode", cityCode);
+        model.addObject("cityName", cityName);
         return model;
     }
 
