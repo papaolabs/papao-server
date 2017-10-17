@@ -152,7 +152,7 @@ public class PostJob {
         post.setUserId(PostType.SYSTEM.getCode());
         post.setUserName(animalItemDTO.getCareNm());
         post.setUserAddress(animalItemDTO.getCareAddr());
-        post.setUserContracts(animalItemDTO.getCareTel());
+        post.setUserContact(animalItemDTO.getCareTel());
         post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
         post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
         post.setUprCode(String.valueOf(shelter.getCityCode()));

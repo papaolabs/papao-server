@@ -39,12 +39,12 @@ public class Post {
     private String introduction;
     @Column(name = "UID")
     private String userId;
-    @Column(name = "MANAGER_NAME")
+    @Column(name = "USER_NAME")
     private String userName;
-    @Column(name = "MANAGER_ADDRESS")
+    @Column(name = "USER_ADDRESS")
     private String userAddress;
-    @Column(name = "CONTRACTS")
-    private String userContracts;
+    @Column(name = "USER_CONTACT")
+    private String userContact;
     @Column(name = "HAPPEN_DATE")
     private Date happenDate;
     @Column(name = "HAPPEN_PLACE")
