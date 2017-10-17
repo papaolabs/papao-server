@@ -47,7 +47,7 @@
                     <div class="thumbnail-wrapper">
                         <div class="thumbnail">
                             <div class="centered">
-                                <img class="article-image" src="${post.imageUrl}">
+                                <img class="article-image lazyload" data-src="${post.imageUrl}">
                             </div>
                         </div>
                     </div>
@@ -248,6 +248,7 @@
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.9/dialog-polyfill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.2/lazyload.js"></script>
 <script>
     (function () {
         'use strict';
@@ -345,6 +346,11 @@
             showSnackbarButton.click();
         };
         // snackbar end
+
+        // lazy
+        let images = document.querySelectorAll(".article-image");
+        lazyload(images);
+        // lazy end
     }());
 </script>
 </body>
