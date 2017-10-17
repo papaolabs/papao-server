@@ -39,6 +39,16 @@
             <div class="mdl-layout-spacer"></div>
         </div>
     </header>
+    <div class="mdl-layout__drawer">
+        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+            <a class="mdl-navigation__link is-active"
+               href="/dashboard">Home</a>
+            <a class="mdl-navigation__link"
+               href="#">About</a>
+            <a class="mdl-navigation__link"
+               href="#">Contact</a>
+        </nav>
+    </div>
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
         <#list posts as post>

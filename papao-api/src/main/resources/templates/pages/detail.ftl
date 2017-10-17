@@ -43,7 +43,7 @@
             </div>
         </div>
     </header>
-    <div class="mdl-layout__drawer mdl-layout--small-screen-only">
+    <div class="mdl-layout__drawer">
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
             <a class="mdl-navigation__link is-active"
                href="/dashboard">Home</a>
