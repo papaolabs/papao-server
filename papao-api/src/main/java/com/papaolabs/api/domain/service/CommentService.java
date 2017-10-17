@@ -7,6 +7,8 @@ import java.util.List;
 public interface CommentService {
     CommentDTO create(String postId, String userId, String userName, String text);
 
+    CommentDTO createByGuest(String postId, String text);
+
     CommentDTO delete(String postId, String commentId, String userId);
 
     List<CommentDTO> readComments(String postId);

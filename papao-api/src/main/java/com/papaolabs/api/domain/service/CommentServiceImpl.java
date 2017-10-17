@@ -1,7 +1,9 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.domain.model.Comment;
+import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -20,9 +23,12 @@ public class CommentServiceImpl implements CommentService {
     private static final String DATE_FORMAT = "yyyyMMdd";
     @NotNull
     private final CommentRepository commentRepository;
+    @NotNull
+    private final KindRepository kindRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, KindRepository kindRepository) {
         this.commentRepository = commentRepository;
+        this.kindRepository = kindRepository;
     }
 
     @Override
@@ -31,6 +37,18 @@ public class CommentServiceImpl implements CommentService {
         comment.setPostId(postId);
         comment.setUserId(userId);
         comment.setUserName(userName);
+        comment.setText(text);
+        return transform(commentRepository.save(comment));
+    }
+
+    @Override
+    public CommentDTO createByGuest(String postId, String text) {
+        List<Kind> kind = kindRepository.findAll();
+        Random random = new Random();
+        Comment comment = new Comment();
+        comment.setPostId(postId);
+        comment.setUserId("0");
+        comment.setUserName(kind.get(random.nextInt(kind.size())).getKindName());
         comment.setText(text);
         return transform(commentRepository.save(comment));
     }

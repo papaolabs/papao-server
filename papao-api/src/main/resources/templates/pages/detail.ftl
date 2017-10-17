@@ -1,150 +1,192 @@
 <!doctype html>
+<!--
+  Material Design Lite
+  Copyright 2015 Google Inc. All rights reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A layout example that shows off a blog page with a list of posts.">
-    <title>Blog &ndash; Layout Examples &ndash; Pure</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-"
-          crossorigin="anonymous">
-
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-old-ie-min.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    <!--<![endif]-->
-
-
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/css/layouts/blog-old-ie.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-    <link rel="stylesheet" href="/css/layouts/blog.css">
-    <!--<![endif]-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A portfolio template that uses Material Design Lite.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>papao</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-pink.min.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
+
 <body>
-<div id="layout" class="pure-g">
-    <div class="sidebar pure-u-1 pure-u-md-1-4">
-        <div class="header">
-            <h1 class="brand-title">papao</h1>
-            <h2 class="brand-tagline">유기동물 관리 플랫폼</h2>
-
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item">
-                        <a class="pure-button" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="pure-button" href="#">Download</a>
-                    </li>
-                </ul>
-            </nav>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title" style="cursor:default">papao</span>
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="margin-bottom:25px;">
+                <a href="javascript:history.back()" class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">keyboard_backspace</i>
+                </a>
+            </div>
         </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+            <a class="mdl-navigation__link is-active"
+               href="/dashboard">Home</a>
+            <a class="mdl-navigation__link"
+               href="#">About</a>
+            <a class="mdl-navigation__link"
+               href="#">Contact</a>
+        </nav>
     </div>
-
-    <div class="content pure-u-1 pure-u-md-3-4">
-        <div>
-            <!-- A wrapper for all the blog posts -->
-        <#if post.id != -1>
-            <div class="posts">
-                <h1 class="content-subhead">Pinned Post #${post.id}</h1>
-
-                <!-- A single blog post -->
-                <section class="post">
-                    <header class="post-header">
-                        <img width="48" height="48" alt="bowwow" class="post-avatar"
-                             src="${post.imageUrl}">
-
-                        <h2 class="post-title">${post.kindName}</h2>
-
-                        <p class="post-meta" style="color:black">
-                            <#if post.type == '01'>
-                                <a class="post-category post-category-design" href="#">외부 데이터</a>
-                            <#elseif post.type == '02'>
-                                <a class="post-category post-category-design" href="#">실종</a>
-                            <#elseif post.type == '03'>
-                                <a class="post-category post-category-design" href="#">보호</a>
-                            </#if>
-                            <#if post.state == 'PROCESS'>
-                                <a class="post-category post-category-pure" href="#">진행중</a>
-                            <#elseif post.state == 'RETURN'>
-                                <a class="post-category post-category-pure" href="#">반환</a>
-                            <#elseif post.state == 'NATURALDEATH'>
-                                <a class="post-category post-category-pure" href="#">자연사</a>
-                            <#elseif post.state == 'EUTHANASIA'>
-                                <a class="post-category post-category-pure" href="#">안락사</a>
-                            <#elseif post.state == 'ADOPTION'>
-                                <a class="post-category post-category-pure" href="#">입양</a>
-                            </#if>
-                            <#if post.gender == 'M'>
-                                <a class="post-category post-category-js" href="#">남아</a>
-                            <#elseif post.gender == 'F'>
-                                <a class="post-category post-category-js" href="#">여아</a>
-                            <#else>
-                                <a class="post-category post-category-js" href="#">성별미상</a>
-                            </#if>
-                            <#if post.neuter == 'Y'>
-                                <a class="post-category post-category-yui" href="#">중성화 함</a>
-                            <#else>
-                                <a class="post-category post-category-yui" href="#">중성화 안함</a>
-                            </#if>
-                            <a class="post-category" href="#">${post.weight} kg</a>
-                            <br/>
-                            <br/>
-                        ${post.happenDate} ${post.happenPlace} 에서 발견됨
-                            <br/>
-                            현재 <a href="#" class="post-author">${post.userName}</a> 님이 보호중
-                            <br/>
-                            연락처 : ${post.userContracts}
-                        </p>
-                    </header>
-
-                    <div class="post-description">
-                        <div class="post-images pure-g">
-                            <div class="pure-u-1 pure-u-md-1-2">
-                                <a href="#">
-                                    <img alt="Photo of someone working poolside at a resort"
-                                         class="pure-img-responsive"
-                                         src="${post.imageUrl}">
-                                </a>
-
-                                <div class="post-image-meta">
-                                    <h3>사진 1</h3>
-                                </div>
+    <main class="mdl-layout__content">
+        <div class="mdl-grid portfolio-max-width">
+            <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-card mdl-shadow--8dp">
+                <div class="mdl-card__media mdl-cell mdl-cell--12-col-tablet">
+                    <div class="thumbnail-wrapper">
+                        <div class="thumbnail">
+                            <div class="centered">
+                                <img class="article-image" src="${post.imageUrl}">
                             </div>
                         </div>
-                        <form class="pure-form pure-form-stacked">
-                            <legend></legend>
-                            <fieldset>
-                                <div class="pure-g">
-                                    <div class="pure-u-1 pure-u-md-1-3">
-                                        <p>${post.feature}</p>
-                                        <p>
-                                        ${post.introduction}
-                                        </p>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
                     </div>
-                </section>
-            </div>
-        <#else>
-            검색 결과가 없습니다.
-        </#if>
-            <div class="footer">
-                <div class="pure-menu pure-menu-horizontal">
-                    <ul>
-                        <li class="pure-menu-item"><a href="http://papaolabs.com/" class="pure-menu-link">About</a></li>
-                        <li class="pure-menu-item"><a href="https://github.com/orgs/papaolabs"
-                                                      class="pure-menu-link">GitHub</a></li>
+                </div>
+                <div class="mdl-cell mdl-cell--8-col">
+                    <h2 class="mdl-card__title-text">${post.kindName}</h2>
+                    <div class="mdl-card__supporting-text padding-top">
+                        <div style="margin-bottom:15px;">
+                        <#if post.type == '01'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">기관</span>
+                            </span>
+                        <#elseif post.type == '02'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">실종</span>
+                            </span>
+                        <#elseif post.type == '03'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">보호</span>
+                            </span>
+                        </#if>
+                        <#if post.state == 'PROCESS'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">진행중</span>
+                            </span>
+                        <#elseif post.state == 'RETURN'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">반환</span>
+                            </span>
+                        <#elseif post.state == 'NATURALDEATH'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">자연사</span>
+                            </span>
+                        <#elseif post.state == 'EUTHANASIA'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">안락사</span>
+                            </span>
+                        <#elseif post.state == 'ADOPTION'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">입양</span>
+                            </span>
+                        </#if>
+                        <#if post.gender == 'M'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">남아</span>
+                            </span>
+                        <#elseif post.gender == 'F'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">여아</span>
+                            </span>
+                        <#else>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">성별미상</span>
+                            </span>
+                        </#if>
+                        <#if post.neuter == 'Y'>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">중성화 함</span>
+                            </span>
+                        <#else>
+                            <span class="mdl-chip">
+                                <span class="mdl-chip__text">중성화 안함</span>
+                            </span>
+                        </#if>
+                            <span class="mdl-chip">
+                            <span class="mdl-chip__text">${post.weight} kg</span>
+                        </span>
+                        </div>
+                        <div id="tt1" class=" icon material-icons portfolio-share-btn">share</div>
+                        <div class="mdl-tooltip" for="tt1">
+                            Share via social media
+                        </div>
+                    </div>
+                    <div class="mdl-card__supporting-text no-left-padding">
+                        <p>
+                        ${post.happenDate} ${post.happenPlace} 에서 발견됨<br/>
+                            현재 <a href="#" class="post-author">${post.userName}</a> 님이 보호중<br/>
+                            연락처 : ${post.userContracts}<br/>
+                        ${post.feature}<br/><br/>
+                        ${post.introduction}
+                        </p>
+                    </div>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                <#--<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">
+                    View Updates
+                </a>-->
+                    <span class="mdl-list__item-primary-content">
+                                <form action="/dashboard/comment?postId=${post.id}" method="post">
+                                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                       style="width:100% !important;">
+                                    <input class="mdl-textfield__input" type="text" name="text">
+                                    <label class="mdl-textfield__label" for="sample3">댓글달기</label>
+                                  </div>
+                                </form>
+                            </span>
+                    <ul class="demo-list-two mdl-list">
+                        <!-- Simple Textfield -->
+
+                    <#list comments as comment>
+                        <li class="mdl-list__item mdl-list__item--two-line"
+                            style="border-bottom:1px solid #f5f5f5;">
+                            <span class="mdl-list__item-primary-content">
+                              <i class="material-icons mdl-list__item-avatar">person</i>
+                              <span>${comment.userName}</span>
+                              <span class="mdl-list__item-sub-title">${comment.text}</span>
+                            </span>
+                        </li>
+                    </#list>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo">papao</div>
+            </div>
+            <div class="mdl-mini-footer__right-section">
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy & Terms</a></li>
+                </ul>
+            </div>
+        </footer>
+    </main>
 </div>
+<script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </body>
 </html>
