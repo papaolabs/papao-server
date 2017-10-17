@@ -1,29 +1,27 @@
 package com.papaolabs.api.infrastructure.persistence.restapi.feign;
 
-import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalKindApiResponse;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.RegionApiResponse;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApiResponse;
 import feign.Param;
-import feign.hystrix.FallbackFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class AnimalApiClientFallbackFactory implements FallbackFactory<AnimalApiClient> {
+public class AnimalApiClientFallbackFactory implements LoggingFallbackFactory<AnimalApiClient> {
     private static final AnimalApiClient FALLBACK = new AnimalApiFallback();
 
     @Override
-    public AnimalApiClient create(Throwable cause) {
-        if (cause instanceof HystrixRuntimeException) {
-            HystrixRuntimeException hystrixRuntimeException = HystrixRuntimeException.class.cast(cause);
-            if (HystrixRuntimeException.FailureType.SHORTCIRCUIT == hystrixRuntimeException.getFailureType()) {
-                return FALLBACK;
-            }
-        }
+    public AnimalApiClient fallback() {
         return FALLBACK;
+    }
+
+    @Override
+    public Logger logger() {
+        return null;
     }
 
     public static class AnimalApiFallback implements AnimalApiClient {
