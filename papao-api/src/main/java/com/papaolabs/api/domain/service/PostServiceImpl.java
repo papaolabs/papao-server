@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
                           String gender,
                           String neuterYn,
                           String uid,
-                          String contracts,
+                          String contact,
                           String happenDate,
                           String happenPlace,
                           String uprCode,
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
         post.setGender(isEmpty(gender) ? GenderType.Q.name() : gender);
         post.setNeuter(isEmpty(neuterYn) ? NeuterType.U.name() : neuterYn);
         post.setUserId(uid);
-        post.setUserContracts(contracts);
+        post.setUserContact(contact);
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(isNotEmpty(happenPlace) ? happenPlace : UNKNOWN);
         post.setUprCode(uprCode);
@@ -153,7 +153,7 @@ public class PostServiceImpl implements PostService {
                       .userId(post.getUserId())
                       .userName(post.getUserName())
                       .userAddress(post.getUserAddress())
-                      .userContracts(post.getUserContracts())
+                      .userContact(post.getUserContact())
                       .weight(String.valueOf(post.getWeight()))
                       .gender(post.getGender())
                       .state(post.getState())

@@ -24,7 +24,7 @@ public class PostDTO {
     private String userId;
     private String userName;
     private String userAddress;
-    private String userContracts;
+    private String userContact;
     private String weight;
     private String gender;
     private String state;

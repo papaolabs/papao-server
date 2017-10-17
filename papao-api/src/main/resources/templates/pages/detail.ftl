@@ -138,7 +138,7 @@
                         <p>
                         ${post.happenDate} ${post.happenPlace} 에서 발견됨<br/>
                             현재 <a href="#" class="post-author">${post.userName}</a> 님이 보호중<br/>
-                            연락처 : ${post.userContracts}<br/>
+                            연락처 : ${post.userContact}<br/>
                         ${post.feature}<br/><br/>
                         ${post.introduction}
                         </p>
