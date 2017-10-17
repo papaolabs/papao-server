@@ -32,21 +32,15 @@
 
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-        <div class="mdl-layout__header-row portfolio-logo-row">
-                <span class="mdl-layout__title">
-                    <div class="portfolio-logo"></div>
-                </span>
-        </div>
-        <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
-            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link"
-                   href="/dashboard">Home</a>
-                <a class="mdl-navigation__link"
-                   href="#">About</a>
-                <a class="mdl-navigation__link"
-                   href="#">Contact</a>
-            </nav>
+    <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title" style="cursor:default">papao</span>
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="margin-bottom:25px;">
+                <a href="javascript:history.back()" class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">keyboard_backspace</i>
+                </a>
+            </div>
         </div>
     </header>
     <div class="mdl-layout__drawer mdl-layout--small-screen-only">
