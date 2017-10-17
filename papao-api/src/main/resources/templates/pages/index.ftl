@@ -99,6 +99,16 @@
         a {
             text-decoration: none;
         }
+
+        nav ul {
+            height: 200px;
+            width: 18%;
+        }
+
+        nav ul {
+            overflow: hidden;
+            overflow-y: scroll;
+        }
     </style>
 </head>
 
@@ -237,25 +247,27 @@
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
                     <input class="mdl-textfield__input" type="text" id="sample1" readonly tabIndex="-1">
                     <label for="sample1" class="mdl-textfield__label">지역</label>
-                    <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-                        <li class="mdl-menu__item city-list" value="">전체</li>
-                        <li class="mdl-menu__item city-list" value="6110000">서울특별시</li>
-                        <li class="mdl-menu__item city-list" value="6410000">경기도</li>
-                        <li class="mdl-menu__item city-list" value="6260000">부산광역시</li>
-                        <li class="mdl-menu__item city-list" value="6270000">대구광역시</li>
-                        <li class="mdl-menu__item city-list" value="6280000">인천광역시</li>
-                        <li class="mdl-menu__item city-list" value="6290000">광주광역시</li>
-                        <li class="mdl-menu__item city-list" value="6300000">대전광역시</li>
-                        <li class="mdl-menu__item city-list" value="6310000">울산광역시</li>
-                        <li class="mdl-menu__item city-list" value="6420000">강원도</li>
-                        <li class="mdl-menu__item city-list" value="6430000">충청북도</li>
-                        <li class="mdl-menu__item city-list" value="6440000">충청남도</li>
-                        <li class="mdl-menu__item city-list" value="6450000">전라북도</li>
-                        <li class="mdl-menu__item city-list" value="6460000">전라남도</li>
-                        <li class="mdl-menu__item city-list" value="6470000">경상북도</li>
-                        <li class="mdl-menu__item city-list" value="6480000">경상남도</li>
-                        <li class="mdl-menu__item city-list" value="6500000">제주특별자치도</li>
-                    </ul>
+                    <nav>
+                        <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                            <li class="mdl-menu__item city-list" value="">전체</li>
+                            <li class="mdl-menu__item city-list" value="6110000">서울특별시</li>
+                            <li class="mdl-menu__item city-list" value="6410000">경기도</li>
+                            <li class="mdl-menu__item city-list" value="6260000">부산광역시</li>
+                            <li class="mdl-menu__item city-list" value="6270000">대구광역시</li>
+                            <li class="mdl-menu__item city-list" value="6280000">인천광역시</li>
+                            <li class="mdl-menu__item city-list" value="6290000">광주광역시</li>
+                            <li class="mdl-menu__item city-list" value="6300000">대전광역시</li>
+                            <li class="mdl-menu__item city-list" value="6310000">울산광역시</li>
+                            <li class="mdl-menu__item city-list" value="6420000">강원도</li>
+                            <li class="mdl-menu__item city-list" value="6430000">충청북도</li>
+                            <li class="mdl-menu__item city-list" value="6440000">충청남도</li>
+                            <li class="mdl-menu__item city-list" value="6450000">전라북도</li>
+                            <li class="mdl-menu__item city-list" value="6460000">전라남도</li>
+                            <li class="mdl-menu__item city-list" value="6470000">경상북도</li>
+                            <li class="mdl-menu__item city-list" value="6480000">경상남도</li>
+                            <li class="mdl-menu__item city-list" value="6500000">제주특별자치도</li>
+                        </ul>
+                    </nav>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
                     <input class="mdl-textfield__input" type="text" id="sample2" readonly tabIndex="-1">
@@ -351,18 +363,18 @@
         };
         var generateMessage = function () {
             let cityName = document.querySelector('#cityName').value;
-            if(cityName != ''){
+            if (cityName != '') {
                 document.querySelector('#city-filter').innerHTML = '<a href="#">' + cityName + '</a>에서 ';
             }
             let endDate = document.querySelector('#endDate').value;
-            if(endDate != ''){
+            if (endDate != '' && endDate != '0') {
                 document.querySelector('#period-filter').innerHTML = '<a href="#">' + endDate + '</a>일전부터 ';
             }
             let upKindName = document.querySelector('#upKindName').value;
-            if(upKindName != ''){
+            if (upKindName != '') {
                 document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">' + upKindName + '</a>들을 보여주세요';
             }
-            else{
+            else {
                 document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">동물</a>들을 보여주세요';
             }
         }
