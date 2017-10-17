@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -29,10 +32,17 @@ public class DashboardController {
 
     @GetMapping
     public ModelAndView main(HttpServletRequest request, ModelAndView model) {
-        String beginDate = Optional.ofNullable(request.getParameter("beginDate")).orElse("");
-        String endDate = Optional.ofNullable(request.getParameter("endDate")).orElse("");
+        String endDate = Optional.ofNullable(request.getParameter("endDate"))
+                                 .orElse("");
+        String upKindCode = Optional.ofNullable(request.getParameter("upKindCode"))
+                                    .orElse(EMPTY);
+        String cityCode = Optional.ofNullable(request.getParameter("cityCode"))
+                                  .orElse(EMPTY);
         model.setViewName("pages/index");
-        model.addObject("posts", postService.readPosts(beginDate, endDate, EMPTY, EMPTY, EMPTY));
+        model.addObject("posts", postService.readPosts(EMPTY, getDefaultDate(endDate), upKindCode, cityCode, EMPTY));
+        model.addObject("endDate", endDate);
+        model.addObject("upKindCode", upKindCode);
+        model.addObject("cityCode", cityCode);
         return model;
     }
 
@@ -51,5 +61,16 @@ public class DashboardController {
         String text = request.getParameter("text");
         commentService.createByGuest(postId, text);
         return "redirect:/dashboard/detail?pageId=" + postId;
+    }
+
+    private String getDefaultDate(String minusDay) {
+        Integer val = 0;
+        if (isNotEmpty(minusDay)) {
+            val = Integer.valueOf(minusDay);
+        }
+        LocalDateTime now = LocalDateTime.now()
+                                         .minusDays(val);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return now.format(formatter);
     }
 }

@@ -74,6 +74,31 @@
             margin-bottom: 40px;
             z-index: 900;
         }
+
+        .mdl-demo #add {
+            position: absolute;
+            right: 40px;
+            top: 36px;
+            z-index: 999;
+        }
+
+        .demo-list-control {
+            width: 300px;
+        }
+
+        .demo-list-radio {
+            display: inline;
+        }
+
+        .mdl-slider__container {
+            margin-top: 30px;
+            width: 270px;
+            margin-left: -20px;
+        }
+
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 
@@ -155,11 +180,11 @@
                         </#if>
                         <#if post.gender == 'M'>
                             <span class="mdl-chip">
-                                <span class="mdl-chip__text">남아</span>
+                                <span class="mdl-chip__text">수컷</span>
                             </span>
                         <#elseif post.gender == 'F'>
                             <span class="mdl-chip">
-                                <span class="mdl-chip__text">여아</span>
+                                <span class="mdl-chip__text">암컷</span>
                             </span>
                         <#else>
                             <span class="mdl-chip">
@@ -194,6 +219,81 @@
             </div>
         </#list>
         </div>
+        <button id="view-source"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent mdl-button mdl-button--raised"
+                data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">search</i>
+            <span class="visuallyhidden">Search</span>
+            <span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating"
+                                                             style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(29px, 41px);"></span></span>
+        </button>
+        <dialog class="mdl-dialog" id="modal-example">
+            <div class="mdl-dialog__content">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                    <label for="sample" class="mdl-textfield__label">검색기간</label>
+                    <input id="search-period" class="mdl-slider mdl-js-slider" type="range"
+                           min="0" max="30" value="0" tabindex="0">
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                    <input class="mdl-textfield__input" type="text" id="sample1" readonly tabIndex="-1">
+                    <label for="sample1" class="mdl-textfield__label">지역</label>
+                    <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        <li class="mdl-menu__item city-list" value="">전체</li>
+                        <li class="mdl-menu__item city-list" value="6110000">서울특별시</li>
+                        <li class="mdl-menu__item city-list" value="6410000">경기도</li>
+                        <li class="mdl-menu__item city-list" value="6260000">부산광역시</li>
+                        <li class="mdl-menu__item city-list" value="6270000">대구광역시</li>
+                        <li class="mdl-menu__item city-list" value="6280000">인천광역시</li>
+                        <li class="mdl-menu__item city-list" value="6290000">광주광역시</li>
+                        <li class="mdl-menu__item city-list" value="6300000">대전광역시</li>
+                        <li class="mdl-menu__item city-list" value="6310000">울산광역시</li>
+                        <li class="mdl-menu__item city-list" value="6420000">강원도</li>
+                        <li class="mdl-menu__item city-list" value="6430000">충청북도</li>
+                        <li class="mdl-menu__item city-list" value="6440000">충청남도</li>
+                        <li class="mdl-menu__item city-list" value="6450000">전라북도</li>
+                        <li class="mdl-menu__item city-list" value="6460000">전라남도</li>
+                        <li class="mdl-menu__item city-list" value="6470000">경상북도</li>
+                        <li class="mdl-menu__item city-list" value="6480000">경상남도</li>
+                        <li class="mdl-menu__item city-list" value="6500000">제주특별자치도</li>
+                    </ul>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                    <input class="mdl-textfield__input" type="text" id="sample2" readonly tabIndex="-1">
+                    <label for="sample2" class="mdl-textfield__label">품종</label>
+                    <ul for="sample2" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        <li class="mdl-menu__item animal-list" value="">동물</li>
+                        <li class="mdl-menu__item animal-list" value="417000">강아지</li>
+                        <li class="mdl-menu__item animal-list" value="422400">고양이</li>
+                    </ul>
+                </div>
+                <div id="filter-list">
+                    <label id="city-filter"></label>
+                    <label id="period-filter"></label>
+                    <label id="animal-filter">길을 잃은 <a href="#">동물</a>들을 보여주세요</label>
+                </div>
+            </div>
+            <div class="mdl-card__actions mdl-card--border" style="text-align:center;">
+                <form id="searchForm">
+                    <input type="hidden" id="cityCode" name="cityCode" value="">
+                    <input type="hidden" id="upKindCode" name="upKindCode" value="">
+                    <input type="hidden" id="endDate" name="endDate" value="">
+                    <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                            data-upgraded=",MaterialButton,MaterialRipple" id="search-btn">
+                        SEARCH
+                        <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
+                </form>
+                <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                        data-upgraded=",MaterialButton,MaterialRipple" id="close-btn">
+                    CLOSE
+                    <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
+            </div>
+        </dialog>
+        <button id="demo-show-snackbar" class="mdl-button mdl-js-button mdl-button--raised" type="button" style="display:none;">
+        </button>
+        <div id="demo-snackbar-example" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer__left-section">
                 <div class="mdl-logo">papao</div>
@@ -206,13 +306,106 @@
             </div>
         </footer>
     </main>
-    <a href="#" target="_blank"
-       id="view-source"
-       class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--white"
-       data-upgraded=",MaterialButton,MaterialRipple">Filter<span class="mdl-button__ripple-container"><span
-            class="mdl-ripple"></span></span></a>
+    <div class="mdl-menu__container is-upgraded" style="right: 235.984px; top: 344px; width: 124px; height: 208px;">
+        <div class="mdl-menu__outline mdl-menu--bottom-right" style="width: 124px; height: 208px;"></div>
+        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect mdl-js-ripple-effect--ignore-events"
+            for="menubtn" data-upgraded=",MaterialMenu,MaterialRipple" style="clip: rect(0px 124px 0px 124px);">
+            <li class="mdl-menu__item city-list mdl-js-ripple-effect" tabindex="-1" data-upgraded=",MaterialRipple"
+                style="">About<span
+                    class="mdl-menu__item city-list-ripple-container"><span class="mdl-ripple"></span></span></li>
+            <li class="mdl-menu__item city-list mdl-js-ripple-effect" tabindex="-1" data-upgraded=",MaterialRipple"
+                style="">
+                Message<span class="mdl-menu__item city-list-ripple-container"><span class="mdl-ripple"></span></span>
+            </li>
+            <li class="mdl-menu__item city-list mdl-js-ripple-effect" tabindex="-1" data-upgraded=",MaterialRipple"
+                style="">
+                Favorite<span class="mdl-menu__item city-list-ripple-container"><span class="mdl-ripple"></span></span>
+            </li>
+            <li class="mdl-menu__item city-list mdl-js-ripple-effect" tabindex="-1" data-upgraded=",MaterialRipple"
+                style="">
+                Search<span class="mdl-menu__item city-list-ripple-container"><span class="mdl-ripple"></span></span>
+            </li>
+        </ul>
+    </div>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-</body>
+<script>
+    (function () {
+        'use strict';
+        // snackbar
+        var snackbarContainer = document.querySelector('#demo-snackbar-example');
+        var showSnackbarButton = document.querySelector('#demo-show-snackbar');
+        var handler = function (event) {
+            showSnackbarButton.style.backgroundColor = '';
+        };
+        showSnackbarButton.addEventListener('click', function () {
+            'use strict';
+            var msg = document.querySelector('#filter-list').innerText;
+            msg = msg.replace('들을 보여주세요', '들 입니다');
+            var data = {
+                message: msg,
+                timeout: 3000
+            };
+            snackbarContainer.MaterialSnackbar.showSnackbar(data);
+        });
+        window.onload = function () {
+            showSnackbarButton.click();
+        };
 
+        // snackbar end
+        var dialog = document.querySelector('#modal-example');
+        var formEl = document.querySelector('#searchForm');
+        var searchButton = dialog.querySelector('#search-btn');
+        var closeButton = dialog.querySelector('#close-btn');
+        var showButton = document.querySelector('#view-source');
+        var cities = dialog.getElementsByClassName('city-list');
+        var animals = dialog.getElementsByClassName('animal-list');
+        var period = dialog.querySelector('#search-period');
+        if (!dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog);
+        }
+        var closeClickHandler = function (event) {
+            dialog.close();
+        };
+        var showClickHandler = function (event) {
+            dialog.showModal();
+        };
+        var cityListClickHandler = function (event) {
+            let cityName = event.target.innerHTML;
+            document.querySelector('#cityCode').value = event.target.value;
+            if (cityName == '전체') {
+                document.querySelector('#city-filter').innerHTML = '';
+            }
+            else {
+                document.querySelector('#city-filter').innerHTML = '<a href="#">' + cityName + '</a>에서 ';
+            }
+        };
+        var animalListClickHandler = function (event) {
+            let animalName = event.target.innerHTML;
+            document.querySelector('#upKindCode').value = event.target.value;
+            document.querySelector('#animal-filter').innerHTML = '길을 잃은 <a href="#">' + animalName + '</a>들을 보여주세요';
+        };
+        var periodChangeHandler = function (event) {
+            let period = event.target.value;
+            document.querySelector('#endDate').value = period;
+            if (period == '0') {
+                document.querySelector('#period-filter').innerHTML = '';
+            }
+            else {
+                document.querySelector('#period-filter').innerHTML = '<a href="#">' + period + '</a>일전부터 ';
+            }
+        };
+        showButton.addEventListener('click', showClickHandler);
+        formEl.addEventListener('submit', closeClickHandler);
+        closeButton.addEventListener('click', closeClickHandler);
+        for (let city of cities) {
+            city.addEventListener('click', cityListClickHandler);
+        }
+        for (let animal of animals) {
+            animal.addEventListener('click', animalListClickHandler);
+        }
+        period.addEventListener('change', periodChangeHandler);
+    }());
+</script>
+</body>
 </html>

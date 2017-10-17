@@ -88,8 +88,8 @@ public class PostServiceImpl implements PostService {
         if(isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
-        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
-                                                                                         convertStringToDate(endDate))
+        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(endDate),
+                                                                                         convertStringToDate(beginDate))
                              .stream()
                              .filter(Post::getIsDisplay)
                              .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
