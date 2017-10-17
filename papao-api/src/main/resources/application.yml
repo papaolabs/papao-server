@@ -4,9 +4,38 @@
 spring:
   datasource:
     platform: h2
-    url: jdbc:h2:mem:yunseul;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     username: sa
     initialize: true
+
+spring.jpa:
+  database: MYSQL
+  showSql: true
+  properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  properties.hibernate.hbm2ddl.auto: update
+  properties.hibernate.format_sql: true
+  properties.hibernate.use_sql_comments: true
+
+logging.level:
+  com.skplanet.rnb: DEBUG
+  org.springframework: INFO
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type: TRACE
+  org.hibernate.type.BasicTypeRegistry: WARN
+
+jasypt:
+  encryptor:
+    password:
+
+seoul:
+  api:
+    animal:
+      appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
+      url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
+---
+spring.profiles: local
+
+spring:
   jpa:
     database: MYSQL
     showSql: true
@@ -14,30 +43,24 @@ spring:
     properties.hibernate.hbm2ddl.auto: create-drop
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
+  h2.console:
+    enabled: true
+    path: /console
+---
+spring.profiles: dev
 
-###
-#   H2 Settings
-###
-  h2:
-    console:
-      enabled: true
-      path: /console
-      settings:
-        trace: false
-        web-allow-others: false
-
-###
-#
-###
-jasypt:
-  encryptor:
-    password:
-
-###
-#
-###
-seoul:
-  api:
-    animal:
-      appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
-      url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
+spring.datasource:
+  url: ENC(xdc33eCYQ3sPkCAHlnpgmqfVCOo0Doxx22yC/XIqbBQp/Lw79VVSXrWLCFW1ztCs)
+  username: papao_user
+  password: ENC(bHUKdWgtyhtWbjW9mPOGRg==)
+  driverClassName: com.mysql.jdbc.Driver
+  initialize: false
+  ## Pool Info ##
+  maxActive: 100
+  initialSize: 10
+  minIdle: 10
+  validationQuery: select 1
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 5000 #5 second
+  minEvictableIdleTimeMillis: 10000  #10 second
+  validationQueryTimeout: 5
