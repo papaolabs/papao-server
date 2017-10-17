@@ -100,12 +100,12 @@
             text-decoration: none;
         }
 
-        nav ul {
+        #city-list-ul {
             height: 200px;
             width: 18%;
         }
 
-        nav ul {
+        #city-list-ul {
             overflow: hidden;
             overflow-y: scroll;
         }
@@ -248,7 +248,7 @@
                     <input class="mdl-textfield__input" type="text" id="sample1" readonly tabIndex="-1">
                     <label for="sample1" class="mdl-textfield__label">지역</label>
                     <nav>
-                        <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                        <ul id="city-list-ul" for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
                             <li class="mdl-menu__item city-list" value="">전체</li>
                             <li class="mdl-menu__item city-list" value="6110000">서울특별시</li>
                             <li class="mdl-menu__item city-list" value="6410000">경기도</li>
