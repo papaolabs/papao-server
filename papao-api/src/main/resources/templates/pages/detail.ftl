@@ -28,44 +28,6 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-pink.min.css"/>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-    <style>
-        .mdl-card__media {
-            background-color: #f5f5f5 !important;
-        }
-
-        .thumbnail-wrappper {
-            width: 25%;
-        }
-
-        .thumbnail {
-            position: relative;
-            padding-top: 100%; /* 1:1 ratio */
-            overflow: hidden;
-        }
-
-        .thumbnail .centered {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            -webkit-transform: translate(50%, 50%);
-            -ms-transform: translate(50%, 50%);
-            transform: translate(50%, 50%);
-        }
-
-        .thumbnail .centered img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            max-width: 100%;
-            height: auto;
-            -webkit-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-    </style>
 </head>
 
 <body>

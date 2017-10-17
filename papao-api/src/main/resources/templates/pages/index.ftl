@@ -23,93 +23,12 @@
     <meta name="description" content="A portfolio template that uses Material Design Lite.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>papao</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.9/dialog-polyfill.min.css" />
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.grey-pink.min.css"/>
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <style>
-        .mdl-card__media {
-            background-color: #f5f5f5 !important;
-        }
-
-        .thumbnail-wrappper {
-            width: 25%;
-        }
-
-        .thumbnail {
-            position: relative;
-            padding-top: 100%; /* 1:1 ratio */
-            overflow: hidden;
-        }
-
-        .thumbnail .centered {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            -webkit-transform: translate(50%, 50%);
-            -ms-transform: translate(50%, 50%);
-            transform: translate(50%, 50%);
-        }
-
-        .thumbnail .centered img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            max-width: 100%;
-            height: auto;
-            -webkit-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-
-        #view-source {
-            position: fixed;
-            display: block;
-            right: 0;
-            bottom: 0;
-            margin-right: 40px;
-            margin-bottom: 40px;
-            z-index: 900;
-        }
-
-        .mdl-demo #add {
-            position: absolute;
-            right: 40px;
-            top: 36px;
-            z-index: 999;
-        }
-
-        .demo-list-control {
-            width: 300px;
-        }
-
-        .demo-list-radio {
-            display: inline;
-        }
-
-        .mdl-slider__container {
-            margin-top: 30px;
-            width: 270px;
-            margin-left: -20px;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        #city-list-ul {
-            height: 200px;
-            width: 18%;
-        }
-
-        #city-list-ul {
-            overflow: hidden;
-            overflow-y: scroll;
-        }
-    </style>
 </head>
 
 <body>
@@ -135,7 +54,6 @@
             <a class="mdl-navigation__link" href="#">Contact</a>
         </nav>
     </div>
-
     <main class="mdl-layout__content">
         <div class="mdl-grid portfolio-max-width">
         <#list posts as post>
@@ -229,14 +147,6 @@
             </div>
         </#list>
         </div>
-        <button id="view-source"
-                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent mdl-button mdl-button--raised"
-                data-upgraded=",MaterialButton,MaterialRipple">
-            <i class="material-icons" role="presentation">search</i>
-            <span class="visuallyhidden">Search</span>
-            <span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating"
-                                                             style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(29px, 41px);"></span></span>
-        </button>
         <dialog class="mdl-dialog" id="modal-example">
             <div class="mdl-dialog__content">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
@@ -302,6 +212,14 @@
                     <span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></button>
             </div>
         </dialog>
+        <button id="view-source"
+                class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent mdl-button mdl-button--raised"
+                data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">search</i>
+            <span class="visuallyhidden">Search</span>
+            <span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating"
+                                                             style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(29px, 41px);"></span></span>
+        </button>
         <button id="demo-show-snackbar" class="mdl-button mdl-js-button mdl-button--raised" type="button"
                 style="display:none;">
         </button>
@@ -344,6 +262,7 @@
     </div>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.9/dialog-polyfill.min.js"></script>
 <script>
     (function () {
         'use strict';
