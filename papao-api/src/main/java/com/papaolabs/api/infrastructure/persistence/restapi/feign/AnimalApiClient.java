@@ -8,7 +8,7 @@ import feign.Param;
 import feign.RequestLine;
 import org.springframework.cloud.netflix.feign.FeignClient;
 
-@FeignClient(fallbackFactory = AnimalApiClientFallbackFactory.class)
+@FeignClient(name="animalApiClient", fallbackFactory = AnimalApiClientFallbackFactory.class)
 public interface AnimalApiClient {
 
     @RequestLine("GET /sido?serviceKey={serviceKey}")
