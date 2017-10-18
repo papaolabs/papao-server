@@ -7,24 +7,30 @@ import java.util.List;
 
 public interface PostService {
     PostDTO create(String imageUrl,
-                String state,
-                String gender,
-                String neuterYn,
-                String managerName,
-                String managerTel,
-                String happenDate,
-                String happenPlace,
-                String uprCode,
-                String orgCode,
-                String kindUpCode,
-                String kindCode,
-                String age,
-                Float weight,
-                String introduction,
-                String feature
+                   String state,
+                   String gender,
+                   String neuterYn,
+                   String managerName,
+                   String managerTel,
+                   String happenDate,
+                   String happenPlace,
+                   String uprCode,
+                   String orgCode,
+                   String kindUpCode,
+                   String kindCode,
+                   String age,
+                   Float weight,
+                   String introduction,
+                   String feature
     );
 
-    List<PostDTO> readPosts(String beginDate, String endDate, String upKindCode, String uprCode, String orgCode);
+    List<PostDTO> readPosts(String beginDate,
+                            String endDate,
+                            String upKindCode,
+                            String uprCode,
+                            String orgCode,
+                            String page,
+                            String size);
 
     PostDTO readPost(String postId);
 

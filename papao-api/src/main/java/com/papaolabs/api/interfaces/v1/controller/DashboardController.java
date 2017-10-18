@@ -46,7 +46,7 @@ public class DashboardController {
         String cityName = Optional.ofNullable(request.getParameter("cityName"))
                                   .orElse(EMPTY);
         model.setViewName("pages/index");
-        model.addObject("posts", postService.readPosts(EMPTY, getDefaultDate(endDate), upKindCode, cityCode, EMPTY));
+        model.addObject("posts", postService.readPosts(EMPTY, getDefaultDate(endDate), upKindCode, cityCode, EMPTY, "0", "100"));
         model.addObject("endDate", isEmpty(endDate) ? "0" : endDate);
         model.addObject("upKindCode", upKindCode);
         model.addObject("upKindName", upKindName);
