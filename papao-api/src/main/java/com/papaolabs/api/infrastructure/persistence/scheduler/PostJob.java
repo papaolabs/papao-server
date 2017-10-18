@@ -62,8 +62,7 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    //    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
-    @Scheduled(fixedRate = 10000000L) // 매달 1일 02시에 실행
+    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
     public void year() {
         for (int i = 0; i < 10; i++) { // 최근 9년간
             batch(BatchType.YEAR, i);
