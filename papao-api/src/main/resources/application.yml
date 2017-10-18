@@ -10,17 +10,17 @@ spring:
 
 spring.jpa:
   database: MYSQL
-  showSql: true
+  showSql: false
   properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   properties.hibernate.hbm2ddl.auto: update
   properties.hibernate.format_sql: true
   properties.hibernate.use_sql_comments: true
 
 logging.level:
-  com.skplanet.rnb: DEBUG
+  com.papaolabs.api: DEBUG
   org.springframework: INFO
-  org.hibernate.SQL: DEBUG
-  org.hibernate.type: TRACE
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
 
 jasypt:
@@ -38,7 +38,7 @@ spring.profiles: local
 spring:
   jpa:
     database: MYSQL
-    showSql: true
+    showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     properties.hibernate.hbm2ddl.auto: create-drop
     properties.hibernate.format_sql: true
@@ -55,12 +55,9 @@ spring.datasource:
   password: ENC(bHUKdWgtyhtWbjW9mPOGRg==)
   driverClassName: com.mysql.jdbc.Driver
   initialize: false
-  ## Pool Info ##
-  maxActive: 100
-  initialSize: 10
-  minIdle: 10
-  validationQuery: select 1
-  testWhileIdle: true
-  timeBetweenEvictionRunsMillis: 5000 #5 second
-  minEvictableIdleTimeMillis: 10000  #10 second
-  validationQueryTimeout: 5
+  connection-test-query: SELECT 1
+  test-while-idle: true
+  test-on-borrow: true
+  validation-interval: 10000
+  log-validation-errors: true
+  validation-query: SELECT 1

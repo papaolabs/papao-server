@@ -14,13 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public class PostJob {
     private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
-    private static final String MAX_SIZE = "100000";
+    private static final String MAX_SIZE = "500000";
     private static final String START_INDEX = "1";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
@@ -61,50 +62,84 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = 1800000L)
-    public void today() {
-        posts(getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT));
+    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
+    public void year() {
+        for (int i = 0; i < 10; i++) { // 최근 9년간
+            batch(BatchType.YEAR, i);
+        }
     }
 
-    @Scheduled(fixedRate = 86400000L)
-    public void yesterDay() {
-        LocalDateTime now = LocalDateTime.now()
-                                         .minusDays(1);
+    @Scheduled(cron = "0 0 0/6 1/1 * ?") // 6시간마다 실행
+    public void month() {
+        batch(BatchType.MONTH, 0);
+    }
+
+    @Scheduled(cron = "0 0/30 * 1/1 * ?") // 30분마다 실행
+    public void day() {
+        batch(BatchType.DAY, 0);
+    }
+
+    public void batch(BatchType type, Integer minus) {
+        StopWatch stopWatch = new StopWatch();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        posts(now.format(formatter), now.format(formatter));
+        LocalDateTime startDate = LocalDateTime.now();
+        LocalDateTime endDate = LocalDateTime.now();
+        if (BatchType.YEAR == type) {
+            startDate = startDate.with(TemporalAdjusters.firstDayOfYear())
+                                 .minusYears(minus);
+            endDate = endDate.with(TemporalAdjusters.lastDayOfYear())
+                             .minusYears(minus);
+        } else if (BatchType.MONTH == type) {
+            startDate = startDate.with(TemporalAdjusters.firstDayOfMonth())
+                                 .minusMonths(minus);
+            endDate = endDate.with(TemporalAdjusters.lastDayOfMonth())
+                             .minusMonths(minus);
+        } else if (BatchType.DAY == type) {
+            startDate = startDate.minusDays(minus);
+            endDate = startDate.minusDays(minus);
+        } else {
+            log.debug("Not valid BatchType !!");
+        }
+        log.info("[BATCH_START] type: {}, startDate : {}, endDate : {}", type, startDate.format(formatter), endDate.format(formatter));
+        stopWatch.start();
+        posts(startDate.format(formatter), endDate.format(formatter));
+        stopWatch.stop();
+        log.info("[BATCH_END} executionTime : {} millis", stopWatch.getLastTaskTimeMillis());
     }
 
     public void posts(String beginDate, String endDate) {
         String beginDateParam = beginDate;
         String endDateParam = endDate;
-        if(isEmpty(beginDate)) {
+        if (isEmpty(beginDate)) {
             beginDateParam = getDefaultDate(DATE_FORMAT);
         }
-        if(isEmpty(endDate)) {
+        if (isEmpty(endDate)) {
             endDateParam = getDefaultDate(DATE_FORMAT);
         }
         AnimalApiResponse response = animalApiClient.animal(appKey, beginDateParam, endDateParam, EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
-            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(getDefaultDate(
-                DATE_FORMAT)),
-                                                                                                         convertStringToDate(getDefaultDate(
-                                                                                                             DATE_FORMAT)));
-            postRepository.save(response.getBody()
-                                        .getItems()
-                                        .getItem()
-                                        .stream()
-                                        .map(this::transform)
-                                        .map(x -> {
-                                            posts.forEach(y -> {
-                                                if (y.getDesertionId()
-                                                     .equals(x.getDesertionId())) {
-                                                    x.setId(y.getId());
-                                                }
-                                            });
-                                            return x;
-                                        })
-                                        .collect(Collectors.toList()));
+            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
+                                                                                                         convertStringToDate(endDate));
+            List<AnimalApiResponse.Body.Items.AnimalItemDTO> animalItems = response.getBody()
+                                                                                   .getItems()
+                                                                                   .getItem();
+            log.info("AnimalItemDTO, beginDate : {}, endDate : {}, size : {}", beginDate, endDate, animalItems.size());
+            postRepository.save(animalItems.stream()
+                                           .map(this::transform)
+                                           .map(x -> {
+                                               posts.forEach(y -> {
+                                                   if (y.getDesertionId()
+                                                        .equals(x.getDesertionId())) {
+                                                       x.setId(y.getId());
+                                                       x.setCreatedDate(y.getCreatedDate());
+                                                   }
+                                               });
+                                               return x;
+                                           })
+                                           .collect(Collectors.toList()));
+        } else {
+            log.info("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
     }
 
@@ -123,15 +158,6 @@ public class PostJob {
                             .orElse(mockKind);
         String[] orgNames = animalItemDTO.getOrgNm()
                                          .split(SPACE);
-        List<Shelter> shelterList = new ArrayList<>();
-        switch (orgNames.length) {
-            case 1:
-                shelterList = shelterRepository.findByCityName(orgNames[0]);
-                break;
-            case 2:
-                shelterList = shelterRepository.findByTownName(orgNames[1]);
-                break;
-        }
         Shelter mockShelter = new Shelter();
         mockShelter.setCityCode(-1L);
         mockShelter.setCityName(UNKNOWN);
@@ -139,9 +165,27 @@ public class PostJob {
         mockShelter.setTownName(UNKNOWN);
         mockShelter.setShelterCode(-1L);
         mockShelter.setShelterName(UNKNOWN);
-        Shelter shelter = shelterList.stream()
-                                     .findFirst()
-                                     .orElse(mockShelter);
+        Shelter shelter = new Shelter();
+        switch (orgNames.length) {
+            case 1:
+                shelter = shelterRepository.findByCityName(orgNames[0])
+                                           .stream()
+                                           .findFirst()
+                                           .orElse(mockShelter);
+                break;
+            case 2:
+                shelter = shelterRepository.findByTownName(orgNames[1])
+                                           .stream()
+                                           .findFirst()
+                                           .orElse(mockShelter);
+                break;
+        }
+        if ("-1".equals(shelter.getTownCode())) {
+            shelter = shelterRepository.findByShelterName(animalItemDTO.getCareNm())
+                                       .stream()
+                                       .findFirst()
+                                       .orElse(mockShelter);
+        }
         Post post = new Post();
         post.setDesertionId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
@@ -159,7 +203,11 @@ public class PostJob {
         post.setOrgCode(String.valueOf(shelter.getTownCode()));
         post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
         post.setKindCode(String.valueOf(kind.getKindCode()));
-        post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
+        try {
+            post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
+        } catch (NumberFormatException nfe) {
+            post.setAge(-1);
+        }
         post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
         post.setIntroduction(animalItemDTO.getNoticeComment());
         post.setFeature(animalItemDTO.getSpecialMark());
@@ -183,13 +231,14 @@ public class PostJob {
     }
 
     private String convertAge(String age) {
-        if (isEmpty(age) || isAllBlank(age)) {
+        String result = age.replace(" ", "");
+        if (isEmpty(result) || isAllBlank(result)) {
             return "-1";
         }
-        if (age.contains("(년생)")) {
-            return age.replace("(년생)", "");
+        if (result.contains("(년생)")) {
+            return result.replace("(년생)", "");
         }
-        return age;
+        return result;
     }
 
     private String convertKindName(String kindName) {

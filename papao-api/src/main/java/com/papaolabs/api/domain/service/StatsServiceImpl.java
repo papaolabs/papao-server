@@ -5,6 +5,7 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiR
 import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
+@Transactional
 public class StatsServiceImpl implements StatsService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;

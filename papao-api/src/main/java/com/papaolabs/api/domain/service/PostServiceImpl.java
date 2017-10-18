@@ -10,6 +10,7 @@ import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -28,6 +29,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
+@Transactional
 public class PostServiceImpl implements PostService {
     private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
