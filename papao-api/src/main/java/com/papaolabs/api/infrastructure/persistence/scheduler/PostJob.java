@@ -68,17 +68,19 @@ public class PostJob {
         Integer yearDays = 365;
         LocalDateTime now;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        for (int i = 0; i < yearDays; i++) {
-            now = LocalDateTime.now()
-                               .minusYears(5)
-                               .minusDays(i);
-            stopWatch.start();
-            posts(now.format(formatter), now.format(formatter));
-            stopWatch.stop();
-            log.info("[batchNo-{}] yyyyMMdd : {}, executionTime : {}",
-                     i,
-                     now.format(formatter),
-                     TimeUnit.MILLISECONDS.toSeconds(stopWatch.getLastTaskTimeMillis()) + "s");
+        for (int i = 6; i < 10; i++) {
+            for (int j = 0; j < yearDays; j++) {
+                now = LocalDateTime.now()
+                                   .minusYears(i)
+                                   .minusDays(j);
+                stopWatch.start();
+                posts(now.format(formatter), now.format(formatter));
+                stopWatch.stop();
+                log.info("[batchNo-{}] yyyyMMdd : {}, executionTime : {}",
+                         j,
+                         now.format(formatter),
+                         TimeUnit.MILLISECONDS.toSeconds(stopWatch.getLastTaskTimeMillis()) + "s");
+            }
         }
     }
 
