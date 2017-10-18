@@ -12,18 +12,18 @@ import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -61,35 +61,40 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    @Scheduled(fixedRate = 1800000L)
-    public void today() {
-        posts(getDefaultDate(DATE_FORMAT), getDefaultDate(DATE_FORMAT));
-    }
-
-    @Scheduled(fixedRate = 86400000L)
-    public void yesterDay() {
-        LocalDateTime now = LocalDateTime.now()
-                                         .minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        posts(now.format(formatter), now.format(formatter));
+    //@Scheduled(fixedRate = 100000000L)
+    public void batch() {
+        StopWatch stopWatch = new StopWatch();
+        Integer yearDays = 365;
+        LocalDateTime now;
+        DateTimeFormatter formatter;
+        for (int i = 0; i < yearDays; i++) {
+            now = LocalDateTime.now()
+                               .minusDays(i);
+            formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+            stopWatch.start();
+            posts(now.format(formatter), now.format(formatter));
+            stopWatch.stop();
+            log.info("[batchNo-{}] yyyyMMdd : {}, executionTime : {}",
+                     i,
+                     now.format(formatter),
+                     TimeUnit.MILLISECONDS.toSeconds(stopWatch.getLastTaskTimeMillis()) + "s");
+        }
     }
 
     public void posts(String beginDate, String endDate) {
         String beginDateParam = beginDate;
         String endDateParam = endDate;
-        if(isEmpty(beginDate)) {
+        if (isEmpty(beginDate)) {
             beginDateParam = getDefaultDate(DATE_FORMAT);
         }
-        if(isEmpty(endDate)) {
+        if (isEmpty(endDate)) {
             endDateParam = getDefaultDate(DATE_FORMAT);
         }
         AnimalApiResponse response = animalApiClient.animal(appKey, beginDateParam, endDateParam, EMPTY, EMPTY,
                                                             EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
         if (response != null) {
-            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(getDefaultDate(
-                DATE_FORMAT)),
-                                                                                                         convertStringToDate(getDefaultDate(
-                                                                                                             DATE_FORMAT)));
+            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
+                                                                                                         convertStringToDate(endDate));
             postRepository.save(response.getBody()
                                         .getItems()
                                         .getItem()
@@ -100,11 +105,14 @@ public class PostJob {
                                                 if (y.getDesertionId()
                                                      .equals(x.getDesertionId())) {
                                                     x.setId(y.getId());
+                                                    x.setCreatedDate(y.getCreatedDate());
                                                 }
                                             });
                                             return x;
                                         })
                                         .collect(Collectors.toList()));
+        } else {
+            log.debug("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
     }
 
@@ -123,15 +131,6 @@ public class PostJob {
                             .orElse(mockKind);
         String[] orgNames = animalItemDTO.getOrgNm()
                                          .split(SPACE);
-        List<Shelter> shelterList = new ArrayList<>();
-        switch (orgNames.length) {
-            case 1:
-                shelterList = shelterRepository.findByCityName(orgNames[0]);
-                break;
-            case 2:
-                shelterList = shelterRepository.findByTownName(orgNames[1]);
-                break;
-        }
         Shelter mockShelter = new Shelter();
         mockShelter.setCityCode(-1L);
         mockShelter.setCityName(UNKNOWN);
@@ -139,9 +138,27 @@ public class PostJob {
         mockShelter.setTownName(UNKNOWN);
         mockShelter.setShelterCode(-1L);
         mockShelter.setShelterName(UNKNOWN);
-        Shelter shelter = shelterList.stream()
-                                     .findFirst()
-                                     .orElse(mockShelter);
+        Shelter shelter = new Shelter();
+        switch (orgNames.length) {
+            case 1:
+                shelter = shelterRepository.findByCityName(orgNames[0])
+                                           .stream()
+                                           .findFirst()
+                                           .orElse(mockShelter);
+                break;
+            case 2:
+                shelter = shelterRepository.findByTownName(orgNames[1])
+                                           .stream()
+                                           .findFirst()
+                                           .orElse(mockShelter);
+                break;
+        }
+        if ("-1".equals(shelter.getTownCode())) {
+            shelter = shelterRepository.findByShelterName(animalItemDTO.getCareNm())
+                                       .stream()
+                                       .findFirst()
+                                       .orElse(mockShelter);
+        }
         Post post = new Post();
         post.setDesertionId(Long.valueOf(animalItemDTO.getDesertionNo()));
         post.setImageUrl(animalItemDTO.getPopfile());
@@ -183,13 +200,14 @@ public class PostJob {
     }
 
     private String convertAge(String age) {
-        if (isEmpty(age) || isAllBlank(age)) {
+        String result = age.replace(" ", "");
+        if (isEmpty(result) || isAllBlank(result)) {
             return "-1";
         }
-        if (age.contains("(년생)")) {
-            return age.replace("(년생)", "");
+        if (result.contains("(년생)")) {
+            return result.replace("(년생)", "");
         }
-        return age;
+        return result;
     }
 
     private String convertKindName(String kindName) {

@@ -12,4 +12,5 @@ public interface ShelterRepository extends JpaRepository<Shelter, Long> {
     List<Shelter> findByTownCode(Long townCode);
     List<Shelter> findByCityName(String cityName);
     List<Shelter> findByTownName(String townName);
+    List<Shelter> findByShelterName(String shelterName);
 }
