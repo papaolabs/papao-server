@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -139,7 +138,7 @@ public class PostJob {
                                                });
                                                return x;
                                            })
-                                           .collect(Collectors.toList()););
+                                           .collect(Collectors.toList()));
         } else {
             log.info("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
