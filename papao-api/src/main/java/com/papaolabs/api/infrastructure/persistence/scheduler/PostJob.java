@@ -68,7 +68,7 @@ public class PostJob {
         Integer yearDays = 365;
         LocalDateTime now;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        for (int i = 6; i < 10; i++) {
+        for (int i = 8; i < 10; i++) {
             for (int j = 0; j < yearDays; j++) {
                 now = LocalDateTime.now()
                                    .minusYears(i)
@@ -116,7 +116,7 @@ public class PostJob {
                                           .collect(Collectors.toList());
             postRepository.save(postList);
         } else {
-            log.debug("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
+            log.info("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
     }
 
