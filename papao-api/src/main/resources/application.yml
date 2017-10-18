@@ -55,12 +55,9 @@ spring.datasource:
   password: ENC(bHUKdWgtyhtWbjW9mPOGRg==)
   driverClassName: com.mysql.jdbc.Driver
   initialize: false
-  ## Pool Info ##
-  maxActive: 100
-  initialSize: 10
-  minIdle: 10
-  validationQuery: select 1
-  testWhileIdle: true
-  timeBetweenEvictionRunsMillis: 5000 #5 second
-  minEvictableIdleTimeMillis: 10000  #10 second
-  validationQueryTimeout: 5
+  connection-test-query: SELECT 1
+  test-while-idle: true
+  test-on-borrow: true
+  validation-interval: 10000
+  log-validation-errors: true
+  validation-query: SELECT 1

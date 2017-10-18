@@ -12,7 +12,9 @@ import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -59,14 +62,15 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-/*    @Scheduled(fixedRate = 100000000L)
+    @Scheduled(fixedRate = 100000000L)
     public void batch() {
         StopWatch stopWatch = new StopWatch();
         Integer yearDays = 365;
         LocalDateTime now;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         for (int i = 0; i < yearDays; i++) {
-            now = LocalDateTime.now().minusYears(5)
+            now = LocalDateTime.now()
+                               .minusYears(5)
                                .minusDays(i);
             stopWatch.start();
             posts(now.format(formatter), now.format(formatter));
@@ -76,7 +80,7 @@ public class PostJob {
                      now.format(formatter),
                      TimeUnit.MILLISECONDS.toSeconds(stopWatch.getLastTaskTimeMillis()) + "s");
         }
-    }*/
+    }
 
     public void posts(String beginDate, String endDate) {
         String beginDateParam = beginDate;
@@ -92,22 +96,23 @@ public class PostJob {
         if (response != null) {
             List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
                                                                                                          convertStringToDate(endDate));
-            postRepository.save(response.getBody()
-                                        .getItems()
-                                        .getItem()
-                                        .stream()
-                                        .map(this::transform)
-                                        .map(x -> {
-                                            posts.forEach(y -> {
-                                                if (y.getDesertionId()
-                                                     .equals(x.getDesertionId())) {
-                                                    x.setId(y.getId());
-                                                    x.setCreatedDate(y.getCreatedDate());
-                                                }
-                                            });
-                                            return x;
-                                        })
-                                        .collect(Collectors.toList()));
+            List<Post> postList = response.getBody()
+                                          .getItems()
+                                          .getItem()
+                                          .stream()
+                                          .map(this::transform)
+                                          .map(x -> {
+                                              posts.forEach(y -> {
+                                                  if (y.getDesertionId()
+                                                       .equals(x.getDesertionId())) {
+                                                      x.setId(y.getId());
+                                                      x.setCreatedDate(y.getCreatedDate());
+                                                  }
+                                              });
+                                              return x;
+                                          })
+                                          .collect(Collectors.toList());
+            postRepository.save(postList);
         } else {
             log.debug("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
@@ -173,10 +178,9 @@ public class PostJob {
         post.setOrgCode(String.valueOf(shelter.getTownCode()));
         post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
         post.setKindCode(String.valueOf(kind.getKindCode()));
-        try{
+        try {
             post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
-        }
-        catch (NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             post.setAge(-1);
         }
         post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
