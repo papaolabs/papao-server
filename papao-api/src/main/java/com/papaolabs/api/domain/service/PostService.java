@@ -29,8 +29,8 @@ public interface PostService {
                             String upKindCode,
                             String uprCode,
                             String orgCode,
-                            Integer page,
-                            Integer size);
+                            String page,
+                            String size);
 
     PostDTO readPost(String postId);
 

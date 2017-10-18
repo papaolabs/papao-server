@@ -89,15 +89,15 @@ public class PostServiceImpl implements PostService {
                                    String kindUpCode,
                                    String uprCode,
                                    String orgCode,
-                                   Integer page,
-                                   Integer size) {
+                                   String page,
+                                   String size) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
         if (isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
-        PageRequest pageRequest = new PageRequest(page, size);
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
         return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(endDate),
                                                                                          convertStringToDate(beginDate),
                                                                                          pageRequest)

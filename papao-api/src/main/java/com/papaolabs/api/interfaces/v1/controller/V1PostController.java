@@ -74,8 +74,8 @@ public class V1PostController {
                                                    @RequestParam(required = false) String kindUpCode,
                                                    @RequestParam(required = false) String uprCode,
                                                    @RequestParam(required = false) String orgCode,
-                                                   @RequestParam(required = false) Integer index,
-                                                   @RequestParam(required = false) Integer size
+                                                   @RequestParam(defaultValue = "1", required = false) String index,
+                                                   @RequestParam(defaultValue = "100", required = false) String size
     ) {
         return new ResponseEntity<>(postService.readPosts(beginDate, endDate, kindUpCode, uprCode, orgCode, index, size), HttpStatus.OK);
     }
