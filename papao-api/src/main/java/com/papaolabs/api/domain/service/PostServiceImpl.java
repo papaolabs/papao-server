@@ -9,6 +9,7 @@ import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,15 +84,23 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> readPosts(String beginDate, String endDate, String kindUpCode, String uprCode, String orgCode) {
-        if(isEmpty(beginDate)) {
+    public List<PostDTO> readPosts(String beginDate,
+                                   String endDate,
+                                   String kindUpCode,
+                                   String uprCode,
+                                   String orgCode,
+                                   Integer page,
+                                   Integer size) {
+        if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
-        if(isEmpty(endDate)) {
+        if (isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
+        PageRequest pageRequest = new PageRequest(page, size);
         return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(endDate),
-                                                                                         convertStringToDate(beginDate))
+                                                                                         convertStringToDate(beginDate),
+                                                                                         pageRequest)
                              .stream()
                              .filter(Post::getIsDisplay)
                              .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
