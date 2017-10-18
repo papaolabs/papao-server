@@ -8,12 +8,14 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApi
 import com.papaolabs.api.interfaces.v1.dto.ShelterDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ShelterServiceImpl implements ShelterService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;

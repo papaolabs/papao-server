@@ -6,12 +6,14 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClien
 import com.papaolabs.api.interfaces.v1.dto.KindDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AnimalServiceImpl implements AnimalService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;

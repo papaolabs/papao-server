@@ -6,6 +6,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private static final String DATE_FORMAT = "yyyyMMdd";
     @NotNull
