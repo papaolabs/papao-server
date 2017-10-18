@@ -12,6 +12,7 @@ import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -61,16 +62,15 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
-    //@Scheduled(fixedRate = 100000000L)
+    @Scheduled(fixedRate = 100000000L)
     public void batch() {
         StopWatch stopWatch = new StopWatch();
         Integer yearDays = 365;
         LocalDateTime now;
-        DateTimeFormatter formatter;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         for (int i = 0; i < yearDays; i++) {
-            now = LocalDateTime.now()
+            now = LocalDateTime.now().minusYears(1)
                                .minusDays(i);
-            formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
             stopWatch.start();
             posts(now.format(formatter), now.format(formatter));
             stopWatch.stop();
@@ -176,7 +176,12 @@ public class PostJob {
         post.setOrgCode(String.valueOf(shelter.getTownCode()));
         post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
         post.setKindCode(String.valueOf(kind.getKindCode()));
-        post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
+        try{
+            post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
+        }
+        catch (NumberFormatException nfe) {
+            post.setAge(-1);
+        }
         post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
         post.setIntroduction(animalItemDTO.getNoticeComment());
         post.setFeature(animalItemDTO.getSpecialMark());
