@@ -12,9 +12,7 @@ import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -24,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -62,6 +59,7 @@ public class PostJob {
         this.shelterRepository = shelterRepository;
     }
 
+/*
     @Scheduled(fixedRate = 100000000L)
     public void batch() {
         StopWatch stopWatch = new StopWatch();
@@ -80,6 +78,7 @@ public class PostJob {
                      TimeUnit.MILLISECONDS.toSeconds(stopWatch.getLastTaskTimeMillis()) + "s");
         }
     }
+*/
 
     public void posts(String beginDate, String endDate) {
         String beginDateParam = beginDate;
