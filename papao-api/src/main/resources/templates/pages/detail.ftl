@@ -149,7 +149,7 @@
                     View Updates
                 </a>-->
                     <span class="mdl-list__item-primary-content">
-                                <form action="/dashboard/comment?postId=${post.id}" method="post">
+                                <form action="/dashboard/comment?postId=${post.id?c}" method="post">
                                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                                        style="width:100% !important;">
                                     <input class="mdl-textfield__input" type="text" name="text">
