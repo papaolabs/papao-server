@@ -37,4 +37,6 @@ public interface PostService {
     PostDTO delete(String id);
 
     PostDTO setState(String postId, StateType state);
+
+    void syncPosts(String beginDate, String endDate);
 }
