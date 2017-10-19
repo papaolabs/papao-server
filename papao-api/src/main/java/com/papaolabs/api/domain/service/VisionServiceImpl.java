@@ -17,10 +17,16 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiR
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.VisionProperties.DominantColor
     .Properties;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -159,10 +165,7 @@ public class VisionServiceImpl implements VisionService {
                                                       .build());
         return Request.builder()
                       .image(Request.Image.builder()
-                                          .source(Request.Image.Source.builder()
-                                                                      .imageUri(
-                                                                          imageUrl)
-                                                                      .build())
+                                          .content(imageUrl)
                                           .build())
                       .features(features)
                       .build();
@@ -171,10 +174,32 @@ public class VisionServiceImpl implements VisionService {
     private VisionApiRequest createVisionApiRequest(List<PostDTO> posts) {
         List<Request> requests = new ArrayList<>();
         for (PostDTO post : posts) {
-            requests.add(createRequest(post.getImageUrl()));
+            byte[] imageData = Base64.encodeBase64(getImageFromUrl(post.getImageUrl()));
+            System.out.println(new String(imageData));
+            requests.add(createRequest(new String(imageData)));
         }
         return VisionApiRequest.builder()
                                .requests(requests)
                                .build();
+    }
+
+    private byte[] getImageFromUrl(String imageUrl) {
+        URL url = null;
+        try {
+            url = new URL(imageUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try (InputStream inputStream = url.openStream()) {
+            int n = 0;
+            byte[] buffer = new byte[1024];
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output.toByteArray();
     }
 }

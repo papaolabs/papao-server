@@ -37,7 +37,7 @@ public class PostJob {
         String nowDate = LocalDateTime.now()
                                       .format(formatter);
         stopWatch.start();
-        List<PostDTO> posts = postService.readPosts(nowDate, nowDate, EMPTY, EMPTY, EMPTY, "1", "10");
+        List<PostDTO> posts = postService.readPosts(nowDate, nowDate, EMPTY, EMPTY, EMPTY, "1", "1");
         for (PostDTO post : posts) {
             visionService.syncVisionData(post);
         }

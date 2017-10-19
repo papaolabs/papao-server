@@ -29,15 +29,7 @@ public class VisionApiRequest implements Serializable{
         @NoArgsConstructor
         @AllArgsConstructor
         public static class Image {
-            private Source source;
-
-            @Data
-            @Builder
-            @NoArgsConstructor
-            @AllArgsConstructor
-            public static class Source {
-                private String imageUri;
-            }
+            private String content;
         }
 
         @Data
