@@ -27,15 +27,20 @@ public class VisionApiResponse {
 
             @Data
             public static class DominantColor {
-                List<Color> colors;
+                List<Properties> colors;
 
                 @Data
-                public static class Color {
-                    private Integer red;
-                    private Integer green;
-                    private Integer blue;
+                public static class Properties {
+                    private Color color;
                     private Double score;
                     private Double pixelFraction;
+
+                    @Data
+                    public static class Color {
+                        private Integer red;
+                        private Integer green;
+                        private Integer blue;
+                    }
                 }
             }
         }

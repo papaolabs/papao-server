@@ -78,11 +78,11 @@ public class PostJob {
         this.visionService = visionService;
     }
 
-    @Scheduled(fixedRate = 100000000L)
+    @Scheduled(fixedRate = 10000000000L)
     public void image() throws Exception {
         Gson gson = new Gson();
-        log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", gson.toJson(createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg")));
-        VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg"));
+        log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", "http://www.animal.go.kr/files/shelter/2017/10/201710191410720.jpg");
+        VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191410720.jpg"));
         log.debug("[GOOGLE_VISION_RESPONSE] vision api response result : {}", result.toString());
         visionService.create(result);
         log.debug("[GOOGLE_VISION_COMPLETE] <================================================");

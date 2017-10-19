@@ -21,6 +21,7 @@ public class VisionLabel {
     @Id
     @GeneratedValue
     private Long id;
+    private String pid;
     private String mid;
     private String name;
     private Double score;

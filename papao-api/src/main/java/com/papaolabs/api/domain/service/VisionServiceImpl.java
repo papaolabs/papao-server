@@ -10,15 +10,23 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiR
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.Label;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.Type;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.VisionProperties.DominantColor.Color;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.VisionProperties.DominantColor
+    .Properties;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class VisionServiceImpl implements VisionService {
+    public static final List<String> filterNameList = Arrays.asList("dog",
+                                                                    "dog breed",
+                                                                    "dog like mammal",
+                                                                    "dog breed group",
+                                                                    "mammal",
+                                                                    "vertebrate");
     @NotNull
     private final VisionLabelRepository labelRepository;
     @NotNull
@@ -40,6 +48,7 @@ public class VisionServiceImpl implements VisionService {
         for (VisionResult visionResult : visionResults) {
             labelRepository.save(visionResult.getLabelAnnotations()
                                              .stream()
+                                             .filter(x -> filterLabelName(x.getDescription()))
                                              .map(this::transform)
                                              .collect(Collectors.toList()));
             typeRepository.save(transform(visionResult.getSafeSearchAnnotation()));
@@ -52,19 +61,28 @@ public class VisionServiceImpl implements VisionService {
         }
     }
 
+    private Boolean filterLabelName(String name) {
+        return !filterNameList.stream()
+                             .anyMatch(x -> x.equals(name));
+    }
+
     private VisionLabel transform(Label label) {
         VisionLabel visionLabel = new VisionLabel();
+        visionLabel.setPid("-1");
         visionLabel.setMid(label.getMid());
         visionLabel.setName(label.getDescription());
         visionLabel.setScore(label.getScore());
         return visionLabel;
     }
 
-    private VisionColor transform(Color color) {
+    private VisionColor transform(Properties color) {
         VisionColor visionColor = new VisionColor();
-        visionColor.setRed(color.getRed());
-        visionColor.setGreen(color.getGreen());
-        visionColor.setBlue(color.getBlue());
+        visionColor.setRed(color.getColor()
+                                .getRed());
+        visionColor.setGreen(color.getColor()
+                                  .getGreen());
+        visionColor.setBlue(color.getColor()
+                                 .getBlue());
         visionColor.setScore(color.getScore());
         visionColor.setPixelFraction(color.getPixelFraction());
         return visionColor;
