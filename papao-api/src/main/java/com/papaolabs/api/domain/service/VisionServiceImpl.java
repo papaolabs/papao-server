@@ -101,35 +101,36 @@ public class VisionServiceImpl implements VisionService {
         VisionApiResponse result = visionApiClient.image(visionAppKey,
                                                          createVisionApiRequest(posts));
         List<VisionResult> visionResults = result.getResponses();
-        for (VisionResult visionResult : visionResults) {
-            List<VisionLabel> visionLabels = visionResult.getLabelAnnotations()
-                                                         .stream()
-                                                         .filter(x -> filterLabelName(x.getDescription()))
-                                                         .map(this::transform)
-                                                         .collect(Collectors.toList());
-            VisionType visionType = transform(visionResult.getSafeSearchAnnotation());
-            List<VisionColor> visionColors = visionResult.getImagePropertiesAnnotation()
-                                                         .getDominantColors()
-                                                         .getColors()
-                                                         .stream()
-                                                         .map(this::transform)
-                                                         .collect(Collectors.toList());
-            for (int i = 0; i < posts.size(); i++) {
-                Long postId = posts.get(i)
-                                   .getId();
-                String imageUrl = posts.get(i)
-                                       .getImageUrl(); // Todo : vision api 테스트 동안에만 저장하도록 함
-                visionLabels.forEach(x -> {
-                    x.setPostId(postId);
-                    x.setImageUrl(imageUrl);
-                });
-                visionColors.forEach(x -> {
-                    x.setPostId(postId);
-                    x.setImageUrl(imageUrl);
-                });
-                visionType.setPostId(postId);
-                visionType.setImageUrl(imageUrl);
-            }
+        for (int i = 0; i < visionResults.size(); i++) {
+            List<VisionLabel> visionLabels = visionResults.get(i)
+                                                          .getLabelAnnotations()
+                                                          .stream()
+                                                          .filter(x -> filterLabelName(x.getDescription()))
+                                                          .map(this::transform)
+                                                          .collect(Collectors.toList());
+            VisionType visionType = transform(visionResults.get(i)
+                                                           .getSafeSearchAnnotation());
+            List<VisionColor> visionColors = visionResults.get(i)
+                                                          .getImagePropertiesAnnotation()
+                                                          .getDominantColors()
+                                                          .getColors()
+                                                          .stream()
+                                                          .map(this::transform)
+                                                          .collect(Collectors.toList());
+            Long postId = posts.get(i)
+                               .getId();
+            String imageUrl = posts.get(i)
+                                   .getImageUrl(); // Todo : vision api 테스트 동안에만 저장하도록 함
+            visionLabels.forEach(x -> {
+                x.setPostId(postId);
+                x.setImageUrl(imageUrl);
+            });
+            visionColors.forEach(x -> {
+                x.setPostId(postId);
+                x.setImageUrl(imageUrl);
+            });
+            visionType.setPostId(postId);
+            visionType.setImageUrl(imageUrl);
             labelRepository.save(visionLabels);
             typeRepository.save(visionType);
             colorRepository.save(visionColors);
