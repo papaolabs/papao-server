@@ -21,6 +21,8 @@ public class VisionType {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "POST_ID")
+    private Long postId;
     private String adult;
     private String spoof;
     private String medical;

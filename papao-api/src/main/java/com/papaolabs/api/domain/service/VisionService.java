@@ -1,7 +1,7 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
+import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 
 public interface VisionService {
-    void create(VisionApiResponse response);
+    void syncVisionData(PostDTO post);
 }

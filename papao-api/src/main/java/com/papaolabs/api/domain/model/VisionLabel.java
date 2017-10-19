@@ -21,7 +21,8 @@ public class VisionLabel {
     @Id
     @GeneratedValue
     private Long id;
-    private String pid;
+    @Column(name = "POST_ID")
+    private Long postId;
     private String mid;
     private String name;
     private Double score;

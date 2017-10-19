@@ -21,6 +21,8 @@ public class VisionColor {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "POST_ID")
+    private Long postId;
     private Integer red;
     private Integer green;
     private Integer blue;
