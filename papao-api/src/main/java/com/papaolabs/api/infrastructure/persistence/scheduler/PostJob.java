@@ -14,6 +14,8 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiR
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request.Feature;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.DominantColor.Color;
 import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
@@ -77,8 +79,8 @@ public class PostJob {
     @Scheduled(fixedRate = 100000000L)
     public void image() throws Exception {
         Gson gson = new Gson();
-        log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", gson.toJson(createVisionApiRequest()));
-        VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest());
+        log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", gson.toJson(createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg")));
+        VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg"));
         log.debug("[GOOGLE_VISION_RESPONSE] vision api response result : {}", result.toString());
     }
 
@@ -97,6 +99,21 @@ public class PostJob {
     @Scheduled(cron = "0 0/30 * 1/1 * ?") // 30분마다 실행
     public void day() {
         batch(BatchType.DAY, 0);
+    }
+
+    public void vision(VisionApiResponse response) {
+        List<VisionResult> visionResults = response.getResponses();
+
+        for(VisionResult visionResult : visionResults) {
+            List<VisionResult.Label> labels = visionResult.getLabelAnnotations();
+            VisionResult.Type type = visionResult.getSafeSearchAnnotation();
+            List<VisionResult.DominantColor> dominantColors = visionResult.getDominantColors();
+            dominantColors.forEach(x -> {
+                List<Color> colors = x.getColors();
+                Double pixelFraction = x.getPixelFraction();
+                Double score = x.getScore();
+            });
+        }
     }
 
     public void batch(BatchType type, Integer minus) {
@@ -289,7 +306,7 @@ public class PostJob {
         return new Date();
     }
 
-    private VisionApiRequest createVisionApiRequest() {
+    private VisionApiRequest createVisionApiRequest(String imageUrl) {
         List<Request> requests = new ArrayList<>();
         List<Feature> features = new ArrayList<>();
         features.add(Feature.builder()
@@ -310,9 +327,7 @@ public class PostJob {
         requests.add(Request.builder()
                             .image(Request.Image.builder()
                                                 .source(Request.Image.Source.builder()
-                                                                            .imageUri(
-                                                                                "http://www.animal.go" +
-                                                                                    ".kr/files/shelter/2017/10/201710191010667.jpg")
+                                                                            .imageUri(imageUrl)
                                                                             .build())
                                                 .build())
                             .features(features)
