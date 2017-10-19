@@ -21,7 +21,7 @@ public class VisionLabel {
     @Id
     @GeneratedValue
     private Long id;
-    private Integer key;
+    private String mid;
     private String name;
     private Double score;
     @Column(name = "CREATED_DATE")

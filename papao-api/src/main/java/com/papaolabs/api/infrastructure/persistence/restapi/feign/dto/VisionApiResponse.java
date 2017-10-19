@@ -12,7 +12,7 @@ public class VisionApiResponse {
     public static class VisionResult {
         private List<Label> labelAnnotations;
         private Type safeSearchAnnotation;
-        private List<DominantColor> dominantColors;
+        private VisionProperties imagePropertiesAnnotation;
 
         @Data
         public static class Label {
@@ -22,16 +22,21 @@ public class VisionApiResponse {
         }
 
         @Data
-        public static class DominantColor {
-            private List<Color> colors;
-            private Double score;
-            private Double pixelFraction;
+        public static class VisionProperties {
+            private DominantColor dominantColors;
 
             @Data
-            public static class Color {
-                private Integer red;
-                private Integer green;
-                private Integer blue;
+            public static class DominantColor {
+                List<Color> colors;
+
+                @Data
+                public static class Color {
+                    private Integer red;
+                    private Integer green;
+                    private Integer blue;
+                    private Double score;
+                    private Double pixelFraction;
+                }
             }
         }
 

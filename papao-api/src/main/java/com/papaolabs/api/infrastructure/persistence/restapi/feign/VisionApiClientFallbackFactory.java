@@ -25,8 +25,8 @@ public class VisionApiClientFallbackFactory implements LoggingFallbackFactory<Vi
 
     public static class VisionApiFallback implements VisionApiClient {
         @Override
-        public VisionApiResponse image(@Param(value = "key") String serviceKey, @RequestBody VisionApiRequest request) {
-            log.debug("service key : {}, request : {}", serviceKey, request.toString());
+        public VisionApiResponse image(@Param(value = "mid") String serviceKey, @RequestBody VisionApiRequest request) {
+            log.debug("service mid : {}, request : {}", serviceKey, request.toString());
             return new VisionApiResponse();
         }
     }

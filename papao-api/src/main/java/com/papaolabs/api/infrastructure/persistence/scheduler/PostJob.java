@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
 import com.papaolabs.api.domain.model.Shelter;
+import com.papaolabs.api.domain.service.VisionService;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
@@ -14,8 +15,6 @@ import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiR
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request.Feature;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.DominantColor.Color;
 import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
@@ -64,16 +63,19 @@ public class PostJob {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final VisionApiClient visionApiClient;
+    @NotNull
+    private final VisionService visionService;
 
     public PostJob(AnimalApiClient animalApiClient,
                    PostRepository postRepository,
                    KindRepository kindRepository,
-                   ShelterRepository shelterRepository, VisionApiClient visionApiClient) {
+                   ShelterRepository shelterRepository, VisionApiClient visionApiClient, VisionService visionService) {
         this.animalApiClient = animalApiClient;
         this.postRepository = postRepository;
         this.kindRepository = kindRepository;
         this.shelterRepository = shelterRepository;
         this.visionApiClient = visionApiClient;
+        this.visionService = visionService;
     }
 
     @Scheduled(fixedRate = 100000000L)
@@ -82,6 +84,8 @@ public class PostJob {
         log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", gson.toJson(createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg")));
         VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest("http://www.animal.go.kr/files/shelter/2017/10/201710191010667.jpg"));
         log.debug("[GOOGLE_VISION_RESPONSE] vision api response result : {}", result.toString());
+        visionService.create(result);
+        log.debug("[GOOGLE_VISION_COMPLETE] <================================================");
     }
 
     @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
@@ -99,21 +103,6 @@ public class PostJob {
     @Scheduled(cron = "0 0/30 * 1/1 * ?") // 30분마다 실행
     public void day() {
         batch(BatchType.DAY, 0);
-    }
-
-    public void vision(VisionApiResponse response) {
-        List<VisionResult> visionResults = response.getResponses();
-
-        for(VisionResult visionResult : visionResults) {
-            List<VisionResult.Label> labels = visionResult.getLabelAnnotations();
-            VisionResult.Type type = visionResult.getSafeSearchAnnotation();
-            List<VisionResult.DominantColor> dominantColors = visionResult.getDominantColors();
-            dominantColors.forEach(x -> {
-                List<Color> colors = x.getColors();
-                Double pixelFraction = x.getPixelFraction();
-                Double score = x.getScore();
-            });
-        }
     }
 
     public void batch(BatchType type, Integer minus) {
