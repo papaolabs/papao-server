@@ -1,5 +1,6 @@
 package com.papaolabs.api.infrastructure.persistence.scheduler;
 
+import com.google.gson.Gson;
 import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
 import com.papaolabs.api.domain.model.Shelter;
@@ -7,7 +8,12 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepositor
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.VisionApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request.Feature;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +50,8 @@ public class PostJob {
     private static final String START_INDEX = "1";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
+    @Value("${google.application.key}")
+    private String visionAppKey;
     @NotNull
     private final AnimalApiClient animalApiClient;
     @NotNull
@@ -51,15 +60,26 @@ public class PostJob {
     private final KindRepository kindRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
+    @NotNull
+    private final VisionApiClient visionApiClient;
 
     public PostJob(AnimalApiClient animalApiClient,
                    PostRepository postRepository,
                    KindRepository kindRepository,
-                   ShelterRepository shelterRepository) {
+                   ShelterRepository shelterRepository, VisionApiClient visionApiClient) {
         this.animalApiClient = animalApiClient;
         this.postRepository = postRepository;
         this.kindRepository = kindRepository;
         this.shelterRepository = shelterRepository;
+        this.visionApiClient = visionApiClient;
+    }
+
+    @Scheduled(fixedRate = 100000000L)
+    public void image() throws Exception {
+        Gson gson = new Gson();
+        log.debug("[GOOGLE_VISION_REQUEST] vision api request json : {}", gson.toJson(createVisionApiRequest()));
+        VisionApiResponse result = visionApiClient.image(visionAppKey, createVisionApiRequest());
+        log.debug("[GOOGLE_VISION_RESPONSE] vision api response result : {}", result.toString());
     }
 
     @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
@@ -267,5 +287,38 @@ public class PostJob {
             e.printStackTrace();
         }
         return new Date();
+    }
+
+    private VisionApiRequest createVisionApiRequest() {
+        List<Request> requests = new ArrayList<>();
+        List<Feature> features = new ArrayList<>();
+        features.add(Feature.builder()
+                            .type("LABEL_DETECTION")
+                            .build());
+/*        features.add(Feature.builder()
+                            .type("FACE_DETECTION")
+                            .build());*/
+        features.add(Feature.builder()
+                            .type("IMAGE_PROPERTIES")
+                            .build());
+        features.add(Feature.builder()
+                            .type("SAFE_SEARCH_DETECTION")
+                            .build());
+/*        features.add(Feature.builder()
+                            .type("CROP_HINTS")
+                            .build());*/
+        requests.add(Request.builder()
+                            .image(Request.Image.builder()
+                                                .source(Request.Image.Source.builder()
+                                                                            .imageUri(
+                                                                                "http://www.animal.go" +
+                                                                                    ".kr/files/shelter/2017/10/201710191010667.jpg")
+                                                                            .build())
+                                                .build())
+                            .features(features)
+                            .build());
+        return VisionApiRequest.builder()
+                               .requests(requests)
+                               .build();
     }
 }

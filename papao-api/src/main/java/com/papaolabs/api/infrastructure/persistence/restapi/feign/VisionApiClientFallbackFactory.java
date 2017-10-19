@@ -1,0 +1,33 @@
+package com.papaolabs.api.infrastructure.persistence.restapi.feign;
+
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
+import feign.Param;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+
+@Component
+@Slf4j
+public class VisionApiClientFallbackFactory implements LoggingFallbackFactory<VisionApiClient> {
+    private static final VisionApiClient FALLBACK = new VisionApiFallback();
+
+    @Override
+    public VisionApiClient fallback() {
+        return FALLBACK;
+    }
+
+    @Override
+    public Logger logger() {
+        return null;
+    }
+
+    public static class VisionApiFallback implements VisionApiClient {
+        @Override
+        public VisionApiResponse image(@Param(value = "key") String serviceKey, @RequestBody VisionApiRequest request) {
+            log.debug("service key : {}, request : {}", serviceKey, request.toString());
+            return new VisionApiResponse();
+        }
+    }
+}
