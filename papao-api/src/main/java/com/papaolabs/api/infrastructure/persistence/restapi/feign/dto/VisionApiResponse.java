@@ -2,7 +2,10 @@ package com.papaolabs.api.infrastructure.persistence.restapi.feign.dto;
 
 import lombok.Data;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Data
 public class VisionApiResponse {
@@ -10,36 +13,36 @@ public class VisionApiResponse {
 
     @Data
     public static class VisionResult {
-        private List<Label> labelAnnotations;
-        private Type safeSearchAnnotation;
-        private VisionProperties imagePropertiesAnnotation;
+        private List<Label> labelAnnotations = Arrays.asList();
+        private Type safeSearchAnnotation = new Type();
+        private VisionProperties imagePropertiesAnnotation = new VisionProperties();
 
         @Data
         public static class Label {
-            private String mid;
-            private String description;
-            private Double score;
+            private String mid = EMPTY;
+            private String description = EMPTY;
+            private Double score = -1.0;
         }
 
         @Data
         public static class VisionProperties {
-            private DominantColor dominantColors;
+            private DominantColor dominantColors = new DominantColor();
 
             @Data
             public static class DominantColor {
-                List<Properties> colors;
+                List<Properties> colors = Arrays.asList();
 
                 @Data
                 public static class Properties {
-                    private Color color;
-                    private Double score;
-                    private Double pixelFraction;
+                    private Color color = new Color();
+                    private Double score = -1.0;
+                    private Double pixelFraction = -1.0;
 
                     @Data
                     public static class Color {
-                        private Integer red;
-                        private Integer green;
-                        private Integer blue;
+                        private Integer red = -1;
+                        private Integer green = -1;
+                        private Integer blue = -1;
                     }
                 }
             }
@@ -47,10 +50,10 @@ public class VisionApiResponse {
 
         @Data
         public static class Type {
-            private String adult;
-            private String spoof;
-            private String medical;
-            private String violence;
+            private String adult = EMPTY;
+            private String spoof = EMPTY;
+            private String medical = EMPTY;
+            private String violence = EMPTY;
         }
     }
 }

@@ -8,6 +8,8 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.VisionLabelRe
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.VisionTypeRepository;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.VisionApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request;
+import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request.Feature;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult;
 import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.Label;
@@ -60,8 +62,7 @@ public class VisionServiceImpl implements VisionService {
     @Override
     public void syncVisionData(PostDTO post) {
         VisionApiResponse result = visionApiClient.image(visionAppKey,
-                                                         createVisionApiRequest(
-                                                             post.getImageUrl()));
+                                                         createVisionApiRequest(Arrays.asList(post)));
         List<VisionResult> visionResults = result.getResponses();
         for (VisionResult visionResult : visionResults) {
             labelRepository.save(visionResult.getLabelAnnotations()
@@ -85,6 +86,28 @@ public class VisionServiceImpl implements VisionService {
                                                  x.setPostId(post.getId());
                                                  return x;
                                              })
+                                             .collect(Collectors.toList()));
+        }
+    }
+
+    @Override
+    public void syncVisionData(List<PostDTO> posts) {
+        VisionApiResponse result = visionApiClient.image(visionAppKey,
+                                                         createVisionApiRequest(posts));
+        List<VisionResult> visionResults = result.getResponses();
+        for (VisionResult visionResult : visionResults) {
+            labelRepository.save(visionResult.getLabelAnnotations()
+                                             .stream()
+                                             .filter(x -> filterLabelName(x.getDescription()))
+                                             .map(this::transform)
+                                             .collect(Collectors.toList()));
+            VisionType visionType = transform(visionResult.getSafeSearchAnnotation());
+            typeRepository.save(visionType);
+            colorRepository.save(visionResult.getImagePropertiesAnnotation()
+                                             .getDominantColors()
+                                             .getColors()
+                                             .stream()
+                                             .map(this::transform)
                                              .collect(Collectors.toList()));
         }
     }
@@ -124,33 +147,32 @@ public class VisionServiceImpl implements VisionService {
         return visionType;
     }
 
-    private VisionApiRequest createVisionApiRequest(String imageUrl) {
-        List<VisionApiRequest.Request> requests = new ArrayList<>();
-        List<VisionApiRequest.Request.Feature> features = new ArrayList<>();
-        features.add(VisionApiRequest.Request.Feature.builder()
-                                                     .type("LABEL_DETECTION")
-                                                     .build());
-/*        features.add(Feature.builder()
-                            .type("FACE_DETECTION")
-                            .build());*/
-        features.add(VisionApiRequest.Request.Feature.builder()
-                                                     .type("IMAGE_PROPERTIES")
-                                                     .build());
-        features.add(VisionApiRequest.Request.Feature.builder()
-                                                     .type("SAFE_SEARCH_DETECTION")
-                                                     .build());
-/*        features.add(Feature.builder()
-                            .type("CROP_HINTS")
-                            .build());*/
-        requests.add(VisionApiRequest.Request.builder()
-                                             .image(VisionApiRequest.Request.Image.builder()
-                                                                                  .source(VisionApiRequest.Request.Image.Source.builder()
-                                                                                                                               .imageUri(
-                                                                                                                                   imageUrl)
-                                                                                                                               .build())
-                                                                                  .build())
-                                             .features(features)
-                                             .build());
+    private Request createRequest(String imageUrl) {
+        List<Feature> features = Arrays.asList(Feature.builder()
+                                                      .type("LABEL_DETECTION")
+                                                      .build(),
+                                               Feature.builder()
+                                                      .type("IMAGE_PROPERTIES")
+                                                      .build(),
+                                               Feature.builder()
+                                                      .type("SAFE_SEARCH_DETECTION")
+                                                      .build());
+        return Request.builder()
+                      .image(Request.Image.builder()
+                                          .source(Request.Image.Source.builder()
+                                                                      .imageUri(
+                                                                          imageUrl)
+                                                                      .build())
+                                          .build())
+                      .features(features)
+                      .build();
+    }
+
+    private VisionApiRequest createVisionApiRequest(List<PostDTO> posts) {
+        List<Request> requests = new ArrayList<>();
+        for (PostDTO post : posts) {
+            requests.add(createRequest(post.getImageUrl()));
+        }
         return VisionApiRequest.builder()
                                .requests(requests)
                                .build();

@@ -41,6 +41,7 @@ public class PostJob {
         for (PostDTO post : posts) {
             visionService.syncVisionData(post);
         }
+//        visionService.syncVisionData(posts);
         stopWatch.stop();
         log.debug("[GOOGLE_VISION_COMPLETE] executionTime : {} millis", stopWatch.getLastTaskTimeMillis());
     }
