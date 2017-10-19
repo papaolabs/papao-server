@@ -9,7 +9,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Data
 public class VisionApiResponse {
-    private List<VisionResult> responses;
+    private List<VisionResult> responses = Arrays.asList();
 
     @Data
     public static class VisionResult {

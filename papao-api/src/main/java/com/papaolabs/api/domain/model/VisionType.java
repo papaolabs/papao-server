@@ -23,6 +23,8 @@ public class VisionType {
     private Long id;
     @Column(name = "POST_ID")
     private Long postId;
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
     private String adult;
     private String spoof;
     private String medical;
