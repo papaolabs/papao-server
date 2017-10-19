@@ -30,14 +30,13 @@ public class PostJob {
         this.postService = postService;
     }
 
-    @Scheduled(fixedDelay = 1000000000L)
     public void image() throws Exception {
         StopWatch stopWatch = new StopWatch();
         log.debug("[GOOGLE_VISION_START]");
         String baseDate = LocalDateTime.now().minusDays(1)
                                       .format(formatter);
         stopWatch.start();
-        List<PostDTO> posts = postService.readPosts(baseDate, baseDate, EMPTY, EMPTY, EMPTY, "1", "10");
+        List<PostDTO> posts = postService.readPosts(baseDate, baseDate, EMPTY, EMPTY, EMPTY, "1", "1");
         visionService.syncVisionData(posts);
         stopWatch.stop();
         log.debug("[GOOGLE_VISION_COMPLETE] executionTime : {} millis", stopWatch.getLastTaskTimeMillis());
