@@ -2,7 +2,15 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +33,29 @@ public class DashboardController {
     private final PostService postService;
     @NotNull
     private final CommentService commentService;
+    @NotNull
+    private final ConnectionRepository connectionRepository;
 
-    public DashboardController(PostService postService, CommentService commentService) {
+    public DashboardController(PostService postService, CommentService commentService, ConnectionRepository connectionRepository) {
         this.postService = postService;
         this.commentService = commentService;
+        this.connectionRepository = connectionRepository;
+    }
+
+    @GetMapping("/login")
+    public ModelAndView login (HttpServletRequest request, ModelAndView model){
+        model.setViewName("pages/login");
+        return model;
+    }
+
+    @GetMapping("/success")
+    public ModelAndView success (HttpServletRequest request, ModelAndView model){
+        model.addObject("status", request.getParameter("status"));
+        model.addObject("code", request.getParameter("code"));
+        model.addObject("state", request.getParameter("state"));
+        User user = getConnect();
+        model.setViewName("pages/success");
+        return model;
     }
 
     @GetMapping
@@ -81,5 +108,23 @@ public class DashboardController {
                                          .minusDays(val);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return now.format(formatter);
+    }
+
+    private User getConnect() {
+        Connection<Facebook> connection = connectionRepository.findPrimaryConnection(Facebook.class);
+        if (connection == null) {
+            return null;
+        }
+        ConnectionData data = connection.createData();
+        return new User(data.getProviderUserId(), data.getDisplayName());
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class User {
+        String providerUserId;
+        String displayName;
     }
 }

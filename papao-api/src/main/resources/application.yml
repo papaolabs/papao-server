@@ -7,6 +7,10 @@ spring:
     url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     username: sa
     initialize: true
+  social:
+    facebook:
+      appId: ENC(5QUgIjPqkRvh439WoT76snKFs3h1efWWi4Dh6vC6SFPnRVIS8TguXbhVbccnfdFM)
+      appSecret: ENC(rnGF0HQzq3DFfyzVKfG+t8BE77VO/T/oqzsJH4hkOnF4K1CX2PwLOVDtaRA5guYp)
 
 spring.jpa:
   database: MYSQL
