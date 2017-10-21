@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.scheduler;
+package com.papaolabs.api.application.scheduler;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;

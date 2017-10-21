@@ -9,8 +9,8 @@ spring:
     initialize: true
   social:
     facebook:
-      appId: ENC(5QUgIjPqkRvh439WoT76snKFs3h1efWWi4Dh6vC6SFPnRVIS8TguXbhVbccnfdFM)
-      appSecret: ENC(rnGF0HQzq3DFfyzVKfG+t8BE77VO/T/oqzsJH4hkOnF4K1CX2PwLOVDtaRA5guYp)
+      appId: ENC(bmM4wK0OyFwBf9J3bqCUkryKm4Fqg87h)
+      appSecret: ENC(82Yj6Tb7NN5eTl4a7lSBuo74CyUVM54w1kHf+LzD85cm918Rq7QMhgA/nm4/8+1q)
 
 spring.jpa:
   database: MYSQL
@@ -41,6 +41,12 @@ google:
   application:
     imageUrl: https://vision.googleapis.com/v1
     key: ENC(J10GTNRuMxFnd6Y04emdEj07yr7N+5Rl9td8K9jKbCc4T24UBh0yxmE08BXQRV8h)
+
+facebook:
+  application:
+    apiUrl: https://graph.accountkit.com/
+    apiVersion: v1.1
+    apiKey: ENC(owKDvYkpHj5DLc56wRxs7GFeCRL8Iz+1EngPP2e+go9mZ81r1WZ2StAipmutICrzC/S+x/weX4YsGGyNdI7FLw==)
 
 ---
 spring.profiles: local

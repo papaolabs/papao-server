@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.scheduler;
+package com.papaolabs.api.application.scheduler;
 
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.domain.service.VisionService;

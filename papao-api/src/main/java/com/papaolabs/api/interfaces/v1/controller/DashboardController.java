@@ -2,15 +2,10 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.papaolabs.api.domain.service.AccountKitService;
+import com.papaolabs.api.infrastructure.persistence.restapi.account.dto.AccountKitAccessResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.account.dto.AccountKitProfileResponse;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionData;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -34,44 +31,52 @@ public class DashboardController {
     @NotNull
     private final CommentService commentService;
     @NotNull
-    private final ConnectionRepository connectionRepository;
+    private final AccountKitService accountKitService;
 
-    public DashboardController(PostService postService, CommentService commentService, ConnectionRepository connectionRepository) {
+    public DashboardController(PostService postService, CommentService commentService, AccountKitService accountKit) {
         this.postService = postService;
         this.commentService = commentService;
-        this.connectionRepository = connectionRepository;
+        this.accountKitService = accountKit;
     }
 
     @GetMapping("/login")
-    public ModelAndView login (HttpServletRequest request, ModelAndView model){
+    public ModelAndView login(HttpServletRequest request, ModelAndView model) {
         model.setViewName("pages/login");
         return model;
     }
 
     @GetMapping("/success")
-    public ModelAndView success (HttpServletRequest request, ModelAndView model){
-        model.addObject("status", request.getParameter("status"));
-        model.addObject("code", request.getParameter("code"));
-        model.addObject("state", request.getParameter("state"));
-        User user = getConnect();
-        model.setViewName("pages/success");
-        return model;
+    public ModelAndView validateAccountKit(HttpServletRequest request, ModelAndView model) {
+        String authCode = request.getParameter("code");
+        try {
+            AccountKitAccessResponse token = accountKitService.validateAuthorizationCode(authCode);
+            if (token != null) {
+                AccountKitProfileResponse profile = accountKitService.getProfile(token.getAccessToken());
+                // save(token); -
+                model.setViewName("pages/success");
+                model.addObject("profile", profile);
+                return model.addObject("status", Response.ok().build());
+            }
+        } catch (IOException e) {
+            return model.addObject(Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build());
+        }
+        return model.addObject(Response.status(Response.Status.UNAUTHORIZED).build());
     }
 
     @GetMapping
     public ModelAndView main(HttpServletRequest request, ModelAndView model) {
         String endDate = Optional.ofNullable(request.getParameter("endDate"))
-                                 .orElse("");
+                .orElse("");
         String upKindCode = Optional.ofNullable(request.getParameter("upKindCode"))
-                                    .orElse(EMPTY);
+                .orElse(EMPTY);
         upKindCode = upKindCode.equals("0") ? "" : upKindCode;
         String upKindName = Optional.ofNullable(request.getParameter("upKindName"))
-                                    .orElse(EMPTY);
+                .orElse(EMPTY);
         String cityCode = Optional.ofNullable(request.getParameter("cityCode"))
-                                  .orElse(EMPTY);
+                .orElse(EMPTY);
         cityCode = cityCode.equals("0") ? "" : cityCode;
         String cityName = Optional.ofNullable(request.getParameter("cityName"))
-                                  .orElse(EMPTY);
+                .orElse(EMPTY);
         model.setViewName("pages/index");
         model.addObject("posts", postService.readPosts(EMPTY, getDefaultDate(endDate), upKindCode, cityCode, EMPTY, "0", "100"));
         model.addObject("endDate", isEmpty(endDate) ? "0" : endDate);
@@ -105,26 +110,8 @@ public class DashboardController {
             val = Integer.valueOf(minusDay);
         }
         LocalDateTime now = LocalDateTime.now()
-                                         .minusDays(val);
+                .minusDays(val);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return now.format(formatter);
-    }
-
-    private User getConnect() {
-        Connection<Facebook> connection = connectionRepository.findPrimaryConnection(Facebook.class);
-        if (connection == null) {
-            return null;
-        }
-        ConnectionData data = connection.createData();
-        return new User(data.getProviderUserId(), data.getDisplayName());
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class User {
-        String providerUserId;
-        String displayName;
     }
 }

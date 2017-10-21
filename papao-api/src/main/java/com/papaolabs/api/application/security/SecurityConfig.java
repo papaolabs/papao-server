@@ -12,32 +12,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .formLogin()
-            .loginPage("/dashboard/user/login")
-            .and()
-            .logout()
-            .logoutUrl("/dashboard/user/logout")
-            .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/dashboard")
-            .and()
-            .authorizeRequests()
-/*
-            .antMatchers("*/
-/**//*
-write*", "*/
-/**//*
-edit*", "*/
-/**//*
-delete*")
-            .authenticated()
-*/
-            .antMatchers("/**")
-            .permitAll();
+                .formLogin()
+                .loginPage("/dashboard/user/login")
+                .and()
+                .logout()
+                .logoutUrl("/dashboard/user/logout")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/dashboard")
+                .and()
+                .authorizeRequests()
+                .antMatchers("/**")
+                .permitAll();
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-           .antMatchers("/console/**");
+                .antMatchers("/console/**");
     }
 }

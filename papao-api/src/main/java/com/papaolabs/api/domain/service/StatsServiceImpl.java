@@ -1,7 +1,7 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.AnimalApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.StatsDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

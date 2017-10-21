@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.feign;
+package com.papaolabs.api.infrastructure.persistence.restapi;
 
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 import feign.hystrix.FallbackFactory;

@@ -1,9 +1,10 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.feign;
+package com.papaolabs.api.infrastructure.persistence.restapi.seoul;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.AnimalKindApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.RegionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.LoggingFallbackFactory;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.AnimalApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.AnimalKindApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.ShelterApiResponse;
 import feign.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

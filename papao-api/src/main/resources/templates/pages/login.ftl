@@ -6,15 +6,12 @@
 
 <body>
 <div>
-    지역번호 (e.g. +82):
-    <input type="text" id="country_code" value="+82"/>
-    휴대폰번호
-    <input type="text" id="phone_num"/>
-    <button onclick="phone_btn_onclick();">Login via SMS</button>
+    <input type="hidden" id="country_code" value="+82"/>
+    <input type="hidden" id="phone_num"/>
+    <button onclick="phone_btn_onclick();">핸드폰으로 로그인</button>
     <br/>
-    이메일
-    <input type="text" id="email"/>
-    <button onclick="email_btn_onclick();">Login via Email</button>
+    <input type="hidden" id="email"/>
+    <button onclick="email_btn_onclick();">이메일로 로그인</button>
 </div>
 
 <form id="my_form" name="my_form" action="/dashboard/success" method="GET" style="display: none;">
@@ -31,12 +28,13 @@
         AccountKit.init(
                 {
                     appId: "122630828406457",
-                    debug: true,
                     state: "0",
-                    version: "v1.1"
+                    version: "v1.2",
+                    redirect: "/dashboard"
                 }
         );
     };
+
     // login callback
     function loginCallback(response) {
         console.log('loginCallback');
@@ -48,11 +46,14 @@
         }
         else if (response.status === "NOT_AUTHENTICATED") {
             // handle authentication failure
+            alert('login fail');
         }
         else if (response.status === "BAD_PARAMS") {
             // handle bad parameters
+            alert('login fail');
         }
     }
+
     // phone form submission handler
     function phone_btn_onclick() {
         var country_code = document.getElementById("country_code").value;
@@ -61,6 +62,7 @@
                 {countryCode: country_code, phoneNumber: ph_num}, // will use default values if this is not specified
                 loginCallback);
     }
+
     // email form submission handler
     function email_btn_onclick() {
         var email_address = document.getElementById("email").value;

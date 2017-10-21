@@ -1,6 +1,5 @@
-package com.papaolabs.api.infrastructure.persistence.restapi;
+package com.papaolabs.api.infrastructure.persistence.restapi.seoul;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
 import feign.Feign;
 import feign.gson.GsonEncoder;
 import feign.jaxb.JAXBContextFactory;

@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.feign.dto;
+package com.papaolabs.api.infrastructure.persistence.restapi.vision.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
