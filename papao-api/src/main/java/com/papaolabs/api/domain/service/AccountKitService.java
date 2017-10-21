@@ -1,5 +1,7 @@
 package com.papaolabs.api.domain.service;
 
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.papaolabs.api.infrastructure.persistence.restapi.account.AccountApiClient;
 import com.papaolabs.api.infrastructure.persistence.restapi.account.dto.AccountKitAccessResponse;
 import com.papaolabs.api.infrastructure.persistence.restapi.account.dto.AccountKitProfileResponse;
@@ -46,7 +48,9 @@ public class AccountKitService {
         }
         AccountKitProfileResponse accountKitProfileResponse = accountApiClient.validateAccessToken(accessToken, hash);
         if (isEmpty(accountKitProfileResponse.getEmail())) {
-            accountKitProfileResponse.setEmail("-1");
+            AccountKitProfileResponse.AccountKitEmail accountKitEmail = new AccountKitProfileResponse.AccountKitEmail();
+            accountKitEmail.setAddress("");
+            accountKitProfileResponse.setEmail(accountKitEmail);
         }
         if (isEmpty(accountKitProfileResponse.getPhone())) {
             AccountKitProfileResponse.AccountKitPhone phone = new AccountKitProfileResponse.AccountKitPhone();

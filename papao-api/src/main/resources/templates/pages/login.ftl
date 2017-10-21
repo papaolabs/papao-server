@@ -10,7 +10,7 @@
     <input type="hidden" id="phone_num"/>
     <button onclick="phone_btn_onclick();">핸드폰으로 로그인</button>
     <br/>
-    <input type="hidden" id="email"/>
+    <input type="hidden" id="email" = value=""/>
     <button onclick="email_btn_onclick();">이메일로 로그인</button>
 </div>
 
@@ -29,8 +29,7 @@
                 {
                     appId: "122630828406457",
                     state: "0",
-                    version: "v1.2",
-                    redirect: "/dashboard"
+                    version: "v1.1"
                 }
         );
     };

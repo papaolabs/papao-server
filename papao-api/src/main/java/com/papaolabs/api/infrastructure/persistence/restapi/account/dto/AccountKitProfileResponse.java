@@ -1,35 +1,37 @@
 package com.papaolabs.api.infrastructure.persistence.restapi.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountKitProfileResponse {
-
     private long id;
-
-    @JsonProperty("phone")
     private AccountKitPhone phone;
-    private String email;
-
-    private Application application;
+    private AccountKitEmail email;
+    private AccountKitApplication application;
 
     @Data
-    public static class Application {
+    public static class AccountKitApplication {
         private String id;
     }
 
     @Data
+    public static class AccountKitEmail {
+        private String address;
+    }
+
+    @Data
     public static class AccountKitPhone {
-        @JsonProperty("number")
+        @SerializedName("number")
         private String mdn;
 
-        @JsonProperty("country_prefix")
+        @SerializedName("country_prefix")
         private String countryCode;
 
-        @JsonProperty("national_number")
+        @SerializedName("national_number")
         private String number;
     }
 }
