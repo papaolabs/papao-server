@@ -25,13 +25,10 @@ public class AccountKitProfileResponse {
 
     @Data
     public static class AccountKitPhone {
-        @SerializedName("number")
-        private String mdn;
-
+        @SerializedName("national_number")
+        private String nationalNumber;
         @SerializedName("country_prefix")
         private String countryCode;
-
-        @SerializedName("national_number")
         private String number;
     }
 }

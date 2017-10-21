@@ -1,6 +1,5 @@
 package com.papaolabs.api.infrastructure.persistence.restapi.account.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
