@@ -1,7 +1,8 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.feign;
+package com.papaolabs.api.infrastructure.persistence.restapi.vision;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.LoggingFallbackFactory;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiRequest;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse;
 import feign.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

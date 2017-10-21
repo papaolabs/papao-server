@@ -1,6 +1,6 @@
-package com.papaolabs.api.infrastructure.persistence.restapi;
+package com.papaolabs.api.infrastructure.persistence.restapi.vision;
 
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.VisionApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.VisionApiClient;
 import feign.Feign;
 import feign.Logger;
 import feign.gson.GsonDecoder;

@@ -2,9 +2,9 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.domain.model.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.AnimalApiClient;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.RegionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.ShelterApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.AnimalApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.RegionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.ShelterApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.ShelterDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -6,15 +6,15 @@ import com.papaolabs.api.domain.model.VisionType;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.VisionColorRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.VisionLabelRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.VisionTypeRepository;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.VisionApiClient;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiRequest.Request.Feature;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.Label;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.Type;
-import com.papaolabs.api.infrastructure.persistence.restapi.feign.dto.VisionApiResponse.VisionResult.VisionProperties.DominantColor
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.VisionApiClient;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiRequest;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiRequest.Request;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiRequest.Request.Feature;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse.VisionResult;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse.VisionResult.Label;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse.VisionResult.Type;
+import com.papaolabs.api.infrastructure.persistence.restapi.vision.dto.VisionApiResponse.VisionResult.VisionProperties.DominantColor
     .Properties;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import org.apache.commons.codec.binary.Base64;
