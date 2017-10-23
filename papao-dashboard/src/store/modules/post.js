@@ -6,23 +6,33 @@ export default {
   getters: {
     index: state => state.index,
     size: state => state.size,
+    beginDate: state => state.beginDate,
+    endDate: state => state.endDate,
     postList: state => state.postList,
   },
   state: {
     index: 0,
     size: 10,
+    beginDate: '',
+    endDate: '',
     postList: [],
   },
   mutations: {
-    [types.INIT_POST_LIST] (state) {
+    [types.INIT_POST_LIST](state) {
       state.postList = [];
       state.index = 0;
       state.size = 10;
+      state.beginDate = '';
+      state.endDate = '';
     },
-    [types.SET_LIST_SIZE] (state, {size}) {
+    [types.SET_LIST_SIZE](state, {size}) {
       state.size = size;
     },
-    [types.RECEIVE_POST_LIST] (state, {postList}) {
+    [types.SET_DATE](state, {beginDate, endDate}) {
+      state.beginDate = beginDate;
+      state.endDate = endDate;
+    },
+    [types.RECEIVE_POST_LIST](state, {postList}) {
       state.postList = [];
       state.postList = postList;
     },
@@ -39,13 +49,23 @@ export default {
         size: size,
       })
     },
+    setDate({commit}, {beginDate, endDate}) {
+      commit({
+        type: types.SET_DATE,
+        beginDate: beginDate,
+        endDate: endDate,
+      })
+    },
     readCurrentPosts({commit}) {
       PostService.readPosts(postList => {
+        console.log(postList);
         commit({
           type: types.RECEIVE_POST_LIST,
           postList: postList,
         })
       }, {
+        beginDate: this.state.post.beginDate,
+        endDate: this.state.post.endDate,
         index: this.state.post.index,
         size: this.state.post.size,
       })
@@ -57,6 +77,8 @@ export default {
           postList: postList,
         })
       }, {
+        beginDate: this.state.post.beginDate,
+        endDate: this.state.post.endDate,
         index: ++this.state.post.index,
         size: this.state.post.size,
       })
@@ -68,6 +90,8 @@ export default {
           postList: postList,
         })
       }, {
+        beginDate: this.state.post.beginDate,
+        endDate: this.state.post.endDate,
         index: --this.state.post.index,
         size: this.state.post.size,
       })

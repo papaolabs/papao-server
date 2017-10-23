@@ -4,7 +4,7 @@
     <div class="mdl-layout__tab-panel is-active" id="overview">
       <button v-on:click="initPostList">초기화</button>
       <button v-if="index > 0" v-on:click="readPrevPosts">이전</button>
-      <button v-on:click="readNextPosts">다음</button>
+      <button v-if="this.postList.length == this.size" v-on:click="readNextPosts">다음</button>
       <div class="mdl-grid portfolio-max-width">
         <div v-for="post in postList" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
           <div class="mdl-card__media">
@@ -35,11 +35,12 @@
 <script>
   import { mapGetters, mapActions } from 'vuex';
 
-  const PAGE_SIZE = 3;
+  const PAGE_SIZE = 100;
 
   export default {
     created() {
       this.setListSize({size: PAGE_SIZE});
+      this.setDate({beginDate: '20171023', endDate: '20171023'});
       this.readCurrentPosts();
     },
     name: 'Post',
@@ -47,6 +48,7 @@
       ...mapActions([
         'initPostList',
         'setListSize',
+        'setDate',
         'readCurrentPosts',
         'readNextPosts',
         'readPrevPosts',
@@ -57,6 +59,8 @@
         'index',
         'size',
         'postList',
+        'beginDate',
+        'endDate',
       ])
     },
   };

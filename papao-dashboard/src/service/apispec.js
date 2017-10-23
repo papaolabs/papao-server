@@ -3,9 +3,11 @@ import axios from 'axios';
 const hostName = 'http://localhost:8080';
 
 export default {
-  readPosts(cb, {index, size}) {
+  readPosts(cb, {beginDate, endDate, index, size}) {
     axios.get(`${hostName}/api/v1/posts`, {
       params: {
+        beginDate: beginDate,
+        endDate: endDate,
         index: index,
         size: size,
       }
