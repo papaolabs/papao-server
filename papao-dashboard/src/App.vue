@@ -1,87 +1,21 @@
 <template>
   <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-      <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-      </div>
-      <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        <h3>Name &amp; Title</h3>
-      </div>
-      <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-      </div>
-      <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-        <a href="#overview" class="mdl-layout__tab is-active">Menu1</a>
-        <a href="#features" class="mdl-layout__tab">Menu2</a>
-        <a href="#features" class="mdl-layout__tab">Menu3</a>
-        <a href="#features" class="mdl-layout__tab">Menu4</a>
-        <a href="#features" class="mdl-layout__tab">Menu5</a>
-        <button
-          class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent"
-          id="add">
-          <i class="material-icons" role="presentation">add</i>
-          <span class="visuallyhidden">Add</span>
-        </button>
-      </div>
-    </header>
+    <Header></Header>
     <router-view/>
-    <footer class="mdl-mega-footer">
-      <div class="mdl-mega-footer--middle-section">
-        <div class="mdl-mega-footer--drop-down-section">
-          <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-          <h1 class="mdl-mega-footer--heading">Features</h1>
-          <ul class="mdl-mega-footer--link-list">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Terms</a></li>
-            <li><a href="#">Partners</a></li>
-            <li><a href="#">Updates</a></li>
-          </ul>
-        </div>
-        <div class="mdl-mega-footer--drop-down-section">
-          <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-          <h1 class="mdl-mega-footer--heading">Details</h1>
-          <ul class="mdl-mega-footer--link-list">
-            <li><a href="#">Spec</a></li>
-            <li><a href="#">Tools</a></li>
-            <li><a href="#">Resources</a></li>
-          </ul>
-        </div>
-        <div class="mdl-mega-footer--drop-down-section">
-          <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-          <h1 class="mdl-mega-footer--heading">Technology</h1>
-          <ul class="mdl-mega-footer--link-list">
-            <li><a href="#">How it works</a></li>
-            <li><a href="#">Patterns</a></li>
-            <li><a href="#">Usage</a></li>
-            <li><a href="#">Products</a></li>
-            <li><a href="#">Contracts</a></li>
-          </ul>
-        </div>
-        <div class="mdl-mega-footer--drop-down-section">
-          <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-          <h1 class="mdl-mega-footer--heading">FAQ</h1>
-          <ul class="mdl-mega-footer--link-list">
-            <li><a href="#">Questions</a></li>
-            <li><a href="#">Answers</a></li>
-            <li><a href="#">Contact us</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="mdl-mega-footer--bottom-section">
-        <div class="mdl-logo">
-          More Information
-        </div>
-        <ul class="mdl-mega-footer--link-list">
-          <li><a href="https://developers.google.com/web/starter-kit/">Web Starter Kit</a></li>
-          <li><a href="#">Help</a></li>
-          <li><a href="#">Privacy and Terms</a></li>
-        </ul>
-      </div>
-    </footer>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+  import header from './common/Header';
+  import footer from './common/Footer';
+
   export default {
     name: 'app',
+    components: {
+      Header: header,
+      Footer: footer,
+    },
   };
 </script>
 

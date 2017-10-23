@@ -107,7 +107,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .mdl-card__media {
-    background-color: #f5f5f5 !important;
+    background-color: #f5f5f5;
   }
 
   .mdl-card__supporting-text {
@@ -122,11 +122,11 @@
   }
 
   .mdl-card__actions {
-    padding: 4px 0px !important;
+    padding: 4px 0px;
   }
 
   .mdl-card__title-text {
-    font-weight: normal !important;
+    font-weight: normal;
     font-size: 20px;
     color: #757575;
   }
