@@ -60,6 +60,13 @@
         </div>
       </div>
     </div>
+    <button id="view-source"
+            class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent">
+      <i class="material-icons" role="presentation">search</i>
+      <span class="visuallyhidden">Search</span>
+      <span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating"
+                                                       style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(29px, 41px);"></span></span>
+    </button>
   </main>
 </template>
 
