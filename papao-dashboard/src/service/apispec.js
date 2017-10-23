@@ -3,8 +3,13 @@ import axios from 'axios';
 const hostName = 'http://localhost:8080';
 
 export default {
-  readPosts(cb, params) {
-    axios.get(`${hostName}/api/v1/posts`, {}).then((response) => {
+  readPosts(cb, {index, size}) {
+    axios.get(`${hostName}/api/v1/posts`, {
+      params: {
+        index: index,
+        size: size,
+      }
+    }).then((response) => {
       cb(response.data);
     });
   },

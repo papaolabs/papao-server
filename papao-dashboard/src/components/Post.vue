@@ -1,168 +1,32 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml">
+<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <main class="mdl-layout__content">
     <div class="mdl-layout__tab-panel is-active" id="overview">
-      <div class="mdl-grid portfolio-max-width"></div>
-      {{postList}}
-      <button v-on:click="getPostList">리스트</button>
+      <button v-on:click="readPosts">리스트</button>
       <button v-on:click="initPostList">초기화</button>
-      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
-        <header
-          class="section__play-btn mdl-cell mdl-cell&#45;&#45;3-col-desktop mdl-cell&#45;&#45;2-col-tablet mdl-cell&#45;&#45;4-col-phone mdl-color&#45;&#45;teal-100 mdl-color-text&#45;&#45;white">
-          <i class="material-icons">play_circle_filled</i>
-        </header>
-        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;9-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;4-col-phone">
+      <div class="mdl-grid portfolio-max-width">
+        <div v-for="post in postList" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+          <div class="mdl-card__media">
+            <div class="thumbnail">
+              <div class="centered">
+                <img class="article-image" v-bind:src="post.imageUrl" border="0" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Blog template</h2>
+          </div>
           <div class="mdl-card__supporting-text">
-            <h4>{{title}}</h4>
-            {{body}}
+            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud
+            aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
           </div>
-          <div class="mdl-card__actions">
-            <a href="#" class="mdl-button">detail</a>
-          </div>
-        </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn1">
-          <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn1">
-          <li class="mdl-menu__item">Lorem</li>
-          <li class="mdl-menu__item" disabled>Ipsum</li>
-          <li class="mdl-menu__item">Dolor</li>
-        </ul>
-      </section>-->
-      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
-        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;12-col">
-          <div class="mdl-card__supporting-text mdl-grid mdl-grid&#45;&#45;no-spacing">
-            <h4 class="mdl-cell mdl-cell&#45;&#45;12-col">Details</h4>
-            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
-              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
-              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
-              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-          </div>
-          <div class="mdl-card__actions">
-            <a href="#" class="mdl-button">Read our features</a>
+          <div class="mdl-card__actions mdl-card--border">
+            <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+               href="portfolio-example01.html" data-upgraded=",MaterialButton,MaterialRipple">Read more<span
+              class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
           </div>
         </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn2">
-          <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn2">
-          <li class="mdl-menu__item">Lorem</li>
-          <li class="mdl-menu__item" disabled>Ipsum</li>
-          <li class="mdl-menu__item">Dolor</li>
-        </ul>
-      </section>-->
-      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
-        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;12-col">
-          <div class="mdl-card__supporting-text">
-            <h4>Technology</h4>
-            Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Nostrud in laboris labore nisi amet do dolor eu fugiat consectetur elit cillum esse. Pariatur occaecat nisi laboris tempor laboris eiusmod qui id Lorem esse commodo in. Exercitation aute dolore deserunt culpa consequat elit labore incididunt elit anim.
-          </div>
-          <div class="mdl-card__actions">
-            <a href="#" class="mdl-button">Read our features</a>
-          </div>
-        </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn3">
-          <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn3">
-          <li class="mdl-menu__item">Lorem</li>
-          <li class="mdl-menu__item" disabled>Ipsum</li>
-          <li class="mdl-menu__item">Dolor</li>
-        </ul>
-      </section>-->
-      <!--<section class="section&#45;&#45;footer mdl-color&#45;&#45;white mdl-grid">
-        <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
-          <div class="section__circle-container__circle mdl-color&#45;&#45;accent section__circle&#45;&#45;big"></div>
-        </div>
-        <div class="section__text mdl-cell mdl-cell&#45;&#45;4-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
-          <h5>Lorem ipsum dolor sit amet</h5>
-          Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
-        </div>
-        <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
-          <div class="section__circle-container__circle mdl-color&#45;&#45;accent section__circle&#45;&#45;big"></div>
-        </div>
-        <div class="section__text mdl-cell mdl-cell&#45;&#45;4-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
-          <h5>Lorem ipsum dolor sit amet</h5>
-          Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
-        </div>
-      </section>-->
+      </div>
     </div>
-    <!--<div class="mdl-layout__tab-panel" id="features">
-      <section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing">
-        <div class="mdl-cell mdl-cell&#45;&#45;12-col">
-          <h4>Features</h4>
-          Minim duis incididunt est cillum est ex occaecat consectetur. Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
-          <ul class="toc">
-            <h4>Contents</h4>
-            <a href="#lorem1">Lorem ipsum</a>
-            <a href="#lorem2">Lorem ipsum</a>
-            <a href="#lorem3">Lorem ipsum</a>
-            <a href="#lorem4">Lorem ipsum</a>
-            <a href="#lorem5">Lorem ipsum</a>
-          </ul>
-
-          <h5 id="lorem1">Lorem ipsum dolor sit amet</h5>
-          Excepteur et pariatur officia veniam anim culpa cupidatat consequat ad velit culpa est non.
-          <ul>
-            <li>Nisi qui nisi duis commodo duis reprehenderit consequat velit aliquip.</li>
-            <li>
-              Dolor consectetur incididunt in ipsum laborum non et irure pariatur excepteur anim occaecat officia sint.
-            </li>
-            <li>Lorem labore proident officia excepteur do.</li>
-          </ul>
-
-          <p>
-            Sit qui est voluptate proident minim cillum in aliquip cupidatat labore pariatur id tempor id. Proident occaecat occaecat sint mollit tempor duis dolor cillum anim. Dolore sunt ea mollit fugiat in aliqua consequat nostrud aliqua ut irure in dolore. Proident aliqua culpa sint sint exercitation. Non proident occaecat reprehenderit veniam et proident dolor id culpa ea tempor do dolor. Nulla adipisicing qui fugiat id dolor. Nostrud magna voluptate irure veniam veniam labore ipsum deserunt adipisicing laboris amet eu irure. Sunt dolore nisi velit sit id. Nostrud voluptate labore proident cupidatat enim amet Lorem officia magna excepteur occaecat eu qui. Exercitation culpa deserunt non et tempor et non.
-          </p>
-          <p>
-            Do dolor eiusmod eu mollit dolore nostrud deserunt cillum irure esse sint irure fugiat exercitation. Magna sit voluptate id in tempor elit veniam enim cupidatat ea labore elit. Aliqua pariatur eu nulla labore magna dolore mollit occaecat sint commodo culpa. Eu non minim duis pariatur Lorem quis exercitation. Sunt qui ex incididunt sit anim incididunt sit elit ad officia id.
-          </p>
-          <p id="lorem2">
-            Tempor voluptate ex consequat fugiat aliqua. Do sit et reprehenderit culpa deserunt culpa. Excepteur quis minim mollit irure nulla excepteur enim quis in laborum. Aliqua elit voluptate ad deserunt nulla reprehenderit adipisicing sint. Est in eiusmod exercitation esse commodo. Ea reprehenderit exercitation veniam adipisicing minim nostrud. Veniam dolore ex ea occaecat non enim minim id ut aliqua adipisicing ad. Occaecat excepteur aliqua tempor cupidatat aute dolore deserunt ipsum qui incididunt aliqua occaecat sit quis. Culpa sint aliqua aliqua reprehenderit veniam irure fugiat ea ad.
-          </p>
-          <p>
-            Eu minim fugiat laborum irure veniam Lorem aliqua enim. Aliqua veniam incididunt consequat irure consequat tempor do nisi deserunt. Elit dolore ad quis consectetur sint laborum anim magna do nostrud amet. Ea nulla sit consequat quis qui irure dolor. Sint deserunt excepteur consectetur magna irure. Dolor tempor exercitation dolore pariatur incididunt ut laboris fugiat ipsum sunt veniam aute sunt labore. Non dolore sit nostrud eu ad excepteur cillum eu ex Lorem duis.
-          </p>
-          <p>
-            Id occaecat velit non ipsum occaecat aliqua quis ut. Eiusmod est magna non esse est ex incididunt aute ullamco. Cillum excepteur sint ipsum qui quis velit incididunt amet. Qui deserunt anim enim laborum cillum reprehenderit duis mollit amet ad officia enim. Minim sint et quis aliqua aliqua do minim officia dolor deserunt ipsum laboris. Nulla nisi voluptate consectetur est voluptate et amet. Occaecat ut quis adipisicing ad enim. Magna est magna sit duis proident veniam reprehenderit fugiat reprehenderit enim velit ex. Ullamco laboris culpa irure aliquip ad Lorem consequat veniam ad ipsum eu. Ipsum culpa dolore sunt officia laborum quis.
-          </p>
-
-          <h5 id="lorem3">Lorem ipsum dolor sit amet</h5>
-
-          <p id="lorem4">
-            Eiusmod nulla aliquip ipsum reprehenderit nostrud non excepteur mollit amet esse est est dolor. Dolore quis pariatur sit consectetur veniam esse ullamco duis Lorem qui enim ut veniam. Officia deserunt minim duis laborum dolor in velit pariatur commodo ullamco eu. Aute adipisicing ad duis labore laboris do mollit dolor cillum sunt aliqua ullamco. Esse tempor quis cillum consequat reprehenderit. Adipisicing proident anim eu sint elit aliqua anim dolore cupidatat fugiat aliquip qui.
-          </p>
-          <p id="lorem5">
-            Nisi eiusmod esse cupidatat excepteur exercitation ipsum reprehenderit nostrud deserunt aliqua ullamco. Anim est irure commodo eiusmod pariatur officia. Est dolor ipsum excepteur magna aliqua ad veniam irure qui occaecat eiusmod aute fugiat commodo. Quis mollit incididunt amet sit minim velit eu fugiat voluptate excepteur. Sit minim id pariatur ex cupidatat cupidatat nostrud nostrud ipsum.
-          </p>
-          <p>
-            Enim ea officia excepteur ad veniam id reprehenderit eiusmod esse mollit consequat. Esse non aute ullamco Lorem aliqua qui dolore irure eiusmod aute aliqua proident labore aliqua. Ipsum voluptate voluptate exercitation laborum deserunt nulla elit aliquip et minim ex veniam. Duis cupidatat aute sunt officia mollit dolor ad elit ad aute labore nostrud duis pariatur. In est sint voluptate consectetur velit ea non labore. Ut duis ea aliqua consequat nulla laboris fugiat aute id culpa proident. Minim eiusmod laboris enim Lorem nisi excepteur mollit voluptate enim labore reprehenderit officia mollit.
-          </p>
-          <p>
-            Cupidatat labore nisi ut sunt voluptate quis sunt qui ad Lorem esse nisi. Ex esse velit ullamco incididunt occaecat dolore veniam tempor minim adipisicing amet. Consequat in exercitation est elit anim consequat cillum sint labore cillum. Aliquip mollit laboris ad labore anim.
-          </p>
-        </div>
-      </section>
-    </div>-->
   </main>
 </template>
 
@@ -170,18 +34,22 @@
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    name: 'Post',
     created() {
+      this.setListSize({size: 10});
     },
+    name: 'Post',
     methods: {
       ...mapActions([
         'initPostList',
+        'setListSize',
         'readPosts',
       ]),
     },
     computed: {
       ...mapGetters([
-        'postList'
+        'index',
+        'size',
+        'postList',
       ])
     },
   };
@@ -189,5 +57,36 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .portfolio-max-width {
+    max-width: 900px;
+    margin: auto;
+  }
 
+  .thumbnail {
+    position: relative;
+    padding-top: 100%; /* 1:1 ratio */
+    overflow: hidden;
+  }
+
+  .thumbnail .centered {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transform: translate(50%, 50%);
+    -ms-transform: translate(50%, 50%);
+    transform: translate(50%, 50%);
+  }
+
+  .thumbnail .centered img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: 100%;
+    height: auto;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 </style>
