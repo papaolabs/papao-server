@@ -1,8 +1,10 @@
-<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<template xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+          xmlns:v-if="http://www.w3.org/1999/xhtml">
   <main class="mdl-layout__content">
     <div class="mdl-layout__tab-panel is-active" id="overview">
-      <button v-on:click="readPosts">리스트</button>
       <button v-on:click="initPostList">초기화</button>
+      <button v-if="index > 0" v-on:click="readPrevPosts">이전</button>
+      <button v-on:click="readNextPosts">다음</button>
       <div class="mdl-grid portfolio-max-width">
         <div v-for="post in postList" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
           <div class="mdl-card__media">
@@ -31,18 +33,23 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex';
+
+  const PAGE_SIZE = 3;
 
   export default {
     created() {
-      this.setListSize({size: 10});
+      this.setListSize({size: PAGE_SIZE});
+      this.readCurrentPosts();
     },
     name: 'Post',
     methods: {
       ...mapActions([
         'initPostList',
         'setListSize',
-        'readPosts',
+        'readCurrentPosts',
+        'readNextPosts',
+        'readPrevPosts',
       ]),
     },
     computed: {
