@@ -2,9 +2,13 @@
           xmlns:v-if="http://www.w3.org/1999/xhtml">
   <main class="mdl-layout__content">
     <div class="mdl-layout__tab-panel is-active" id="overview">
+      <div>
+        {{this.beginDate}} ~ {{this.endDate}}
+      </div>
       <button v-on:click="initPostList">초기화</button>
       <button v-if="index > 0" v-on:click="readPrevPosts">이전</button>
       <button v-if="this.postList.length == this.size" v-on:click="readNextPosts">다음</button>
+      <div v-else>검색 결과 끝</div>
       <div class="mdl-grid portfolio-max-width">
         <div v-for="post in postList" class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
           <div class="mdl-card__media">
@@ -15,15 +19,42 @@
             </div>
           </div>
           <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Blog template</h2>
+            <h2 class="mdl-card__title-text">{{post.kindName}}</h2>
+            <div class="mdl-card__state">- {{post.state}}</div>
           </div>
           <div class="mdl-card__supporting-text">
-            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud
-            aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+            <span v-if="post.gender == 'M'" class="mdl-chip">
+            <span class="mdl-chip__text">수컷</span>
+          </span>
+            <span v-if="post.gender == 'F'" class="mdl-chip">
+            <span class="mdl-chip__text">암컷</span>
+          </span>
+            <span v-if="post.type == '01'" class="mdl-chip">
+            <span class="mdl-chip__text">기관</span>
+          </span>
+            <span v-if="post.type == '02'" class="mdl-chip">
+            <span class="mdl-chip__text">실종</span>
+          </span>
+            <span v-if="post.type == '03'" class="mdl-chip">
+            <span class="mdl-chip__text">개인</span>
+          </span>
+            <span class="mdl-chip">
+            <span class="mdl-chip__text">{{post.weight}}kg</span>
+          </span>
+            <span v-if="post.neuter == 'Y'" class="mdl-chip">
+            <span class="mdl-chip__text">중성화</span>
+          </span>
+            <span v-if="post.neuter == 'N'" class="mdl-chip">
+            <span class="mdl-chip__text">중성화X</span>
+          </span>
+          </div>
+          <div class="mdl-card__supporting-text">
+            {{dateFormat(post.happenDate)}}
+            {{post.happenPlace}}에서 길을 잃었어요
           </div>
           <div class="mdl-card__actions mdl-card--border">
             <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent"
-               href="portfolio-example01.html" data-upgraded=",MaterialButton,MaterialRipple">Read more<span
+               href="portfolio-example01.html" data-upgraded=",MaterialButton,MaterialRipple">자세히 보기<span
               class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>
           </div>
         </div>
@@ -35,7 +66,7 @@
 <script>
   import { mapGetters, mapActions } from 'vuex';
 
-  const PAGE_SIZE = 100;
+  const PAGE_SIZE = 12;
 
   export default {
     created() {
@@ -53,6 +84,13 @@
         'readNextPosts',
         'readPrevPosts',
       ]),
+      dateFormat(source) {
+        let year = source.substring(0, 4);
+        let month = source.substring(4, 6);
+        let day = source.substring(6, 8);
+
+        return year + '년 ' + month + '월 ' + day + '일';
+      },
     },
     computed: {
       ...mapGetters([
@@ -68,6 +106,31 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .mdl-card__media {
+    background-color: #f5f5f5 !important;
+  }
+
+  .mdl-card__supporting-text {
+    margin: -20px 0px 0px 0px !important;
+    padding: 16px !important;
+    width: 90% !important;
+  }
+
+  .mdl-card__state {
+    margin-left: 5px;
+    color: #a5a5a5;
+  }
+
+  .mdl-card__actions {
+    padding: 4px 0px !important;
+  }
+
+  .mdl-card__title-text {
+    font-weight: normal !important;
+    font-size: 20px;
+    color: #757575;
+  }
+
   .portfolio-max-width {
     max-width: 900px;
     margin: auto;
