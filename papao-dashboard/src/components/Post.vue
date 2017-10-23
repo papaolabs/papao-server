@@ -1,74 +1,77 @@
-<template>
-
+<template xmlns:v-on="http://www.w3.org/1999/xhtml">
   <main class="mdl-layout__content">
     <div class="mdl-layout__tab-panel is-active" id="overview">
-      <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+      <div class="mdl-grid portfolio-max-width"></div>
+      {{postList}}
+      <button v-on:click="getPostList">리스트</button>
+      <button v-on:click="initPostList">초기화</button>
+      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
         <header
-          class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white">
+          class="section__play-btn mdl-cell mdl-cell&#45;&#45;3-col-desktop mdl-cell&#45;&#45;2-col-tablet mdl-cell&#45;&#45;4-col-phone mdl-color&#45;&#45;teal-100 mdl-color-text&#45;&#45;white">
           <i class="material-icons">play_circle_filled</i>
         </header>
-        <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;9-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;4-col-phone">
           <div class="mdl-card__supporting-text">
-            <h4>Features</h4>
-            Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Nostrud in laboris labore nisi amet do dolor eu fugiat consectetur elit cillum esse.
+            <h4>{{title}}</h4>
+            {{body}}
+          </div>
+          <div class="mdl-card__actions">
+            <a href="#" class="mdl-button">detail</a>
+          </div>
+        </div>
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn1">
+          <i class="material-icons">more_vert</i>
+        </button>
+        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn1">
+          <li class="mdl-menu__item">Lorem</li>
+          <li class="mdl-menu__item" disabled>Ipsum</li>
+          <li class="mdl-menu__item">Dolor</li>
+        </ul>
+      </section>-->
+      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
+        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;12-col">
+          <div class="mdl-card__supporting-text mdl-grid mdl-grid&#45;&#45;no-spacing">
+            <h4 class="mdl-cell mdl-cell&#45;&#45;12-col">Details</h4>
+            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
+              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
+            </div>
+            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
+              <h5>Lorem ipsum dolor sit amet</h5>
+              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
+              href="#">proident minim</a>.
+            </div>
+            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
+              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
+            </div>
+            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
+              <h5>Lorem ipsum dolor sit amet</h5>
+              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
+              href="#">proident minim</a>.
+            </div>
+            <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
+              <div class="section__circle-container__circle mdl-color&#45;&#45;primary"></div>
+            </div>
+            <div class="section__text mdl-cell mdl-cell&#45;&#45;10-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
+              <h5>Lorem ipsum dolor sit amet</h5>
+              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
+              href="#">proident minim</a>.
+            </div>
           </div>
           <div class="mdl-card__actions">
             <a href="#" class="mdl-button">Read our features</a>
           </div>
         </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn1">
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn2">
           <i class="material-icons">more_vert</i>
         </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn1">
+        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn2">
           <li class="mdl-menu__item">Lorem</li>
           <li class="mdl-menu__item" disabled>Ipsum</li>
           <li class="mdl-menu__item">Dolor</li>
         </ul>
-      </section>
-      <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-        <div class="mdl-card mdl-cell mdl-cell--12-col">
-          <div class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
-            <h4 class="mdl-cell mdl-cell--12-col">Details</h4>
-            <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
-              <div class="section__circle-container__circle mdl-color--primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-            <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
-              <div class="section__circle-container__circle mdl-color--primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-            <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
-              <div class="section__circle-container__circle mdl-color--primary"></div>
-            </div>
-            <div class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-              <h5>Lorem ipsum dolor sit amet</h5>
-              Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Duis nulla tempor do aute et eiusmod velit exercitation nostrud quis <a
-              href="#">proident minim</a>.
-            </div>
-          </div>
-          <div class="mdl-card__actions">
-            <a href="#" class="mdl-button">Read our features</a>
-          </div>
-        </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn2">
-          <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn2">
-          <li class="mdl-menu__item">Lorem</li>
-          <li class="mdl-menu__item" disabled>Ipsum</li>
-          <li class="mdl-menu__item">Dolor</li>
-        </ul>
-      </section>
-      <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-        <div class="mdl-card mdl-cell mdl-cell--12-col">
+      </section>-->
+      <!--<section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing mdl-shadow&#45;&#45;2dp">
+        <div class="mdl-card mdl-cell mdl-cell&#45;&#45;12-col">
           <div class="mdl-card__supporting-text">
             <h4>Technology</h4>
             Dolore ex deserunt aute fugiat aute nulla ea sunt aliqua nisi cupidatat eu. Nostrud in laboris labore nisi amet do dolor eu fugiat consectetur elit cillum esse. Pariatur occaecat nisi laboris tempor laboris eiusmod qui id Lorem esse commodo in. Exercitation aute dolore deserunt culpa consequat elit labore incididunt elit anim.
@@ -77,35 +80,35 @@
             <a href="#" class="mdl-button">Read our features</a>
           </div>
         </div>
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn3">
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="btn3">
           <i class="material-icons">more_vert</i>
         </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn3">
+        <ul class="mdl-menu mdl-js-menu mdl-menu&#45;&#45;bottom-right" for="btn3">
           <li class="mdl-menu__item">Lorem</li>
           <li class="mdl-menu__item" disabled>Ipsum</li>
           <li class="mdl-menu__item">Dolor</li>
         </ul>
-      </section>
-      <section class="section--footer mdl-color--white mdl-grid">
-        <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
-          <div class="section__circle-container__circle mdl-color--accent section__circle--big"></div>
+      </section>-->
+      <!--<section class="section&#45;&#45;footer mdl-color&#45;&#45;white mdl-grid">
+        <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
+          <div class="section__circle-container__circle mdl-color&#45;&#45;accent section__circle&#45;&#45;big"></div>
         </div>
-        <div class="section__text mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+        <div class="section__text mdl-cell mdl-cell&#45;&#45;4-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
           <h5>Lorem ipsum dolor sit amet</h5>
           Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
         </div>
-        <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
-          <div class="section__circle-container__circle mdl-color--accent section__circle--big"></div>
+        <div class="section__circle-container mdl-cell mdl-cell&#45;&#45;2-col mdl-cell&#45;&#45;1-col-phone">
+          <div class="section__circle-container__circle mdl-color&#45;&#45;accent section__circle&#45;&#45;big"></div>
         </div>
-        <div class="section__text mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+        <div class="section__text mdl-cell mdl-cell&#45;&#45;4-col-desktop mdl-cell&#45;&#45;6-col-tablet mdl-cell&#45;&#45;3-col-phone">
           <h5>Lorem ipsum dolor sit amet</h5>
           Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
         </div>
-      </section>
+      </section>-->
     </div>
-    <div class="mdl-layout__tab-panel" id="features">
-      <section class="section--center mdl-grid mdl-grid--no-spacing">
-        <div class="mdl-cell mdl-cell--12-col">
+    <!--<div class="mdl-layout__tab-panel" id="features">
+      <section class="section&#45;&#45;center mdl-grid mdl-grid&#45;&#45;no-spacing">
+        <div class="mdl-cell mdl-cell&#45;&#45;12-col">
           <h4>Features</h4>
           Minim duis incididunt est cillum est ex occaecat consectetur. Qui sint ut et qui nisi cupidatat. Reprehenderit nostrud proident officia exercitation anim et pariatur ex.
           <ul class="toc">
@@ -159,17 +162,27 @@
           </p>
         </div>
       </section>
-    </div>
+    </div>-->
   </main>
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
+
   export default {
-    name: 'HelloWorld',
-    data() {
-      return {
-        msg: 'Welcome to Your Vue.js App',
-      };
+    name: 'Post',
+    created() {
+    },
+    methods: {
+      ...mapActions([
+        'initPostList',
+        'readPosts',
+      ]),
+    },
+    computed: {
+      ...mapGetters([
+        'postList'
+      ])
     },
   };
 </script>
