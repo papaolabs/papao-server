@@ -15,11 +15,14 @@ export default {
       cb(response.data);
     });
   },
-  createComment(cb, params) {
-    axios.post(`${hostName}/api/v1/posts` + postId + '/comments', {
-      userId: params.userId,
-      userName: params.userName,
-      text: params.text,
+  readPost(cb, {postId}) {
+    axios.get(`${hostName}/api/v1/posts/${postId}`).then((response) => {
+      cb(response.data);
+    });
+  },
+  createComment(cb, {text, postId}) {
+    axios.post(`${hostName}/api/v1/posts/comments/${postId}`, {
+      text: text,
     }).then((response) => {
       cb(response.data);
     });

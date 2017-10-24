@@ -9,6 +9,7 @@ export default {
     beginDate: state => state.beginDate,
     endDate: state => state.endDate,
     postList: state => state.postList,
+    selectedPost: state => state.selectedPost,
   },
   state: {
     index: 0,
@@ -16,6 +17,7 @@ export default {
     beginDate: '',
     endDate: '',
     postList: [],
+    selectedPost: {id: -1},
   },
   mutations: {
     [types.INIT_POST_LIST](state) {
@@ -33,8 +35,10 @@ export default {
       state.endDate = endDate;
     },
     [types.RECEIVE_POST_LIST](state, {postList}) {
-      state.postList = [];
       state.postList = postList;
+    },
+    [types.RECEIVE_POST](state, {post}) {
+      state.selectedPost = post;
     },
   },
   actions: {
@@ -56,9 +60,18 @@ export default {
         endDate: endDate,
       })
     },
+    readPost({commit}, {postId}) {
+      postService.readPost(post => {
+        commit({
+          type: types.RECEIVE_POST,
+          post: post,
+        })
+      }, {
+        postId: postId,
+      })
+    },
     readCurrentPosts({commit}) {
       postService.readPosts(postList => {
-        console.log(postList);
         commit({
           type: types.RECEIVE_POST_LIST,
           postList: postList,

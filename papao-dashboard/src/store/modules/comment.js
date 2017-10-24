@@ -1,27 +1,39 @@
 import * as types from '../mutation-types';
-import commetService from '../../service/apispec'
+import commentService from '../../service/apispec'
 
 export default {
 
   getters: {
+    postId: state => state.postId,
     commentList: state => state.commentList,
   },
   state: {
+    postId: -1,
     postList: [],
   },
   mutations: {
-    [types.RECEIVE_COMMENT_LIST] (state, {commentList}) {
-      state.commentList = commentList;
+    [types.CREATE_COMMENT]() {
+      console.log('success');
+    },
+    [types.SET_POST_ID](state, {postId}) {
+      state.postId = postId;
     },
   },
   actions: {
-    createComment({commit}, params) {
-      commetService.createComment(commentList => {
-        commit({
-          type: types.RECEIVE_COMMENT_LIST,
-          commentList: commentList,
-        }, params);
-      });
+    createComment({commit}, {text}) {
+      commentService.createComment(commit({
+        type: types.CREATE_COMMENT,
+      }), {
+        postId: this.state.comment.postId,
+        text: text,
+      })
+    },
+    setPostId({commit}, {postId}) {
+      console.log(postId);
+      commit({
+        type: types.SET_POST_ID,
+        postId: postId,
+      })
     },
   },
 };

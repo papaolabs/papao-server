@@ -105,6 +105,12 @@ public class V1PostController {
         return new ResponseEntity<>(commentService.create(postId, userId, userName, text), HttpStatus.OK);
     }
 
+    @PostMapping("/{postId}/comments/guest")
+    public ResponseEntity<CommentDTO> createCommentByGuest(@PathVariable("postId") String postId,
+                                                           @RequestParam("text") String text) {
+        return new ResponseEntity<>(commentService.createByGuest(postId, text), HttpStatus.OK);
+    }
+
     @PostMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> deleteComment(@PathVariable("postId") String postId,
                                                     @PathVariable("commentId") String commentId,

@@ -1,20 +1,22 @@
 <template>
   <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <Header></Header>
-    <router-view/>
-    <Footer></Footer>
+    <commonHeader></commonHeader>
+    <main class="mdl-layout__content">
+      <router-view/>
+    </main>
+    <commonFooter></commonFooter>
   </div>
 </template>
 
 <script>
-  import header from './common/header';
-  import footer from './common/footer';
+  import commonHeader from './common/common-header';
+  import commonFooter from './common/common-footer';
 
   export default {
     name: 'app',
     components: {
-      Header: header,
-      Footer: footer,
+      commonHeader: commonHeader,
+      commonFooter: commonFooter,
     },
   };
 </script>
