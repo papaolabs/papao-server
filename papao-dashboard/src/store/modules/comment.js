@@ -12,8 +12,8 @@ export default {
     postList: [],
   },
   mutations: {
-    [types.CREATE_COMMENT]() {
-      console.log('success');
+    [types.CREATE_COMMENT](state, {comment}) {
+      console.log(comment);
     },
     [types.SET_POST_ID](state, {postId}) {
       state.postId = postId;
@@ -21,15 +21,17 @@ export default {
   },
   actions: {
     createComment({commit}, {text}) {
-      commentService.createComment(commit({
-        type: types.CREATE_COMMENT,
-      }), {
+      commentService.createComment(comment => {
+        commit({
+          type: types.CREATE_COMMENT,
+          comment: comment,
+        })
+      }, {
         postId: this.state.comment.postId,
-        text: text,
+        text: 'abcd',
       })
     },
     setPostId({commit}, {postId}) {
-      console.log(postId);
       commit({
         type: types.SET_POST_ID,
         postId: postId,

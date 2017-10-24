@@ -20,10 +20,9 @@ export default {
       cb(response.data);
     });
   },
-  createComment(cb, {text, postId}) {
-    axios.post(`${hostName}/api/v1/posts/comments/${postId}`, {
-      text: text,
-    }).then((response) => {
+  createComment(cb, {postId, text}) {
+    let url = `${hostName}/api/v1/posts/${postId}/comments/guest?text=`+text;
+    axios.post(url).then((response) => {
       cb(response.data);
     });
   },
