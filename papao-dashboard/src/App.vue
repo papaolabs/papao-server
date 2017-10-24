@@ -7,8 +7,8 @@
 </template>
 
 <script>
-  import header from './common/Header';
-  import footer from './common/Footer';
+  import header from './common/header';
+  import footer from './common/footer';
 
   export default {
     name: 'app',

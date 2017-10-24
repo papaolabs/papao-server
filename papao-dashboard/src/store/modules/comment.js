@@ -1,5 +1,5 @@
 import * as types from '../mutation-types';
-import CommetService from '../../service/apispec'
+import commetService from '../../service/apispec'
 
 export default {
 
@@ -16,7 +16,7 @@ export default {
   },
   actions: {
     createComment({commit}, params) {
-      CommetService.createComment(commentList => {
+      commetService.createComment(commentList => {
         commit({
           type: types.RECEIVE_COMMENT_LIST,
           commentList: commentList,

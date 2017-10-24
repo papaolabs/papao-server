@@ -1,5 +1,5 @@
 import * as types from '../mutation-types';
-import PostService from '../../service/apispec';
+import postService from '../../service/apispec';
 
 export default {
 
@@ -57,7 +57,7 @@ export default {
       })
     },
     readCurrentPosts({commit}) {
-      PostService.readPosts(postList => {
+      postService.readPosts(postList => {
         console.log(postList);
         commit({
           type: types.RECEIVE_POST_LIST,
@@ -71,7 +71,7 @@ export default {
       })
     },
     readNextPosts({commit}) {
-      PostService.readPosts(postList => {
+      postService.readPosts(postList => {
         commit({
           type: types.RECEIVE_POST_LIST,
           postList: postList,
@@ -84,7 +84,7 @@ export default {
       })
     },
     readPrevPosts({commit}) {
-      PostService.readPosts(postList => {
+      postService.readPosts(postList => {
         commit({
           type: types.RECEIVE_POST_LIST,
           postList: postList,

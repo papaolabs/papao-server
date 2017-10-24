@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Post from '@/components/Post';
+import post from '@/components/post';
 
 Vue.use(Router);
 
@@ -8,8 +8,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Post',
-      component: Post,
+      name: 'post',
+      component: post,
     },
   ],
 });
