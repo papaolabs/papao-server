@@ -81,7 +81,7 @@
       this.setDate({beginDate: '20171023', endDate: '20171023'});
       this.readCurrentPosts();
     },
-    name: 'Post',
+    name: 'post',
     methods: {
       ...mapActions([
         'initPostList',
