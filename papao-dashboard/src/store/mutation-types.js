@@ -1,0 +1,9 @@
+export const CREATE_COMMENT = 'CREATE_COMMENT';
+export const SET_POST_ID = 'SET_POST_ID';
+export const RECEIVE_POST_LIST = 'RECEIVE_POST_LIST';
+export const RECEIVE_COMMENT_LIST = 'RECEIVE_COMMENT_LIST';
+export const INIT_POST_LIST = 'INIT_POST_LIST';
+
+export const SET_LIST_SIZE = 'SET_LIST_SIZE';
+export const SET_DATE = 'SET_DATE';
+export const RECEIVE_POST = 'RECEIVE_POST';
