@@ -1,17 +1,12 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.domain.model.Kind;
 import com.papaolabs.api.domain.model.Post;
-import com.papaolabs.api.domain.model.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
-import com.papaolabs.api.infrastructure.persistence.restapi.seoul.AnimalApiClient;
-import com.papaolabs.api.infrastructure.persistence.restapi.seoul.dto.AnimalApiResponse;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
 import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
-import com.papaolabs.api.interfaces.v1.dto.type.PostType;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -50,19 +44,15 @@ public class PostServiceImpl implements PostService {
     private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
     @NotNull
-    private final AnimalApiClient animalApiClient;
-    @NotNull
     private final PostRepository postRepository;
     @NotNull
     private final KindRepository kindRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
 
-    public PostServiceImpl(AnimalApiClient animalApiClient,
-                           PostRepository postRepository,
+    public PostServiceImpl(PostRepository postRepository,
                            KindRepository kindRepository,
                            ShelterRepository shelterRepository) {
-        this.animalApiClient = animalApiClient;
         this.postRepository = postRepository;
         this.kindRepository = kindRepository;
         this.shelterRepository = shelterRepository;
@@ -173,7 +163,7 @@ public class PostServiceImpl implements PostService {
         return transform(post);
     }
 
-    public void syncPosts(String beginDate, String endDate) {
+    /*public void syncPosts(String beginDate, String endDate) {
         String beginDateParam = beginDate;
         String endDateParam = endDate;
         if (isEmpty(beginDate)) {
@@ -207,9 +197,9 @@ public class PostServiceImpl implements PostService {
         } else {
             log.info("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
         }
-    }
+    }*/
 
-    private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
+    /*private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
         String kindName = convertKindName(animalItemDTO.getKindCd());
         Kind mockKind = new Kind();
         mockKind.setUpKindCode(-1L);
@@ -273,7 +263,7 @@ public class PostServiceImpl implements PostService {
         post.setFeature(animalItemDTO.getSpecialMark());
         post.setIsDisplay(TRUE);
         return post;
-    }
+    }*/
 
     private PostDTO transform(Post post) {
         return PostDTO.builder()

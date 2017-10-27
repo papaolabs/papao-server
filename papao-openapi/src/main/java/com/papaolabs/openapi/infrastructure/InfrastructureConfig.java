@@ -1,15 +1,11 @@
-/*
-package com.papaolabs.api.application.scheduler;
+package com.papaolabs.openapi.infrastructure;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @ComponentScan
-@EnableScheduling
 @EnableAutoConfiguration
-public class SchedulerConfiguration {
+public class InfrastructureConfig {
 }
-*/
