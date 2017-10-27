@@ -22,12 +22,18 @@ logging.level:
   org.hibernate.SQL: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
 
+ribbon:
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  ReadTimeout: 2500
+  ConnectTimeout: 500
+
 govdata:
   ribbon:
-    MaxAutoRetries: 1
+    MaxAutoRetries: 0
     MaxAutoRetriesNextServer: 0
     ReadTimeout: 2500
-    ConnectTimeout: 1000
+    ConnectTimeout: 500
 
 jasypt:
   encryptor:
