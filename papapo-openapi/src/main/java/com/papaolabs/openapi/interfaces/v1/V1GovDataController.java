@@ -2,13 +2,9 @@ package com.papaolabs.openapi.interfaces.v1;
 
 import com.papaolabs.openapi.domain.service.GovDataService;
 import com.papaolabs.openapi.domain.service.GovDataServiceImpl;
-import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.AnimalResponse;
 import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.AnimalResponse.Body.Items.AnimalItem;
-import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.KindResponse;
 import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.KindResponse.Body.Items.KindItem;
-import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.RegionResponse;
 import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.RegionResponse.Body.Items.RegionItem;
-import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.ShelterResponse;
 import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.ShelterResponse.Body.Items.ShelterItem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

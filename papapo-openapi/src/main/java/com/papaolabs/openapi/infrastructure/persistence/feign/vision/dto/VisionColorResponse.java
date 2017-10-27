@@ -1,13 +1,13 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.vision.dto;
+package com.papaolabs.openapi.infrastructure.persistence.feign.vision.dto;
 
 import lombok.Data;
 
 @Data
 public class VisionColorResponse {
-    private String RgbCode;
+    private RgbColor rgbColor;
     private Double score;
     private Double pixelFraction;
-    
+
     @Data
     public static class RgbColor {
         private Integer red;

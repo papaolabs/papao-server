@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.restapi.vision.dto;
+package com.papaolabs.openapi.infrastructure.persistence.feign.vision.dto;
 
 import lombok.Data;
 

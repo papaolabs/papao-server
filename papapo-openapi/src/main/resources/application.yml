@@ -23,14 +23,21 @@ logging.level:
   org.hibernate.type.BasicTypeRegistry: WARN
 
 ribbon:
-  MaxAutoRetries: 0
+  MaxAutoRetries: 1
   MaxAutoRetriesNextServer: 0
   ReadTimeout: 2500
   ConnectTimeout: 500
 
 govdata:
   ribbon:
-    MaxAutoRetries: 0
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 2500
+    ConnectTimeout: 500
+
+vision:
+  ribbon:
+    MaxAutoRetries: 1
     MaxAutoRetriesNextServer: 0
     ReadTimeout: 2500
     ConnectTimeout: 500
@@ -44,3 +51,8 @@ seoul:
     animal:
       appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
       url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
+
+google:
+  application:
+    imageUrl: https://vision.googleapis.com/v1
+    key: ENC(J10GTNRuMxFnd6Y04emdEj07yr7N+5Rl9td8K9jKbCc4T24UBh0yxmE08BXQRV8h)
