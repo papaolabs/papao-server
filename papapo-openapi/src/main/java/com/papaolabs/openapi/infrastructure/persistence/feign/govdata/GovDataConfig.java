@@ -1,4 +1,4 @@
-package com.papaolabs.openapi.infrastructure.persistence.feign.animal;
+package com.papaolabs.openapi.infrastructure.persistence.feign.govdata;
 
 import feign.Feign;
 import feign.gson.GsonEncoder;
@@ -16,18 +16,18 @@ import static org.apache.commons.lang.CharEncoding.UTF_8;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class AnimalApiConfig {
+public class GovDataConfig {
     @Value("${seoul.api.animal.url}")
     private String animalApiUrl;
 
     @Bean
-    public AnimalApiClient animalApiClient() {
+    public GovDataClient animalApiClient() {
         return Feign.builder()
                     .client(new OkHttpClient())
                     .encoder(new GsonEncoder())
                     .decoder(new JAXBDecoder(new JAXBContextFactory.Builder()
                             .withMarshallerJAXBEncoding(UTF_8)
                             .build()))
-                    .target(AnimalApiClient.class, animalApiUrl);
+                    .target(GovDataClient.class, animalApiUrl);
     }
 }

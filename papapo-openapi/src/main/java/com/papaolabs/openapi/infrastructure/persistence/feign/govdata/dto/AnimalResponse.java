@@ -1,4 +1,4 @@
-package com.papaolabs.openapi.infrastructure.persistence.feign.animal.dto;
+package com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @XmlRootElement(name = "response")
 @RequiredArgsConstructor
-public class AnimalApiResponse {
+public class AnimalResponse {
     private Header header;
     private Body body;
 
@@ -25,10 +25,10 @@ public class AnimalApiResponse {
 
         @Data
         public static class Items {
-            List<AnimalItemDTO> item;
+            List<AnimalItem> item;
 
             @Data
-            public static class AnimalItemDTO {
+            public static class AnimalItem {
                 private String noticeEdt;
                 private String popfile;
                 private String processState;

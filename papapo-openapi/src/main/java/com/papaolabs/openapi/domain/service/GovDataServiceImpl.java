@@ -1,0 +1,124 @@
+package com.papaolabs.openapi.domain.service;
+
+import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.GovDataClient;
+import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.AnimalResponse.Body.Items.AnimalItem;
+import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.KindResponse.Body.Items.KindItem;
+import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.RegionResponse.Body.Items.RegionItem;
+import com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto.ShelterResponse.Body.Items.ShelterItem;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
+@Service
+public class GovDataServiceImpl implements GovDataService {
+    @NotNull
+    private final GovDataClient client;
+    @Value("${seoul.api.animal.appKey}")
+    private String serviceKey;
+
+    public GovDataServiceImpl(GovDataClient client) {
+        this.client = client;
+    }
+
+    @Override
+    public List<AnimalItem> readAnimalItems(String beginDate,
+                                            String endDate,
+                                            String categoryCode,
+                                            String kindCode,
+                                            String sidoCode,
+                                            String gunguCode,
+                                            String shelterCode,
+                                            String state,
+                                            String index,
+                                            String size) {
+        beginDate = isEmpty(beginDate) ? getDefaultDate("yyyyMMdd") : beginDate;
+        endDate = isEmpty(endDate) ? getDefaultDate("yyyyMMdd") : endDate;
+        return client.animal(serviceKey, beginDate, endDate, categoryCode, kindCode, sidoCode, gunguCode, shelterCode, state, index, size)
+                     .getBody()
+                     .getItems()
+                     .getItem();
+    }
+
+    @Override
+    public List<KindItem> readKindItems(String categoryCode) {
+        return isEmpty(categoryCode) ?
+            Arrays.asList("417000", "422400", "429900")
+                  .stream()
+                  .map(this::kind)
+                  .flatMap(x -> x.stream())
+                  .collect(Collectors.toList())
+            : kind(categoryCode);
+    }
+
+    private List<KindItem> kind(String categoryCode) {
+        return client.kind(serviceKey, categoryCode)
+                     .getBody()
+                     .getItems()
+                     .getItem();
+    }
+
+    @Override
+    public List<RegionItem> readSidoItems() {
+        return sido();
+    }
+
+    private List<RegionItem> sido() {
+        return client.sido(serviceKey)
+                     .getBody()
+                     .getItems()
+                     .getItem();
+    }
+
+    @Override
+    public List<RegionItem> readGunguItems(String sidoCode) {
+        return isEmpty(sidoCode) ? this.readSidoItems()
+                                       .stream()
+                                       .map(RegionItem::getOrgCd)
+                                       .distinct()
+                                       .map(this::gungu)
+                                       .flatMap(Collection::stream)
+                                       .collect(Collectors.toList()) : gungu(sidoCode);
+    }
+
+    private List<RegionItem> gungu(String sidoCode) {
+        return client.sigungu(serviceKey, sidoCode)
+                     .getBody()
+                     .getItems()
+                     .getItem();
+    }
+
+    @Override
+    public List<ShelterItem> readShelterItems(String sidoCode, String gunguCode) {
+        return isEmpty(sidoCode) ? sido().stream()
+                                         .map(RegionItem::getOrgCd)
+                                         .map(this::gungu)
+                                         .flatMap(Collection::stream)
+                                         .map(x -> shelter(x.getOrgCd(), x.getUprCd()))
+                                         .flatMap(Collection::stream)
+                                         .collect(Collectors.toList()) :
+            shelter(sidoCode, gunguCode);
+    }
+
+    private List<ShelterItem> shelter(String sidoCode, String gunguCode) {
+        return client.shelter(serviceKey, sidoCode, gunguCode)
+                     .getBody()
+                     .getItems()
+                     .getItem();
+    }
+
+    private String getDefaultDate(String format) {
+        LocalDateTime now = LocalDateTime.now()
+                                         .minusDays(2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return now.format(formatter);
+    }
+}

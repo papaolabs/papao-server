@@ -1,4 +1,4 @@
-package com.papaolabs.openapi.infrastructure.persistence.feign.animal.dto;
+package com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @XmlRootElement(name = "response")
 @RequiredArgsConstructor
-public class KindApiResponse {
+public class ShelterResponse {
     private Header header;
     private Body body;
 
@@ -25,12 +25,12 @@ public class KindApiResponse {
 
         @Data
         public static class Items {
-            List<KindItemDTO> item;
+            List<ShelterItem> item;
 
             @Data
-            public static class KindItemDTO {
-                private String kindCd;
-                private String kNm;
+            public static class ShelterItem {
+                private String careRegNo;
+                private String careNm;
             }
         }
     }

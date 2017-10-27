@@ -1,4 +1,4 @@
-package com.papaolabs.openapi.infrastructure.persistence.feign.animal.dto;
+package com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @XmlRootElement(name = "response")
 @RequiredArgsConstructor
-public class RegionApiResponse {
+public class RegionResponse {
     private Header header;
     private Body body;
 
@@ -25,10 +25,10 @@ public class RegionApiResponse {
 
         @Data
         public static class Items {
-            List<RegionItemDTO> item;
+            List<RegionItem> item;
 
             @Data
-            public static class RegionItemDTO {
+            public static class RegionItem {
                 private String uprCd;
                 private String orgCd;
                 private String orgdownNm;
