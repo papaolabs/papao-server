@@ -1,14 +1,13 @@
 package com.papaolabs.openapi.infrastructure.persistence.feign.govdata.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @Data
 @XmlRootElement(name = "response")
-@RequiredArgsConstructor
 public class RegionResponse {
     private Header header;
     private Body body;
@@ -21,13 +20,14 @@ public class RegionResponse {
 
     @Data
     public static class Body {
-        Items items;
+        private Items items;
 
         @Data
         public static class Items {
-            List<RegionItem> item;
+            private List<RegionItem> item;
 
             @Data
+            @JsonInclude(JsonInclude.Include.NON_NULL)
             public static class RegionItem {
                 private String uprCd;
                 private String orgCd;

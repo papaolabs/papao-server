@@ -14,9 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class GovDataServiceImpl implements GovDataService {
@@ -59,16 +62,38 @@ public class GovDataServiceImpl implements GovDataService {
             : kind(categoryCode);
     }
 
+    @Override
+    public List<RegionItem> readSidoItems() {
+        return sido();
+    }
+
+    @Override
+    public List<RegionItem> readGunguItems(String sidoCode) {
+        return isEmpty(sidoCode) ? this.readSidoItems()
+                                       .stream()
+                                       .map(RegionItem::getOrgCd)
+                                       .map(this::gungu)
+                                       .filter(Objects::nonNull)
+                                       .flatMap(Collection::stream)
+                                       .collect(Collectors.toList()) : gungu(sidoCode);
+    }
+
+    @Override
+    public List<ShelterItem> readShelterItems(String sidoCode, String gunguCode) {
+        return this.readGunguItems(sidoCode)
+                   .stream()
+                   .filter(x -> isNotEmpty(gunguCode) ? gunguCode.equals(x.getOrgCd()) : TRUE)
+                   .map(x -> shelter(x.getUprCd(), x.getOrgCd()))
+                   .filter(Objects::nonNull)
+                   .flatMap(Collection::stream)
+                   .collect(Collectors.toList());
+    }
+
     private List<KindItem> kind(String categoryCode) {
         return client.kind(serviceKey, categoryCode)
                      .getBody()
                      .getItems()
                      .getItem();
-    }
-
-    @Override
-    public List<RegionItem> readSidoItems() {
-        return sido();
     }
 
     private List<RegionItem> sido() {
@@ -78,34 +103,11 @@ public class GovDataServiceImpl implements GovDataService {
                      .getItem();
     }
 
-    @Override
-    public List<RegionItem> readGunguItems(String sidoCode) {
-        return isEmpty(sidoCode) ? this.readSidoItems()
-                                       .stream()
-                                       .map(RegionItem::getOrgCd)
-                                       .distinct()
-                                       .map(this::gungu)
-                                       .flatMap(Collection::stream)
-                                       .collect(Collectors.toList()) : gungu(sidoCode);
-    }
-
     private List<RegionItem> gungu(String sidoCode) {
-        return client.sigungu(serviceKey, sidoCode)
-                     .getBody()
-                     .getItems()
-                     .getItem();
-    }
-
-    @Override
-    public List<ShelterItem> readShelterItems(String sidoCode, String gunguCode) {
-        return isEmpty(sidoCode) ? sido().stream()
-                                         .map(RegionItem::getOrgCd)
-                                         .map(this::gungu)
-                                         .flatMap(Collection::stream)
-                                         .map(x -> shelter(x.getOrgCd(), x.getUprCd()))
-                                         .flatMap(Collection::stream)
-                                         .collect(Collectors.toList()) :
-            shelter(sidoCode, gunguCode);
+        return isEmpty(sidoCode) ? Arrays.asList() : client.sigungu(serviceKey, sidoCode)
+                                                           .getBody()
+                                                           .getItems()
+                                                           .getItem();
     }
 
     private List<ShelterItem> shelter(String sidoCode, String gunguCode) {

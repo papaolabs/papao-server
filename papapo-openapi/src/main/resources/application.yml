@@ -27,7 +27,7 @@ govdata:
     MaxAutoRetries: 1
     MaxAutoRetriesNextServer: 0
     ReadTimeout: 2500
-    ConnectTimeout: 500
+    ConnectTimeout: 1000
 
 jasypt:
   encryptor:
