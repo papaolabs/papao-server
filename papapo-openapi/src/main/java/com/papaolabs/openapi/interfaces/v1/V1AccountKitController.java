@@ -21,17 +21,17 @@ public class V1AccountKitController {
         this.accountKitService = accountKitService;
     }
 
-    @GetMapping("/success")
+    @GetMapping("/valid")
     public AccountKitAccessResponse validateAccount(@RequestParam String code) {
         return accountKitService.validateAuthorizationCode(code);
     }
 
-    @GetMapping("/success")
+    @GetMapping("/profile")
     public AccountKitProfileResponse getAccountProfile(@RequestParam String accessToken) {
         return accountKitService.getProfile(accessToken);
     }
 
-    @GetMapping("/success")
+    @GetMapping("/logout")
     public DeleteAccountResponseResponse deleteAccount(@RequestParam String accountId) {
         return accountKitService.removeAccount(accountId);
     }

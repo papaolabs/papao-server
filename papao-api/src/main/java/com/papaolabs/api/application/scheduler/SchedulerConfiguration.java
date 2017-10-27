@@ -1,3 +1,4 @@
+/*
 package com.papaolabs.api.application.scheduler;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -11,3 +12,4 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAutoConfiguration
 public class SchedulerConfiguration {
 }
+*/

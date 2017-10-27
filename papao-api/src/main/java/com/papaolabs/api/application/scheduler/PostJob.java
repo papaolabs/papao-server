@@ -1,3 +1,4 @@
+/*
 package com.papaolabs.api.application.scheduler;
 
 import com.papaolabs.api.domain.service.PostService;
@@ -87,3 +88,4 @@ public class PostJob {
         log.info("[BATCH_END} executionTime : {} millis", stopWatch.getLastTaskTimeMillis());
     }
 }
+*/

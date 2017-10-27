@@ -1,3 +1,6 @@
+server:
+  port: 9020
+
 ###
 #   Database Settings
 ###
@@ -7,10 +10,6 @@ spring:
     url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     username: sa
     initialize: true
-  social:
-    facebook:
-      appId: ENC(bmM4wK0OyFwBf9J3bqCUkryKm4Fqg87h)
-      appSecret: ENC(82Yj6Tb7NN5eTl4a7lSBuo74CyUVM54w1kHf+LzD85cm918Rq7QMhgA/nm4/8+1q)
 
 spring.jpa:
   database: MYSQL
