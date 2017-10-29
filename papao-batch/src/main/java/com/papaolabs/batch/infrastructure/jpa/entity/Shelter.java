@@ -20,10 +20,10 @@ public class Shelter {
     @Id
     @GeneratedValue
     private Long id;
-    private Long cityCode;
-    private String cityName;
-    private Long townCode;
-    private String townName;
+    private Long sidoCode;
+    private String sidoName;
+    private Long gunguCode;
+    private String gunguName;
     private Long shelterCode;
     private String shelterName;
     @CreatedDate

@@ -136,10 +136,10 @@ public class OperationServiceImpl implements OperationService {
                        .stream()
                        .map(x -> {
                            Region region = new Region();
-                           region.setCityCode(Integer.valueOf(regionItem.getOrgCd()));
-                           region.setCityName(regionItem.getOrgdownNm());
-                           region.setTownCode(Integer.valueOf(x.getOrgCd()));
-                           region.setTownName(x.getOrgdownNm());
+                           region.setSidoCode(Integer.valueOf(regionItem.getOrgCd()));
+                           region.setSidoName(regionItem.getOrgdownNm());
+                           region.setGunguCode(Integer.valueOf(x.getOrgCd()));
+                           region.setGunguName(x.getOrgdownNm());
                            return region;
                        })
                        .collect(Collectors.toList());
@@ -157,10 +157,10 @@ public class OperationServiceImpl implements OperationService {
                                   .stream()
                                   .map(x -> {
                                       Region region = new Region();
-                                      region.setCityCode(Integer.valueOf(regionItem.getUprCd()));
-                                      region.setCityName(sidoName);
-                                      region.setTownCode(Integer.valueOf(regionItem.getOrgCd()));
-                                      region.setTownName(regionItem.getOrgdownNm());
+                                      region.setSidoCode(Integer.valueOf(regionItem.getUprCd()));
+                                      region.setSidoName(sidoName);
+                                      region.setGunguCode(Integer.valueOf(regionItem.getOrgCd()));
+                                      region.setGunguName(regionItem.getOrgdownNm());
                                       Shelter shelter = new Shelter();
                                       shelter.setRegion(region);
                                       shelter.setCode(x.getCareRegNo());

@@ -277,7 +277,7 @@
             dialog.close();
         };
         var generateMessage = function () {
-            let cityName = document.querySelector('#cityName').value;
+            let sidoName = document.querySelector('#cityName').value;
             if (cityName != '') {
                 document.querySelector('#city-filter').innerHTML = '<a href="#">' + cityName + '</a>에서 ';
             }

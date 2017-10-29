@@ -50,7 +50,7 @@ public class PostServiceImpl implements PostService {
                                 post.setDesertionId(x.getDesertionId());
                                 post.setStateType(x.getStateType());
                                 post.setImageUrl(x.getImageUrl());
-                                post.setAnimalCode(breed.getAnimalCode());
+                                post.setAnimalCode(breed.getKindCode());
                                 post.setColorName(x.getColorName());
                                 post.setAge(convertAge(x.getAge()));
                                 post.setWeight(convertWeight(x.getWeight()));

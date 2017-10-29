@@ -38,14 +38,14 @@ public class CaptureServiceImpl implements CaptureService {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_SHELTER_TB_NAME;
         return this.operationService.getShelterList()
                                     .stream()
-                                    .map(x -> "insert into " + tbName + " (city_code, city_name, town_code, town_name, shelter_code, " +
+                                    .map(x -> "insert into " + tbName + " (sido_code, sido_name, gungu_code, gungu_name, shelter_code, " +
                                         "shelter_name, created_date, updated_date) VALUES (" + x.getRegion()
-                                                                                                .getCityCode() + ", '" + x.getRegion()
-                                                                                                                          .getCityName()
+                                                                                                .getSidoCode() + ", '" + x.getRegion()
+                                                                                                                          .getSidoName()
                                         + "', " + x.getRegion()
-                                                   .getTownCode() + ", " +
+                                                   .getGunguCode() + ", " +
                                         "'" + x.getRegion()
-                                               .getTownName() + "', " +
+                                               .getGunguName() + "', " +
                                         "" + x.getCode() + ", '" + x.getName() + "', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n")
                                     .collect(Collectors.joining());
     }
