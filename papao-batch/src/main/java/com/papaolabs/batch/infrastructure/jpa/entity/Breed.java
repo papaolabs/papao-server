@@ -20,9 +20,9 @@ public class Breed {
     @Id
     @GeneratedValue
     private Long id;
-    private Long categoryCode;
-    private Long animalCode;
-    private String animalName;
+    private Long speciesCode;
+    private Long kindCode;
+    private String kindName;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate

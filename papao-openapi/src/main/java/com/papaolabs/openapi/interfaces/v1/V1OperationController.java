@@ -55,7 +55,7 @@ public class V1OperationController {
     @GetMapping("/animals")
     public List<Animal> getAnimalList(@RequestParam(required = false) String beginDate,
                                       @RequestParam(required = false) String endDate,
-                                      @RequestParam(required = false) String categoryCode,
+                                      @RequestParam(required = false) String speciesCode,
                                       @RequestParam(required = false) String kindCode,
                                       @RequestParam(required = false) String sidoCode,
                                       @RequestParam(required = false) String gunguCode,
@@ -65,7 +65,7 @@ public class V1OperationController {
                                       @RequestParam(required = false, defaultValue = "100000") String size) {
         return this.operationService.getAnimalList(beginDate,
                                                    endDate,
-                                                   categoryCode,
+                                                   speciesCode,
                                                    kindCode,
                                                    sidoCode,
                                                    gunguCode,

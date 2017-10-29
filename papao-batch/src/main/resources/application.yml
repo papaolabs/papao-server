@@ -17,3 +17,19 @@ spring:
 
 openapi:
   url: http://localhost:9010
+
+---
+spring.profiles: dev
+
+spring.datasource:
+  url: 220.230.114.180
+  username: papao_dev
+  password: ENC(TEZjcPKw9dpWO5dgf9MmAw==)
+  driverClassName: com.mysql.jdbc.Driver
+  initialize: false
+  connection-test-query: SELECT 1
+  test-while-idle: true
+  test-on-borrow: true
+  validation-interval: 10000
+  log-validation-errors: true
+  validation-query: SELECT 1

@@ -65,9 +65,9 @@ spring:
 spring.profiles: dev
 
 spring.datasource:
-  url: ENC(xdc33eCYQ3sPkCAHlnpgmqfVCOo0Doxx22yC/XIqbBQp/Lw79VVSXrWLCFW1ztCs)
-  username: papao_user
-  password: ENC(bHUKdWgtyhtWbjW9mPOGRg==)
+  url: 220.230.114.180
+  username: papao_dev
+  password: ENC(TEZjcPKw9dpWO5dgf9MmAw==)
   driverClassName: com.mysql.jdbc.Driver
   initialize: false
   connection-test-query: SELECT 1

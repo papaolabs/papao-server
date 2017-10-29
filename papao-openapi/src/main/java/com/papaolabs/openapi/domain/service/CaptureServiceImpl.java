@@ -9,9 +9,9 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class CaptureServiceImpl implements CaptureService {
-    public static final String DEFAULT_BREED_TB_NAME = "BREED_INFO_TB";
-    public static final String DEFAULT_REGION_TB_NAME = "REGION_INFO_TB";
-    public static final String DEFAULT_SHELTER_TB_NAME = "SHELTER_INFO_TB";
+    public static final String DEFAULT_BREED_TB_NAME = "breed_info_tb";
+    public static final String DEFAULT_REGION_TB_NAME = "region_info_tb";
+    public static final String DEFAULT_SHELTER_TB_NAME = "shelter_info_tb";
     @NotNull
     private final OperationService operationService;
 
@@ -24,9 +24,9 @@ public class CaptureServiceImpl implements CaptureService {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_BREED_TB_NAME;
         return this.operationService.getBreedList()
                                     .stream()
-                                    .map(x -> "INSERT INTO " + tbName
-                                        + " (CATEGORY_CODE, CODE, NAME, CREATED_DATE, UPDATED_DATE) VALUES" +
-                                        " (" + x.getCategory()
+                                    .map(x -> "insert into " + tbName
+                                        + " (species_code, kind_code, kind_name, created_date, updated_date) VALUES" +
+                                        " (" + x.getSpecies()
                                                 .getCode() + ", " + x.getCode() + ", '" + x.getName() + "', CURRENT_TIMESTAMP, " +
                                         "CURRENT_TIMESTAMP);\n"
                                     )
@@ -38,14 +38,14 @@ public class CaptureServiceImpl implements CaptureService {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_SHELTER_TB_NAME;
         return this.operationService.getShelterList()
                                     .stream()
-                                    .map(x -> "INSERT INTO " + tbName + " (CITY_CODE, CITY_NAME, TOWN_CODE, TOWN_NAME, SHELTER_CODE, " +
-                                        "SHELTER_NAME, CREATED_DATE, UPDATED_DATE) VALUES (" + x.getRegion()
-                                                                                                .getCityCode() + ", '" + x.getRegion()
-                                                                                                                          .getCityName()
+                                    .map(x -> "insert into " + tbName + " (sido_code, sido_name, gungu_code, gungu_name, shelter_code, " +
+                                        "shelter_name, created_date, updated_date) VALUES (" + x.getRegion()
+                                                                                                .getSidoCode() + ", '" + x.getRegion()
+                                                                                                                          .getSidoName()
                                         + "', " + x.getRegion()
-                                                   .getTownCode() + ", " +
+                                                   .getGunguCode() + ", " +
                                         "'" + x.getRegion()
-                                               .getTownName() + "', " +
+                                               .getGunguName() + "', " +
                                         "" + x.getCode() + ", '" + x.getName() + "', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n")
                                     .collect(Collectors.joining());
     }

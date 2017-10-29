@@ -27,7 +27,7 @@ public class V1GovDataController {
     @GetMapping("/animals")
     public List<AnimalItem> readAnimalList(@RequestParam(defaultValue = "", required = false) String beginDate,
                                            @RequestParam(defaultValue = "", required = false) String endDate,
-                                           @RequestParam(defaultValue = "", required = false) String categoryCode,
+                                           @RequestParam(defaultValue = "", required = false) String speciesCode,
                                            @RequestParam(defaultValue = "", required = false) String kindCode,
                                            @RequestParam(defaultValue = "", required = false) String sidoCode,
                                            @RequestParam(defaultValue = "", required = false) String gunguCode,
@@ -37,7 +37,7 @@ public class V1GovDataController {
                                            @RequestParam(defaultValue = "100000", required = false) String size) {
         return this.service.readAnimalItems(beginDate,
                                             endDate,
-                                            categoryCode,
+                                            speciesCode,
                                             kindCode,
                                             sidoCode,
                                             gunguCode,
@@ -48,8 +48,8 @@ public class V1GovDataController {
     }
 
     @GetMapping("/kinds")
-    public List<KindItem> readKindList(@RequestParam(defaultValue = "", required = false) String categoryCode) {
-        return this.service.readKindItems(categoryCode);
+    public List<KindItem> readKindList(@RequestParam(defaultValue = "", required = false) String speciesCode) {
+        return this.service.readKindItems(speciesCode);
     }
 
     @GetMapping("/sidos")

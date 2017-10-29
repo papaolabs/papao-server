@@ -10,7 +10,7 @@ import java.util.List;
 public interface GovDataService {
     List<AnimalItem> readAnimalItems(String beginDate,
                                      String endDate,
-                                     String categoryCode,
+                                     String speciesCode,
                                      String kindCode,
                                      String sidoCode,
                                      String gunguCode,
@@ -19,7 +19,7 @@ public interface GovDataService {
                                      String index,
                                      String size);
 
-    List<KindItem> readKindItems(String categoryCode);
+    List<KindItem> readKindItems(String speciesCode);
 
     List<RegionItem> readSidoItems();
 

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShelterRepository extends JpaRepository<Shelter, Long> {
-    Shelter findByCityNameAndTownNameAndShelterName(String cityName, String townName, String shelterName);
+    Shelter findBySidoNameAndGunguNameAndShelterName(String sidoName, String gunguName, String shelterName);
 }

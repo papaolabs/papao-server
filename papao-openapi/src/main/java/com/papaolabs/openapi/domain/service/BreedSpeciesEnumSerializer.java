@@ -7,9 +7,9 @@ import com.papaolabs.openapi.domain.model.Breed;
 
 import java.io.IOException;
 
-public class BreedCategoryEnumSerializer extends JsonSerializer<Breed.Category> {
+public class BreedSpeciesEnumSerializer extends JsonSerializer<Breed.Species> {
     @Override
-    public void serialize(Breed.Category value, JsonGenerator generator,
+    public void serialize(Breed.Species value, JsonGenerator generator,
                           SerializerProvider provider) throws IOException {
         generator.writeStartObject();
         generator.writeFieldName("name");
