@@ -1,6 +1,7 @@
 package com.papaolabs.openapi.domain.service;
 
 import com.papaolabs.client.govdata.dto.RegionResponse.Body.Items.RegionItem;
+import com.papaolabs.openapi.domain.model.Animal;
 import com.papaolabs.openapi.domain.model.Breed;
 import com.papaolabs.openapi.domain.model.Breed.Category;
 import com.papaolabs.openapi.domain.model.Region;
@@ -8,6 +9,9 @@ import com.papaolabs.openapi.domain.model.Shelter;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +22,8 @@ import static com.papaolabs.openapi.domain.model.Breed.Category.CAT;
 import static com.papaolabs.openapi.domain.model.Breed.Category.DOG;
 import static com.papaolabs.openapi.domain.model.Breed.Category.ETC;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isAllBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class OperationServiceImpl implements OperationService {
@@ -27,6 +33,65 @@ public class OperationServiceImpl implements OperationService {
 
     public OperationServiceImpl(GovDataService govDataService) {
         this.govDataService = govDataService;
+    }
+
+    @Override
+    public List<Animal> getAnimalList(String beginDate,
+                                      String endDate,
+                                      String categoryCode,
+                                      String kindCode,
+                                      String sidoCode,
+                                      String gunguCode,
+                                      String shelterCode,
+                                      String state,
+                                      String index,
+                                      String size) {
+        return this.govDataService.readAnimalItems(beginDate,
+                                                   endDate,
+                                                   categoryCode,
+                                                   kindCode,
+                                                   sidoCode,
+                                                   gunguCode,
+                                                   shelterCode,
+                                                   state,
+                                                   index,
+                                                   size)
+                                  .stream()
+                                  .map(x -> {
+                                      Animal animal = new Animal();
+                                      animal.setNoticeId(x.getNoticeNo());
+                                      animal.setNoticeBeginDate(x.getNoticeSdt());
+                                      animal.setNoticeEndDate(x.getNoticeEdt());
+                                      animal.setDesertionId(Long.valueOf(x.getDesertionNo()));
+                                      animal.setStateType(x.getProcessState());
+                                      animal.setImageUrl(x.getPopfile());
+                                      animal.setThumbImageUrl(x.getFilename());
+                                      animal.setBreedName(x.getKindCd());
+                                      animal.setColorName(x.getColorCd());
+                                      animal.setAge(convertAge(x.getAge()));
+                                      animal.setWeight(Float.valueOf(convertWeight(x.getWeight())));
+                                      animal.setGenderCode(x.getSexCd());
+                                      animal.setNeuterCode(x.getNeuterYn());
+                                      animal.setJurisdiction(x.getOrgNm());
+                                      animal.setShelterName(x.getCareNm());
+                                      animal.setShelterContact(x.getCareTel());
+                                      animal.setShelterAddress(x.getCareAddr());
+                                      animal.setUserName(x.getChargeNm());
+                                      animal.setUserContact(x.getOfficetel());
+                                      animal.setFeature(x.getSpecialMark());
+                                      animal.setNote(x.getNoticeComment());
+/*
+                                      animal.setPageSize(Integer.valueOf(x.getNumOfRows()));
+                                      animal.setPageIndex(Integer.valueOf(x.getPageNo()));
+                                      animal.setPageTotalCount(Integer.valueOf(x.getTotalCount()));
+                                      animal.setResultCode(Integer.valueOf(x.getResultCode()));
+                                      animal.setResultMessage(x.getResultMsg());
+*/
+                                      animal.setHappenDate(x.getHappenDt());
+                                      animal.setHappenPlace(x.getHappenPlace());
+                                      return animal;
+                                  })
+                                  .collect(Collectors.toList());
     }
 
     @Override
@@ -106,5 +171,31 @@ public class OperationServiceImpl implements OperationService {
                                       return shelter;
                                   })
                                   .collect(Collectors.toList());
+    }
+
+    private String convertWeight(String weight) {
+        if (isEmpty(weight)) {
+            return "-1";
+        }
+        if (weight.contains("(Kg)")) {
+            weight = weight.replace("(Kg)", "");
+            try {
+                Float.valueOf(weight);
+            } catch (NumberFormatException nfe) {
+                weight = "-1";
+            }
+        }
+        return weight;
+    }
+
+    private String convertAge(String age) {
+        String result = age.replace(" ", "");
+        if (isEmpty(result) || isAllBlank(result)) {
+            return "-1";
+        }
+        if (result.contains("(년생)")) {
+            return result.replace("(년생)", "");
+        }
+        return result;
     }
 }
