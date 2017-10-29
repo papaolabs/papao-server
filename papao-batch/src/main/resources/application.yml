@@ -1,0 +1,19 @@
+server:
+  port: 9030
+
+spring:
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    username: sa
+    initialize: true
+  jpa:
+    database: MYSQL
+    showSql: false
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.format_sql: true
+    properties.hibernate.use_sql_comments: true
+
+openapi:
+  url: http://localhost:9010

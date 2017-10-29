@@ -61,8 +61,8 @@ public class V1OperationController {
                                       @RequestParam(required = false) String gunguCode,
                                       @RequestParam(required = false) String shelterCode,
                                       @RequestParam(required = false) String state,
-                                      @RequestParam(required = false) String index,
-                                      @RequestParam(required = false) String size) {
+                                      @RequestParam(required = false, defaultValue = "1") String index,
+                                      @RequestParam(required = false, defaultValue = "100000") String size) {
         return this.operationService.getAnimalList(beginDate,
                                                    endDate,
                                                    categoryCode,
