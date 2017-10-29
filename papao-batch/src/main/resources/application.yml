@@ -17,12 +17,11 @@ spring:
 
 openapi:
   url: http://localhost:9010
-
 ---
 spring.profiles: dev
 
 spring.datasource:
-  url: 220.230.114.180
+  url: jdbc:mysql://220.230.114.180:3306/papao
   username: papao_dev
   password: ENC(TEZjcPKw9dpWO5dgf9MmAw==)
   driverClassName: com.mysql.jdbc.Driver
