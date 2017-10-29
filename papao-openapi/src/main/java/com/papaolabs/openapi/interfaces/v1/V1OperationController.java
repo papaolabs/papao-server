@@ -4,6 +4,7 @@ import com.papaolabs.openapi.domain.model.Animal;
 import com.papaolabs.openapi.domain.model.Breed;
 import com.papaolabs.openapi.domain.model.Region;
 import com.papaolabs.openapi.domain.model.Shelter;
+import com.papaolabs.openapi.domain.service.CaptureService;
 import com.papaolabs.openapi.domain.service.OperationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +19,22 @@ import java.util.List;
 public class V1OperationController {
     @NotNull
     private final OperationService operationService;
+    @NotNull
+    private final CaptureService captureService;
 
-    public V1OperationController(OperationService operationService) {
+    public V1OperationController(OperationService operationService, CaptureService captureService) {
         this.operationService = operationService;
+        this.captureService = captureService;
     }
 
     @GetMapping("/breeds")
     public List<Breed> getBreedList() {
         return this.operationService.getBreedList();
+    }
+
+    @GetMapping("/capture/breeds")
+    public String captureBreedList(@RequestParam(required = false) String tableName) {
+        return this.captureService.captureBreedList(tableName);
     }
 
     @GetMapping("/regions")
@@ -36,6 +45,11 @@ public class V1OperationController {
     @GetMapping("/shelters")
     public List<Shelter> getShelterList() {
         return this.operationService.getShelterList();
+    }
+
+    @GetMapping("/capture/shelters")
+    public String captureShelterList(@RequestParam(required = false) String tableName) {
+        return this.captureService.captureShelterList(tableName);
     }
 
     @GetMapping("/animals")
