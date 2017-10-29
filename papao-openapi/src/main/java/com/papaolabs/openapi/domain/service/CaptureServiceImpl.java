@@ -9,9 +9,9 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class CaptureServiceImpl implements CaptureService {
-    public static final String DEFAULT_BREED_TB_NAME = "BREED_INFO_TB";
-    public static final String DEFAULT_REGION_TB_NAME = "REGION_INFO_TB";
-    public static final String DEFAULT_SHELTER_TB_NAME = "SHELTER_INFO_TB";
+    public static final String DEFAULT_BREED_TB_NAME = "breed_info_tb";
+    public static final String DEFAULT_REGION_TB_NAME = "region_info_tb";
+    public static final String DEFAULT_SHELTER_TB_NAME = "shelter_info_tb";
     @NotNull
     private final OperationService operationService;
 

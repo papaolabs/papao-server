@@ -11,7 +11,6 @@ public class Post {
     private String stateType;
     private String imageUrl;
     private Long animalCode;
-    private String colorName;
     private Integer age;
     private Float weight;
     private String genderCode;

@@ -37,10 +37,10 @@ public class PostServiceImpl implements PostService {
         return openApiClient.animal(beginDate, endDate)
                             .stream()
                             .map(x -> {
-                                Breed breed = breedRepository.findByAnimalName(convertKindName(x.getBreedName()));
+                                Breed breed = breedRepository.findByKindName(convertKindName(x.getBreedName()));
                                 String[] addressArr = x.getJurisdiction()
                                                        .split(" ");
-                                Shelter shelter = shelterRepository.findByCityNameAndTownNameAndShelterName(addressArr[0],
+                                Shelter shelter = shelterRepository.findBySidoNameAndGunguNameAndShelterName(addressArr[0],
                                                                                                             addressArr[1],
                                                                                                             x.getShelterName());
                                 Post post = new Post();
@@ -51,7 +51,6 @@ public class PostServiceImpl implements PostService {
                                 post.setStateType(x.getStateType());
                                 post.setImageUrl(x.getImageUrl());
                                 post.setAnimalCode(breed.getKindCode());
-                                post.setColorName(x.getColorName());
                                 post.setAge(convertAge(x.getAge()));
                                 post.setWeight(convertWeight(x.getWeight()));
                                 post.setGenderCode(x.getGenderCode());
