@@ -24,9 +24,9 @@ public class CaptureServiceImpl implements CaptureService {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_BREED_TB_NAME;
         return this.operationService.getBreedList()
                                     .stream()
-                                    .map(x -> "INSERT INTO " + tbName
-                                        + " (CATEGORY_CODE, CODE, NAME, CREATED_DATE, UPDATED_DATE) VALUES" +
-                                        " (" + x.getCategory()
+                                    .map(x -> "insert into " + tbName
+                                        + " (species_code, code, name, created_date, updated_date) VALUES" +
+                                        " (" + x.getSpecies()
                                                 .getCode() + ", " + x.getCode() + ", '" + x.getName() + "', CURRENT_TIMESTAMP, " +
                                         "CURRENT_TIMESTAMP);\n"
                                     )
@@ -38,8 +38,8 @@ public class CaptureServiceImpl implements CaptureService {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_SHELTER_TB_NAME;
         return this.operationService.getShelterList()
                                     .stream()
-                                    .map(x -> "INSERT INTO " + tbName + " (CITY_CODE, CITY_NAME, TOWN_CODE, TOWN_NAME, SHELTER_CODE, " +
-                                        "SHELTER_NAME, CREATED_DATE, UPDATED_DATE) VALUES (" + x.getRegion()
+                                    .map(x -> "insert into " + tbName + " (city_code, city_name, town_code, town_name, shelter_code, " +
+                                        "shelter_name, created_date, updated_date) VALUES (" + x.getRegion()
                                                                                                 .getCityCode() + ", '" + x.getRegion()
                                                                                                                           .getCityName()
                                         + "', " + x.getRegion()

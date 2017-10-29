@@ -35,7 +35,7 @@ public class GovDataServiceImpl implements GovDataService {
     @Override
     public List<AnimalItem> readAnimalItems(String beginDate,
                                             String endDate,
-                                            String categoryCode,
+                                            String speciesCode,
                                             String kindCode,
                                             String sidoCode,
                                             String gunguCode,
@@ -45,21 +45,21 @@ public class GovDataServiceImpl implements GovDataService {
                                             String size) {
         beginDate = isEmpty(beginDate) ? getDefaultDate("yyyyMMdd") : beginDate;
         endDate = isEmpty(endDate) ? getDefaultDate("yyyyMMdd") : endDate;
-        return client.animal(serviceKey, beginDate, endDate, categoryCode, kindCode, sidoCode, gunguCode, shelterCode, state, index, size)
+        return client.animal(serviceKey, beginDate, endDate, speciesCode, kindCode, sidoCode, gunguCode, shelterCode, state, index, size)
                      .getBody()
                      .getItems()
                      .getItem();
     }
 
     @Override
-    public List<KindItem> readKindItems(String categoryCode) {
-        return isEmpty(categoryCode) ?
+    public List<KindItem> readKindItems(String speciesCode) {
+        return isEmpty(speciesCode) ?
             Arrays.asList("417000", "422400", "429900")
                   .stream()
                   .map(this::kind)
                   .flatMap(x -> x.stream())
                   .collect(Collectors.toList())
-            : kind(categoryCode);
+            : kind(speciesCode);
     }
 
     @Override
@@ -89,8 +89,8 @@ public class GovDataServiceImpl implements GovDataService {
                    .collect(Collectors.toList());
     }
 
-    private List<KindItem> kind(String categoryCode) {
-        return client.kind(serviceKey, categoryCode)
+    private List<KindItem> kind(String speciesCode) {
+        return client.kind(serviceKey, speciesCode)
                      .getBody()
                      .getItems()
                      .getItem();

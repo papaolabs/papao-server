@@ -10,7 +10,7 @@ import java.util.List;
 public interface OperationService {
     List<Animal> getAnimalList(String beginDate,
                                String endDate,
-                               String categoryCode,
+                               String speciesCode,
                                String kindCode,
                                String sidoCode,
                                String gunguCode,

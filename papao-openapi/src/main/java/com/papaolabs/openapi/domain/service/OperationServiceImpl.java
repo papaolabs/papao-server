@@ -3,31 +3,28 @@ package com.papaolabs.openapi.domain.service;
 import com.papaolabs.client.govdata.dto.RegionResponse.Body.Items.RegionItem;
 import com.papaolabs.openapi.domain.model.Animal;
 import com.papaolabs.openapi.domain.model.Breed;
-import com.papaolabs.openapi.domain.model.Breed.Category;
+import com.papaolabs.openapi.domain.model.Breed.Species;
 import com.papaolabs.openapi.domain.model.Region;
 import com.papaolabs.openapi.domain.model.Shelter;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.papaolabs.openapi.domain.model.Breed.Category.CAT;
-import static com.papaolabs.openapi.domain.model.Breed.Category.DOG;
-import static com.papaolabs.openapi.domain.model.Breed.Category.ETC;
+import static com.papaolabs.openapi.domain.model.Breed.Species.CAT;
+import static com.papaolabs.openapi.domain.model.Breed.Species.DOG;
+import static com.papaolabs.openapi.domain.model.Breed.Species.ETC;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class OperationServiceImpl implements OperationService {
-    public final static List<Category> breedCategoryList = Arrays.asList(DOG, CAT, ETC);
+    public final static List<Species> BREED_SPECIES_LIST = Arrays.asList(DOG, CAT, ETC);
     @NotNull
     private final GovDataService govDataService;
 
@@ -38,7 +35,7 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public List<Animal> getAnimalList(String beginDate,
                                       String endDate,
-                                      String categoryCode,
+                                      String speciesCode,
                                       String kindCode,
                                       String sidoCode,
                                       String gunguCode,
@@ -48,7 +45,7 @@ public class OperationServiceImpl implements OperationService {
                                       String size) {
         return this.govDataService.readAnimalItems(beginDate,
                                                    endDate,
-                                                   categoryCode,
+                                                   speciesCode,
                                                    kindCode,
                                                    sidoCode,
                                                    gunguCode,
@@ -96,10 +93,10 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public List<Breed> getBreedList() {
-        return this.breedCategoryList.stream()
-                                     .map(this::transform)
-                                     .flatMap(Collection::stream)
-                                     .collect(Collectors.toList());
+        return this.BREED_SPECIES_LIST.stream()
+                                      .map(this::transform)
+                                      .flatMap(Collection::stream)
+                                      .collect(Collectors.toList());
     }
 
     @Override
@@ -120,12 +117,12 @@ public class OperationServiceImpl implements OperationService {
                                   .collect(Collectors.toList());
     }
 
-    private List<Breed> transform(Category category) {
-        return this.govDataService.readKindItems(category.getCode())
+    private List<Breed> transform(Species species) {
+        return this.govDataService.readKindItems(species.getCode())
                                   .stream()
                                   .map(x -> {
                                       Breed breed = new Breed();
-                                      breed.setCategory(category);
+                                      breed.setSpecies(species);
                                       breed.setCode(Integer.valueOf(x.getKindCd()));
                                       breed.setName(x.getKNm());
                                       return breed;
