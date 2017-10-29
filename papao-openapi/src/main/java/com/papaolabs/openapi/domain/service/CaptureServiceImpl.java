@@ -25,7 +25,7 @@ public class CaptureServiceImpl implements CaptureService {
         return this.operationService.getBreedList()
                                     .stream()
                                     .map(x -> "insert into " + tbName
-                                        + " (species_code, code, name, created_date, updated_date) VALUES" +
+                                        + " (species_code, kind_code, kind_name, created_date, updated_date) VALUES" +
                                         " (" + x.getSpecies()
                                                 .getCode() + ", " + x.getCode() + ", '" + x.getName() + "', CURRENT_TIMESTAMP, " +
                                         "CURRENT_TIMESTAMP);\n"
