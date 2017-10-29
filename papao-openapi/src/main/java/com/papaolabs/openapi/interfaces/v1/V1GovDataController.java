@@ -34,7 +34,7 @@ public class V1GovDataController {
                                            @RequestParam(defaultValue = "", required = false) String shelterCode,
                                            @RequestParam(defaultValue = "", required = false) String state,
                                            @RequestParam(defaultValue = "1", required = false) String index,
-                                           @RequestParam(defaultValue = "1000", required = false) String size) {
+                                           @RequestParam(defaultValue = "100000", required = false) String size) {
         return this.service.readAnimalItems(beginDate,
                                             endDate,
                                             categoryCode,
