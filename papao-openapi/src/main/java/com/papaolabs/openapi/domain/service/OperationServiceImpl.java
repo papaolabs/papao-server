@@ -60,7 +60,7 @@ public class OperationServiceImpl implements OperationService {
                                   .stream()
                                   .map(x -> {
                                       Breed breed = new Breed();
-                                      breed.setCategory(category.getCode());
+                                      breed.setCategory(category);
                                       breed.setCode(Integer.valueOf(x.getKindCd()));
                                       breed.setName(x.getKNm());
                                       return breed;
