@@ -1,15 +1,22 @@
 package com.papaolabs.batch.domain.service;
 
 import com.papaolabs.batch.infrastructure.feign.openapi.OpenApiClient;
+import com.papaolabs.batch.infrastructure.feign.openapi.dto.AnimalDTO;
 import com.papaolabs.batch.infrastructure.jpa.entity.Breed;
 import com.papaolabs.batch.infrastructure.jpa.entity.Post;
 import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
 import com.papaolabs.batch.infrastructure.jpa.repository.BreedRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
@@ -23,48 +30,70 @@ public class PostServiceImpl implements PostService {
     private final BreedRepository breedRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
+    @NotNull
+    private final PostRepository postRepository;
 
     public PostServiceImpl(OpenApiClient openApiClient,
                            BreedRepository breedRepository,
-                           ShelterRepository shelterRepository) {
+                           ShelterRepository shelterRepository,
+                           PostRepository postRepository) {
         this.openApiClient = openApiClient;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
+        this.postRepository = postRepository;
     }
 
     @Override
     public List<Post> syncPostList(String beginDate, String endDate) {
-        return openApiClient.animal(beginDate, endDate)
-                            .stream()
-                            .map(x -> {
-                                Breed breed = breedRepository.findByKindName(convertKindName(x.getBreedName()));
-                                String[] addressArr = x.getJurisdiction()
-                                                       .split(" ");
-                                Shelter shelter = shelterRepository.findBySidoNameAndGunguNameAndShelterName(addressArr[0],
-                                                                                                            addressArr[1],
-                                                                                                            x.getShelterName());
-                                Post post = new Post();
-                                post.setNoticeId(x.getNoticeId());
-                                post.setNoticeBeginDate(x.getNoticeBeginDate());
-                                post.setNoticeEndDate(x.getNoticeEndDate());
-                                post.setDesertionId(x.getDesertionId());
-                                post.setStateType(x.getStateType());
-                                post.setImageUrl(x.getImageUrl());
-                                post.setAnimalCode(breed.getKindCode());
-                                post.setAge(convertAge(x.getAge()));
-                                post.setWeight(convertWeight(x.getWeight()));
-                                post.setGenderCode(x.getGenderCode());
-                                post.setNeuterCode(x.getNeuterCode());
-                                post.setShelterCode(shelter.getShelterCode());
-                                post.setShelterContact(x.getShelterContact());
-                                post.setManager(x.getUserName());
-                                post.setContact(x.getUserContact());
-                                post.setFeature(x.getFeature());
-                                post.setHappenDate(x.getHappenDate());
-                                post.setHappenPlace(x.getHappenPlace());
-                                return post;
-                            })
-                            .collect(Collectors.toList());
+        List<Post> posts = openApiClient.animal(beginDate, endDate)
+                                        .stream()
+                                        .map(x -> {
+                                            Breed breed = breedRepository.findByKindName(convertKindName(x.getBreedName()));
+                                            String[] addressArr = x.getJurisdiction()
+                                                                   .split(" ");
+                                            Shelter shelter = shelterRepository.findBySidoNameAndGunguNameAndShelterName(addressArr[0],
+                                                                                                                         addressArr[1],
+                                                                                                                         x.getShelterName
+                                                                                                                             ());
+                                            Post post = new Post();
+                                            post.setNoticeId(x.getNoticeId());
+                                            post.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
+                                            post.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
+                                            post.setDesertionId(x.getDesertionId());
+                                            post.setStateType(x.getStateType());
+                                            post.setImageUrl(x.getImageUrl());
+                                            post.setAnimalCode(breed.getKindCode());
+                                            post.setAge(convertAge(x.getAge()));
+                                            post.setWeight(convertWeight(x.getWeight()));
+                                            post.setGenderCode(x.getGenderCode());
+                                            post.setNeuterCode(x.getNeuterCode());
+                                            post.setShelterCode(shelter.getShelterCode());
+                                            post.setShelterContact(x.getShelterContact());
+                                            post.setManager(x.getUserName());
+                                            post.setContact(x.getUserContact());
+                                            post.setFeature(x.getFeature());
+                                            post.setHappenDate(convertStringToDate(x.getHappenDate()));
+                                            post.setHappenPlace(x.getHappenPlace());
+                                            return post;
+                                        })
+                                        .collect(Collectors.toList());
+        postRepository.save(posts);
+        return posts;
+    }
+
+    private String convertDateToString(Date date) {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+        return transFormat.format(date);
+    }
+
+    private Date convertStringToDate(String from) {
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+        try {
+            return transFormat.parse(from);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
     }
 
     private String convertKindName(String kindName) {
@@ -86,11 +115,11 @@ public class PostServiceImpl implements PostService {
             return Float.valueOf(result);
         }
         if (weight.contains("(Kg)")) {
-            weight = weight.replace("(Kg)", "");
+            result = weight.replace("(Kg)", "");
             try {
                 Float.valueOf(weight);
             } catch (NumberFormatException nfe) {
-
+                return Float.valueOf(result);
             }
         }
         return Float.valueOf(result);

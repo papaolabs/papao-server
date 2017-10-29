@@ -1,15 +1,12 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.domain.model.Post;
-import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.GenderType;
-import com.papaolabs.api.interfaces.v1.dto.type.NeuterType;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,12 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
@@ -46,15 +39,15 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final PostRepository postRepository;
     @NotNull
-    private final KindRepository kindRepository;
+    private final BreedRepository breedRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
 
     public PostServiceImpl(PostRepository postRepository,
-                           KindRepository kindRepository,
+                           BreedRepository breedRepository,
                            ShelterRepository shelterRepository) {
         this.postRepository = postRepository;
-        this.kindRepository = kindRepository;
+        this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
     }
 
@@ -76,7 +69,7 @@ public class PostServiceImpl implements PostService {
                           String introduction,
                           String feature) {
         Post post = new Post();
-        post.setImageUrl(imageUrl);
+/*        post.setImageUrl(imageUrl);
         post.setType(type);
         post.setState(StateType.PROCESS.name());
         post.setGender(isEmpty(gender) ? GenderType.Q.name() : gender);
@@ -93,7 +86,7 @@ public class PostServiceImpl implements PostService {
         post.setWeight(weight);
         post.setIntroduction(introduction);
         post.setFeature(feature);
-        post.setIsDisplay(TRUE);
+        post.setIsDisplay(TRUE);*/
         return transform(postRepository.save(post));
     }
 
@@ -117,9 +110,9 @@ public class PostServiceImpl implements PostService {
                                                                                          pageRequest)
                              .stream()
                              .filter(Post::getIsDisplay)
-                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
+/*                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
                              .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
-                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)
+                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)*/
                              .map((this::transform))
                              .sorted(Comparator.comparing(PostDTO::getHappenDate))
                              .collect(Collectors.toList());
@@ -159,7 +152,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO setState(String postId, StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-        post.setState(state.name());
+/*        post.setState(state.name());*/
         return transform(post);
     }
 
@@ -218,13 +211,13 @@ public class PostServiceImpl implements PostService {
         Shelter shelter = new Shelter();
         switch (orgNames.length) {
             case 1:
-                shelter = shelterRepository.findByCityName(orgNames[0])
+                shelter = shelterRepository.findBySidoName(orgNames[0])
                                            .stream()
                                            .findFirst()
                                            .orElse(mockShelter);
                 break;
             case 2:
-                shelter = shelterRepository.findByTownName(orgNames[1])
+                shelter = shelterRepository.findByGunguName(orgNames[1])
                                            .stream()
                                            .findFirst()
                                            .orElse(mockShelter);
@@ -268,7 +261,7 @@ public class PostServiceImpl implements PostService {
     private PostDTO transform(Post post) {
         return PostDTO.builder()
                       .id(post.getId())
-                      .desertionId(post.getDesertionId())
+/*                      .desertionId(post.getDesertionId())
                       .type(post.getType())
                       .imageUrl(post.getImageUrl())
                       .kindUpCode(post.getKindUpCode())
@@ -286,7 +279,7 @@ public class PostServiceImpl implements PostService {
                       .state(post.getState())
                       .neuter(post.getNeuter())
                       .feature(post.getFeature())
-                      .introduction(isNotEmpty(post.getIntroduction()) ? post.getIntroduction() : StringUtils.EMPTY)
+                      .introduction(isNotEmpty(post.getIntroduction()) ? post.getIntroduction() : StringUtils.EMPTY)*/
                       .build();
     }
 
