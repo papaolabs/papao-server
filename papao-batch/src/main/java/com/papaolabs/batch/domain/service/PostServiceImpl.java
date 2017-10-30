@@ -8,6 +8,8 @@ import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
 import com.papaolabs.batch.infrastructure.jpa.repository.BreedRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -23,6 +25,7 @@ import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
+@Slf4j
 public class PostServiceImpl implements PostService {
     @NotNull
     private final OpenApiClient openApiClient;
@@ -45,16 +48,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> syncPostList(String beginDate, String endDate) {
+        List<AnimalDTO> animals = Arrays.asList();
+        try {
+            animals = openApiClient.animal(beginDate, endDate);
+        } catch (FeignException fe) {
+            fe.printStackTrace();
+        }
         List<Post> posts = openApiClient.animal(beginDate, endDate)
                                         .stream()
                                         .map(x -> {
-                                            Breed breed = breedRepository.findByKindName(convertKindName(x.getBreedName()));
+                                            log.debug("syncPostList - AnimalDTO :: {}", x);
+                                            Breed mockBreed = new Breed();
+                                            mockBreed.setKindCode(-1L);
+                                            Breed breed = Optional.ofNullable(breedRepository.findByKindName(convertKindName(x.getBreedName())))
+                                                                  .orElse(mockBreed);
                                             String[] addressArr = x.getJurisdiction()
                                                                    .split(" ");
-                                            Shelter shelter = shelterRepository.findBySidoNameAndGunguNameAndShelterName(addressArr[0],
-                                                                                                                         addressArr[1],
-                                                                                                                         x.getShelterName
-                                                                                                                             ());
+                                            if (addressArr.length <= 1) {
+                                                addressArr = x.getShelterAddress()
+                                                              .split(" ");
+                                            }
+                                            Shelter mockShelter = new Shelter();
+                                            mockShelter.setShelterCode(-1L);
+                                            Shelter shelter = Optional.ofNullable(shelterRepository
+                                                                                      .findBySidoNameAndGunguNameAndShelterName(
+                                                                                          addressArr[0],
+                                                                                          addressArr[1],
+                                                                                          x.getShelterName
+                                                                                              ()))
+                                                                      .orElse(mockShelter);
                                             Post post = new Post();
                                             post.setNoticeId(x.getNoticeId());
                                             post.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
@@ -97,16 +119,17 @@ public class PostServiceImpl implements PostService {
     }
 
     private String convertKindName(String kindName) {
+        // Todo 분기처리에 대한 대책 필요
+/*        if (kindName.contains("발바리") || kindName.contains("진돗개믹스견")) {
+            return "믹스견";
+        }*/
         if (kindName.contains("[개] ")) {
             return kindName.replace("[개] ", "");
-        }
-        if (kindName.contains("[기타축종] ")) {
-            return kindName.replace("[기타축종] ", "");
         }
         if (kindName.contains("[고양이]")) {
             return kindName.replace("[고양이]", "고양이");
         }
-        return kindName;
+        return "기타축종";
     }
 
     private Float convertWeight(String weight) {

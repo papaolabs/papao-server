@@ -15,6 +15,14 @@ spring:
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
 
+logging.level:
+  com.papaolabs.batch: DEBUG
+  com.papaolabs.scheduler: DEBUG
+  org.springframework: INFO
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
+  org.hibernate.type.BasicTypeRegistry: WARN
+
 openapi:
   url: http://localhost:9010
 ---
@@ -25,7 +33,7 @@ spring.datasource:
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: com.mysql.jdbc.Driver
-  initialize: false
+  initialize: true
   connection-test-query: SELECT 1
   test-while-idle: true
   test-on-borrow: true
