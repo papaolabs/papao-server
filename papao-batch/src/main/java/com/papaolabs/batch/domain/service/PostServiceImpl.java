@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -57,7 +58,6 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = openApiClient.animal(beginDate, endDate)
                                         .stream()
                                         .map(x -> {
-                                            log.debug("syncPostList - AnimalDTO :: {}", x);
                                             Breed mockBreed = new Breed();
                                             mockBreed.setKindCode(-1L);
                                             Breed breed = Optional.ofNullable(breedRepository.findByKindName(convertKindName(x.getBreedName())))
@@ -96,6 +96,7 @@ public class PostServiceImpl implements PostService {
                                             post.setFeature(x.getFeature());
                                             post.setHappenDate(convertStringToDate(x.getHappenDate()));
                                             post.setHappenPlace(x.getHappenPlace());
+                                            post.setIsDisplay(TRUE);
                                             return post;
                                         })
                                         .collect(Collectors.toList());

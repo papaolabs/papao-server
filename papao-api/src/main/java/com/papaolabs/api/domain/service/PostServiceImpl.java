@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
@@ -123,9 +124,9 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
             log.debug("[NotFound] readPost - postId : {postId}", postId);
-            return PostDTO.builder()
-                          .id(-1L)
-                          .build();
+            PostDTO postDTO = new PostDTO();
+            postDTO.setId(-1L);
+            return postDTO;
         }
         return transform(post);
     }
@@ -135,14 +136,14 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
             log.debug("[NotFound] delete - postId : {postId}", postId);
-            return PostDTO.builder()
-                          .id(-1L)
-                          .build();
+            PostDTO postDTO = new PostDTO();
+            postDTO.setId(-1L);
+            return postDTO;
         } else if (!post.getIsDisplay()) {
             log.debug("[NotValid] delete - isDisplay : {isDisplay}, postId : {postId}", post.getIsDisplay(), postId);
-            return PostDTO.builder()
-                          .id(-1L)
-                          .build();
+            PostDTO postDTO = new PostDTO();
+            postDTO.setId(-1L);
+            return postDTO;
         }
         post.setIsDisplay(FALSE);
         postRepository.save(post);
@@ -259,28 +260,34 @@ public class PostServiceImpl implements PostService {
     }*/
 
     private PostDTO transform(Post post) {
-        return PostDTO.builder()
-                      .id(post.getId())
-/*                      .desertionId(post.getDesertionId())
-                      .type(post.getType())
-                      .imageUrl(post.getImageUrl())
-                      .kindUpCode(post.getKindUpCode())
-                      .kindCode(convertKindName(post.getKindCode()))
-                      .kindName(kindRepository.findByKindCode(Long.valueOf(post.getKindCode()))
-                                              .getKindName())
-                      .happenDate(convertDateToString(post.getHappenDate()))
-                      .happenPlace(post.getHappenPlace())
-                      .userId(post.getUserId())
-                      .userName(post.getUserName())
-                      .userAddress(post.getUserAddress())
-                      .userContact(post.getUserContact())
-                      .weight(String.valueOf(post.getWeight()))
-                      .gender(post.getGender())
-                      .state(post.getState())
-                      .neuter(post.getNeuter())
-                      .feature(post.getFeature())
-                      .introduction(isNotEmpty(post.getIntroduction()) ? post.getIntroduction() : StringUtils.EMPTY)*/
-                      .build();
+        Breed breed = breedRepository.findByKindCode(post.getAnimalCode());
+        PostDTO postDTO = new PostDTO();
+        postDTO.setId(post.getId());
+        postDTO.setDesertionId(post.getDesertionId());
+        postDTO.setState(post.getStateType());
+        postDTO.setImageUrl(post.getImageUrl());
+        postDTO.setType(post.getPostType());
+        postDTO.setGender(post.getGenderCode());
+        postDTO.setNeuter(post.getNeuterCode());
+        postDTO.setFeature(post.getFeature());
+        // Todo user 필요
+/*        postDTO.setUserId();
+        postDTO.setUserName();
+        postDTO.setUserContact();
+        postDTO.setUserAddress();*/
+        postDTO.setHappenDate(convertDateToString(post.getHappenDate()));
+        postDTO.setHappenPlace(post.getHappenPlace());
+        postDTO.setKindUpCode(breed.getSpeciesCode());
+        postDTO.setKindCode(breed.getKindCode());
+        postDTO.setUserName(breed.getKindName());
+        postDTO.setAge(post.getAge());
+        postDTO.setWeight(post.getWeight());
+        // Todo view count, favorite setting
+        postDTO.setViewCount(-1L);
+        postDTO.setFavorite(FALSE);
+        postDTO.setCreatedDate(convertDateToString(post.getCreatedDate()));
+        postDTO.setUpdatedDate(convertDateToString(post.getUpdatedDate()));
+        return postDTO;
     }
 
     private String convertKindName(String kindName) {

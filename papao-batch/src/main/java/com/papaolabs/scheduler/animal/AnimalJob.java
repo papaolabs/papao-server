@@ -38,7 +38,7 @@ public class AnimalJob {
     }
 
     @Scheduled(cron = "0 0/30 * 1/1 * ?") // 30분마다 실행
-    @Scheduled(fixedDelay = 108000)
+    @Scheduled(fixedDelay = 100000L)
     public void day() {
         batch(BatchType.DAY, 0);
     }

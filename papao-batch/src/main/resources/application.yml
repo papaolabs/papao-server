@@ -1,12 +1,12 @@
 server:
-  port: 9030
+  port: 9020
 
 spring:
   datasource:
     platform: h2
     url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     username: sa
-    initialize: true
+    initialize: false
   jpa:
     database: MYSQL
     showSql: false
@@ -24,7 +24,7 @@ logging.level:
   org.hibernate.type.BasicTypeRegistry: WARN
 
 openapi:
-  url: http://localhost:9010
+  url: http://localhost:9030
 ---
 spring.profiles: dev
 
@@ -33,7 +33,7 @@ spring.datasource:
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: com.mysql.jdbc.Driver
-  initialize: true
+  initialize: false
   connection-test-query: SELECT 1
   test-while-idle: true
   test-on-borrow: true

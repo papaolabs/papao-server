@@ -1,34 +1,35 @@
 package com.papaolabs.api.interfaces.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Value;
+import lombok.Data;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Builder
-@Getter
-@Value
+@Data
 @JsonInclude(NON_NULL)
 public class PostDTO {
     private Long id;
-    private Long desertionId;
-    private String type;
+    private String desertionId;
+    private String state;
     private String imageUrl;
-    private String kindUpCode;
-    private String kindCode;
-    private String kindName;
-    private String happenDate;
-    private String happenPlace;
+    private String type;
+    private String gender;
+    private String neuter;
+    private String feature;
     private String userId;
     private String userName;
     private String userAddress;
     private String userContact;
-    private String weight;
-    private String gender;
-    private String state;
-    private String neuter;
-    private String feature;
-    private String introduction;
+    private String happenDate;
+    private String happenPlace;
+    private Long kindUpCode;
+    private Long kindCode;
+    private String kindName;
+    private Integer age;
+    private Float weight;
+    // 신규추가
+    private Long viewCount;
+    private Boolean favorite;
+    private String createdDate;
+    private String updatedDate;
 }
