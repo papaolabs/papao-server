@@ -11,7 +11,7 @@ spring:
     database: MYSQL
     showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.hbm2ddl.auto: update
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
 

@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     private static final String UNKNOWN = "UNKNOWN";
-    private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final String DATE_FORMAT = "yyyyMMdd hh:MM:ss";
     @NotNull
     private final PostRepository postRepository;
     @NotNull
