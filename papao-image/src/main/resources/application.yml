@@ -1,0 +1,9 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(w62VSwX5X6kj1uNjZRi6L83dkq8il01lYqdEp7F0oPQ=)
+      secretKey: ENC(W7StoBjtdHWucpV9nppzENEIuwxeDXe9k9gOF3oG6qFYDM3MimoZjOOo+yFaQMQ9JQiz3Aos2bQ=)
+    s3:
+      bucket: papaobucket
+    region:
+      static: ap-northeast-2
