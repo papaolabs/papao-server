@@ -1,9 +1,9 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.domain.model.Comment;
-import com.papaolabs.api.domain.model.Kind;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
-import com.papaolabs.api.infrastructure.persistence.jpa.repository.KindRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +26,11 @@ public class CommentServiceImpl implements CommentService {
     @NotNull
     private final CommentRepository commentRepository;
     @NotNull
-    private final KindRepository kindRepository;
+    private final BreedRepository breedRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, KindRepository kindRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, BreedRepository breedRepository) {
         this.commentRepository = commentRepository;
-        this.kindRepository = kindRepository;
+        this.breedRepository = breedRepository;
     }
 
     @Override
@@ -45,12 +45,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO createByGuest(String postId, String text) {
-        List<Kind> kind = kindRepository.findAll();
+        List<Breed> kind = breedRepository.findAll();
         Random random = new Random();
         Comment comment = new Comment();
         comment.setPostId(postId);
         comment.setUserId("0");
-        comment.setUserName(kind.get(random.nextInt(kind.size())).getKindName());
+        comment.setUserName(kind.get(random.nextInt(kind.size()))
+                                .getKindName());
         comment.setText(text);
         return transform(commentRepository.save(comment));
     }

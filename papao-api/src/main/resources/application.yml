@@ -1,5 +1,5 @@
 server:
-  port: 9020
+  port: 9010
 
 ###
 #   Database Settings
@@ -55,7 +55,7 @@ spring:
     database: MYSQL
     showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.hbm2ddl.auto: update
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
   h2.console:
@@ -65,9 +65,9 @@ spring:
 spring.profiles: dev
 
 spring.datasource:
-  url: 220.230.114.180
+  url: jdbc:mysql://220.230.114.180:3306/papao
   username: papao_dev
-  password: ENC(TEZjcPKw9dpWO5dgf9MmAw==)
+  password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: com.mysql.jdbc.Driver
   initialize: false
   connection-test-query: SELECT 1

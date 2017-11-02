@@ -3,10 +3,15 @@ package com.papaolabs.batch.infrastructure.feign.openapi;
 import com.papaolabs.batch.infrastructure.feign.LoggingFallbackFactory;
 import com.papaolabs.batch.infrastructure.feign.openapi.dto.AnimalDTO;
 import feign.Param;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
+@Component
+@Slf4j
 public class OpenApiClientFallbackFactory implements LoggingFallbackFactory<OpenApiClient> {
     private static final OpenApiClient FALLBACK = new OpenApiFallback();
 
@@ -21,10 +26,10 @@ public class OpenApiClientFallbackFactory implements LoggingFallbackFactory<Open
     }
 
     public static class OpenApiFallback implements OpenApiClient {
-
         @Override
         public List<AnimalDTO> animal(String beginDate, String endDate) {
-            return null;
+            log.debug("OpenApiClientFallbackFactory.animal() : beginDate {}, endDate : {}", beginDate, endDate);
+            return Arrays.asList();
         }
     }
 }

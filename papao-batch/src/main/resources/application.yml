@@ -1,30 +1,37 @@
 server:
-  port: 9030
+  port: 9020
 
 spring:
   datasource:
     platform: h2
     url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
     username: sa
-    initialize: true
+    initialize: false
   jpa:
     database: MYSQL
     showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.hbm2ddl.auto: update
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
 
-openapi:
-  url: http://localhost:9010
+logging.level:
+  com.papaolabs.batch: DEBUG
+  com.papaolabs.scheduler: DEBUG
+  org.springframework: INFO
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
+  org.hibernate.type.BasicTypeRegistry: WARN
 
+openapi:
+  url: http://localhost:9030
 ---
 spring.profiles: dev
 
 spring.datasource:
-  url: 220.230.114.180
+  url: jdbc:mysql://220.230.114.180:3306/papao
   username: papao_dev
-  password: ENC(TEZjcPKw9dpWO5dgf9MmAw==)
+  password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: com.mysql.jdbc.Driver
   initialize: false
   connection-test-query: SELECT 1

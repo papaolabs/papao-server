@@ -1,4 +1,4 @@
-package com.papaolabs.batch.infrastructure.jpa.entity;
+package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +24,7 @@ public class Post {
     private Date noticeBeginDate;
     private Date noticeEndDate;
     private String desertionId;
+    private String postType;
     private String stateType;
     private String imageUrl;
     private Long animalCode;
