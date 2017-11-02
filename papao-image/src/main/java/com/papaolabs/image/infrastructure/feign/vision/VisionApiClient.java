@@ -1,7 +1,7 @@
-package com.papaolabs.client.vision;
+package com.papaolabs.image.infrastructure.feign.vision;
 
-import com.papaolabs.client.vision.dto.VisionApiRequest;
-import com.papaolabs.client.vision.dto.VisionApiResponse;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

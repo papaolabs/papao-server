@@ -1,4 +1,4 @@
-package com.papaolabs.client.vision;
+package com.papaolabs.image.infrastructure.feign.vision;
 
 import feign.Feign;
 import feign.Logger;

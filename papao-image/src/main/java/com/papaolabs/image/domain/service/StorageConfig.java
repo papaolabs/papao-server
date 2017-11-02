@@ -1,4 +1,4 @@
-package com.papaolabs.image;
+package com.papaolabs.image.domain.service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AwsConfig {
+public class StorageConfig {
 
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;

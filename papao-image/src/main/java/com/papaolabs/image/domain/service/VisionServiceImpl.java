@@ -1,11 +1,11 @@
-package com.papaolabs.openapi.domain.service;
+package com.papaolabs.image.domain.service;
 
-import com.papaolabs.client.vision.VisionApiClient;
-import com.papaolabs.client.vision.dto.VisionApiRequest;
-import com.papaolabs.client.vision.dto.VisionApiRequest.Request;
-import com.papaolabs.client.vision.dto.VisionApiRequest.Request.Feature;
-import com.papaolabs.client.vision.dto.VisionApiRequest.Request.Image;
-import com.papaolabs.client.vision.dto.VisionApiResponse.VisionResult;
+import com.papaolabs.image.infrastructure.feign.vision.VisionApiClient;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest.Request;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest.Request.Feature;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest.Request.Image;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse.VisionResult;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

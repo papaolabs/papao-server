@@ -1,4 +1,4 @@
-package com.papaolabs.client.vision.dto;
+package com.papaolabs.image.infrastructure.feign.vision.dto;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
-package com.papaolabs.client.vision;
+package com.papaolabs.image.infrastructure.feign.vision;
 
-import com.papaolabs.client.LoggingFallbackFactory;
-import com.papaolabs.client.vision.dto.VisionApiRequest;
-import com.papaolabs.client.vision.dto.VisionApiResponse;
+import com.papaolabs.image.infrastructure.feign.LoggingFallbackFactory;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiRequest;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse;
 import feign.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

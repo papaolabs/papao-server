@@ -1,6 +1,6 @@
-package com.papaolabs.openapi.domain.service;
+package com.papaolabs.image.domain.service;
 
-import com.papaolabs.client.vision.dto.VisionApiResponse.VisionResult;
+import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse.VisionResult;
 
 import java.util.List;
 

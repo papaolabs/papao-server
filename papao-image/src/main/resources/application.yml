@@ -1,3 +1,20 @@
+server:
+  port: 9040
+
+spring:
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    username: sa
+    initialize: true
+  jpa:
+    database: MYSQL
+    showSql: false
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.format_sql: true
+    properties.hibernate.use_sql_comments: true
+
 cloud:
   aws:
     credentials:
@@ -7,3 +24,32 @@ cloud:
       bucket: papaobucket
     region:
       static: ap-northeast-2
+
+logging.level:
+  com.papaolabs.api: DEBUG
+  org.springframework: INFO
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
+  org.hibernate.type.BasicTypeRegistry: WARN
+
+ribbon:
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 0
+  ReadTimeout: 2500
+  ConnectTimeout: 500
+
+vision:
+  ribbon:
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 2000
+    ConnectTimeout: 500
+
+jasypt:
+  encryptor:
+    password:
+
+google:
+  application:
+    imageUrl: https://vision.googleapis.com/v1
+    key: ENC(J10GTNRuMxFnd6Y04emdEj07yr7N+5Rl9td8K9jKbCc4T24UBh0yxmE08BXQRV8h)
