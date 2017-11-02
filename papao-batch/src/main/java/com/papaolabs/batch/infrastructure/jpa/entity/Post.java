@@ -20,6 +20,7 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
+    private String postType;
     private String noticeId;
     private Date noticeBeginDate;
     private Date noticeEndDate;

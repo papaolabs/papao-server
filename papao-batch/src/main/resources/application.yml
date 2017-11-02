@@ -25,6 +25,11 @@ logging.level:
 
 openapi:
   url: http://localhost:9030
+  ribbon:
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 2000
+    ConnectTimeout: 500
 ---
 spring.profiles: dev
 

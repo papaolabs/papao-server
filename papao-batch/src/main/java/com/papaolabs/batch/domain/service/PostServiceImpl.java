@@ -11,6 +11,7 @@ import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -36,6 +37,7 @@ public class PostServiceImpl implements PostService {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final PostRepository postRepository;
+    public final static String DATE_FORMAT = "yyyyMMdd";
 
     public PostServiceImpl(OpenApiClient openApiClient,
                            BreedRepository breedRepository,
@@ -49,68 +51,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> syncPostList(String beginDate, String endDate) {
-        List<AnimalDTO> animals = Arrays.asList();
-        try {
-            animals = openApiClient.animal(beginDate, endDate);
-        } catch (FeignException fe) {
-            fe.printStackTrace();
-        }
+        StopWatch stopWatch = new StopWatch();
+        List<Post> originalPosts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual
+            (convertStringToDate(beginDate),
+             convertStringToDate(endDate));
         List<Post> posts = openApiClient.animal(beginDate, endDate)
                                         .stream()
+                                        .map(this::transform)
                                         .map(x -> {
-                                            Breed mockBreed = new Breed();
-                                            mockBreed.setKindCode(-1L);
-                                            Breed breed = Optional.ofNullable(breedRepository.findByKindName(convertKindName(x.getBreedName())))
-                                                                  .orElse(mockBreed);
-                                            String[] addressArr = x.getJurisdiction()
-                                                                   .split(" ");
-                                            if (addressArr.length <= 1) {
-                                                addressArr = x.getShelterAddress()
-                                                              .split(" ");
+                                            for (Post post : originalPosts) {
+                                                if (post.getDesertionId()
+                                                        .equals(x.getDesertionId())) {
+                                                    x.setId(post.getId());
+                                                    x.setCreatedDate(post.getCreatedDate());
+                                                    break;
+                                                }
                                             }
-                                            Shelter mockShelter = new Shelter();
-                                            mockShelter.setShelterCode(-1L);
-                                            Shelter shelter = Optional.ofNullable(shelterRepository
-                                                                                      .findBySidoNameAndGunguNameAndShelterName(
-                                                                                          addressArr[0],
-                                                                                          addressArr[1],
-                                                                                          x.getShelterName
-                                                                                              ()))
-                                                                      .orElse(mockShelter);
-                                            Post post = new Post();
-                                            post.setNoticeId(x.getNoticeId());
-                                            post.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
-                                            post.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
-                                            post.setDesertionId(x.getDesertionId());
-                                            post.setStateType(x.getStateType());
-                                            post.setImageUrl(x.getImageUrl());
-                                            post.setAnimalCode(breed.getKindCode());
-                                            post.setAge(convertAge(x.getAge()));
-                                            post.setWeight(convertWeight(x.getWeight()));
-                                            post.setGenderCode(x.getGenderCode());
-                                            post.setNeuterCode(x.getNeuterCode());
-                                            post.setShelterCode(shelter.getShelterCode());
-                                            post.setShelterContact(x.getShelterContact());
-                                            post.setManager(x.getUserName());
-                                            post.setContact(x.getUserContact());
-                                            post.setFeature(x.getFeature());
-                                            post.setHappenDate(convertStringToDate(x.getHappenDate()));
-                                            post.setHappenPlace(x.getHappenPlace());
-                                            post.setIsDisplay(TRUE);
-                                            return post;
+                                            return x;
                                         })
                                         .collect(Collectors.toList());
-        postRepository.save(posts);
-        return posts;
+        return postRepository.save(posts);
     }
 
     private String convertDateToString(Date date) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         return transFormat.format(date);
     }
 
     private Date convertStringToDate(String from) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
             return transFormat.parse(from);
         } catch (ParseException e) {
@@ -130,6 +99,7 @@ public class PostServiceImpl implements PostService {
         if (kindName.contains("[고양이]")) {
             return kindName.replace("[고양이]", "고양이");
         }
+        log.warn("convertKindName - 예외처리 kindName : {}", kindName);
         return "기타축종";
     }
 
@@ -141,12 +111,12 @@ public class PostServiceImpl implements PostService {
         if (weight.contains("(Kg)")) {
             result = weight.replace("(Kg)", "");
             try {
-                Float.valueOf(weight);
+                Float.valueOf(result);
             } catch (NumberFormatException nfe) {
                 return Float.valueOf(result);
             }
         }
-        return Float.valueOf(result);
+        return Float.valueOf(weight);
     }
 
     private Integer convertAge(String age) {
@@ -158,5 +128,49 @@ public class PostServiceImpl implements PostService {
             return Integer.valueOf(result.replace("(년생)", ""));
         }
         return Integer.valueOf(result);
+    }
+
+    private Post transform(AnimalDTO animalDTO) {
+        Breed mockBreed = new Breed();
+        mockBreed.setKindCode(-1L);
+        Breed breed = Optional.ofNullable(breedRepository.findByKindName(convertKindName(animalDTO.getBreedName())))
+                              .orElse(mockBreed);
+        String[] addressArr = animalDTO.getJurisdiction()
+                                       .split(" ");
+        if (addressArr.length <= 1) {
+            addressArr = animalDTO.getShelterAddress()
+                                  .split(" ");
+        }
+        Shelter mockShelter = new Shelter();
+        mockShelter.setShelterCode(-1L);
+        Shelter shelter = Optional.ofNullable(shelterRepository
+                                                  .findBySidoNameAndGunguNameAndShelterName(
+                                                      addressArr[0],
+                                                      addressArr[1],
+                                                      animalDTO.getShelterName
+                                                          ()))
+                                  .orElse(mockShelter);
+        Post post = new Post();
+        post.setNoticeId(animalDTO.getNoticeId());
+        post.setNoticeBeginDate(convertStringToDate(animalDTO.getNoticeBeginDate()));
+        post.setNoticeEndDate(convertStringToDate(animalDTO.getNoticeEndDate()));
+        post.setDesertionId(animalDTO.getDesertionId());
+        post.setStateType(animalDTO.getStateType());
+        post.setImageUrl(animalDTO.getImageUrl());
+        post.setAnimalCode(breed.getKindCode());
+        post.setAge(convertAge(animalDTO.getAge()));
+        post.setWeight(convertWeight(animalDTO.getWeight()));
+        post.setGenderCode(animalDTO.getGenderCode());
+        post.setNeuterCode(animalDTO.getNeuterCode());
+        post.setShelterCode(shelter.getShelterCode());
+        post.setShelterContact(animalDTO.getShelterContact());
+        post.setManager(animalDTO.getUserName());
+        post.setContact(animalDTO.getUserContact());
+        post.setFeature(animalDTO.getFeature());
+        post.setHappenDate(convertStringToDate(animalDTO.getHappenDate()));
+        post.setHappenPlace(animalDTO.getHappenPlace());
+        post.setIsDisplay(TRUE);
+        post.setPostType("01");
+        return post;
     }
 }
