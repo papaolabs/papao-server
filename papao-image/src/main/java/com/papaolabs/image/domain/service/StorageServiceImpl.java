@@ -1,4 +1,4 @@
-package com.papaolabs.image.service;
+package com.papaolabs.image.domain.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -14,13 +14,12 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,12 +30,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class S3Service {
+public class StorageServiceImpl implements StorageService {
+    @NotNull
     private AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public S3Service(AmazonS3Client amazonS3Client) {
+    public StorageServiceImpl(AmazonS3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
     }
 
@@ -66,18 +66,24 @@ public class S3Service {
         return putObjectResults;
     }
 
-    public ResponseEntity<byte[]> download(String key) throws IOException {
+    public byte[] download(String key) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, key);
         S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
         S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-        byte[] bytes = IOUtils.toByteArray(objectInputStream);
-        String fileName = URLEncoder.encode(key, "UTF-8")
-                                    .replaceAll("\\+", "%20");
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentLength(bytes.length);
-        httpHeaders.setContentDispositionFormData("attachment", fileName);
-        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+        byte[] bytes = new byte[0];
+        try {
+            bytes = IOUtils.toByteArray(objectInputStream);
+            String fileName = URLEncoder.encode(key, "UTF-8")
+                                        .replaceAll("\\+", "%20");
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            httpHeaders.setContentLength(bytes.length);
+            httpHeaders.setContentDispositionFormData("attachment", fileName);
+            return bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
 
     public List<S3ObjectSummary> list() {
