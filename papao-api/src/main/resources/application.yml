@@ -25,30 +25,8 @@ logging.level:
   org.hibernate: ERROR
   org.hibernate.SQL: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
-
-jasypt:
-  encryptor:
-    password:
-
-seoul:
-  api:
-    animal:
-      appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
-      url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
-
-google:
-  application:
-    imageUrl: https://vision.googleapis.com/v1
-    key: ENC(J10GTNRuMxFnd6Y04emdEj07yr7N+5Rl9td8K9jKbCc4T24UBh0yxmE08BXQRV8h)
-
-facebook:
-  application:
-    apiUrl: https://graph.accountkit.com/
-    apiVersion: v1.1
-    apiKey: ENC(owKDvYkpHj5DLc56wRxs7GFeCRL8Iz+1EngPP2e+go9mZ81r1WZ2StAipmutICrzC/S+x/weX4YsGGyNdI7FLw==)
-
 ---
-spring.profiles: local
+spring.profiles: dev
 
 spring:
   jpa:
@@ -58,21 +36,19 @@ spring:
     properties.hibernate.hbm2ddl.auto: update
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
-  h2.console:
-    enabled: true
-    path: /console
----
-spring.profiles: dev
 
 spring.datasource:
   url: jdbc:mysql://220.230.114.180:3306/papao
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
-  driverClassName: com.mysql.jdbc.Driver
+  driverClassName: org.mariadb.jdbc.Driver
   initialize: false
-  connection-test-query: SELECT 1
-  test-while-idle: true
-  test-on-borrow: true
-  validation-interval: 10000
-  log-validation-errors: true
-  validation-query: SELECT 1
+  ## Pool Info ##
+  maxActive: 100
+  initialSize: 10
+  minIdle: 10
+  validationQuery: select 1
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 5000 #5 second
+  minEvictableIdleTimeMillis: 10000  #10 second
+  validationQueryTimeout: 5
