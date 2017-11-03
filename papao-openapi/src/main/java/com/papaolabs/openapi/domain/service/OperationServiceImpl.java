@@ -1,5 +1,6 @@
 package com.papaolabs.openapi.domain.service;
 
+import com.papaolabs.client.govdata.dto.AnimalResponse;
 import com.papaolabs.client.govdata.dto.RegionResponse.Body.Items.RegionItem;
 import com.papaolabs.openapi.domain.model.Animal;
 import com.papaolabs.openapi.domain.model.Breed;
@@ -43,40 +44,43 @@ public class OperationServiceImpl implements OperationService {
                                       String state,
                                       String index,
                                       String size) {
-        return this.govDataService.readAnimalItems(beginDate,
-                                                   endDate,
-                                                   speciesCode,
-                                                   kindCode,
-                                                   sidoCode,
-                                                   gunguCode,
-                                                   shelterCode,
-                                                   state,
-                                                   index,
-                                                   size)
-                                  .stream()
-                                  .map(x -> {
-                                      Animal animal = new Animal();
-                                      animal.setNoticeId(x.getNoticeNo());
-                                      animal.setNoticeBeginDate(x.getNoticeSdt());
-                                      animal.setNoticeEndDate(x.getNoticeEdt());
-                                      animal.setDesertionId(Long.valueOf(x.getDesertionNo()));
-                                      animal.setStateType(x.getProcessState());
-                                      animal.setImageUrl(x.getPopfile());
-                                      animal.setThumbImageUrl(x.getFilename());
-                                      animal.setBreedName(x.getKindCd());
-                                      animal.setColorName(x.getColorCd());
-                                      animal.setAge(convertAge(x.getAge()));
-                                      animal.setWeight(Float.valueOf(convertWeight(x.getWeight())));
-                                      animal.setGenderCode(x.getSexCd());
-                                      animal.setNeuterCode(x.getNeuterYn());
-                                      animal.setJurisdiction(x.getOrgNm());
-                                      animal.setShelterName(x.getCareNm());
-                                      animal.setShelterContact(x.getCareTel());
-                                      animal.setShelterAddress(x.getCareAddr());
-                                      animal.setUserName(x.getChargeNm());
-                                      animal.setUserContact(x.getOfficetel());
-                                      animal.setFeature(x.getSpecialMark());
-                                      animal.setNote(x.getNoticeComment());
+        List<AnimalResponse.Body.Items.AnimalItem> animalItems = this.govDataService.readAnimalItems(beginDate,
+                                                                                                     endDate,
+                                                                                                     speciesCode,
+                                                                                                     kindCode,
+                                                                                                     sidoCode,
+                                                                                                     gunguCode,
+                                                                                                     shelterCode,
+                                                                                                     state,
+                                                                                                     index,
+                                                                                                     size);
+        if (animalItems == null) {
+            return Arrays.asList();
+        }
+        return animalItems.stream()
+                   .map(x -> {
+                       Animal animal = new Animal();
+                       animal.setNoticeId(x.getNoticeNo());
+                       animal.setNoticeBeginDate(x.getNoticeSdt());
+                       animal.setNoticeEndDate(x.getNoticeEdt());
+                       animal.setDesertionId(Long.valueOf(x.getDesertionNo()));
+                       animal.setStateType(x.getProcessState());
+                       animal.setImageUrl(x.getPopfile());
+                       animal.setThumbImageUrl(x.getFilename());
+                       animal.setBreedName(x.getKindCd());
+                       animal.setColorName(x.getColorCd());
+                       animal.setAge(convertAge(x.getAge()));
+                       animal.setWeight(Float.valueOf(convertWeight(x.getWeight())));
+                       animal.setGenderCode(x.getSexCd());
+                       animal.setNeuterCode(x.getNeuterYn());
+                       animal.setJurisdiction(x.getOrgNm());
+                       animal.setShelterName(x.getCareNm());
+                       animal.setShelterContact(x.getCareTel());
+                       animal.setShelterAddress(x.getCareAddr());
+                       animal.setUserName(x.getChargeNm());
+                       animal.setUserContact(x.getOfficetel());
+                       animal.setFeature(x.getSpecialMark());
+                       animal.setNote(x.getNoticeComment());
 /*
                                       animal.setPageSize(Integer.valueOf(x.getNumOfRows()));
                                       animal.setPageIndex(Integer.valueOf(x.getPageNo()));
@@ -84,11 +88,11 @@ public class OperationServiceImpl implements OperationService {
                                       animal.setResultCode(Integer.valueOf(x.getResultCode()));
                                       animal.setResultMessage(x.getResultMsg());
 */
-                                      animal.setHappenDate(x.getHappenDt());
-                                      animal.setHappenPlace(x.getHappenPlace());
-                                      return animal;
-                                  })
-                                  .collect(Collectors.toList());
+                       animal.setHappenDate(x.getHappenDt());
+                       animal.setHappenPlace(x.getHappenPlace());
+                       return animal;
+                   })
+                   .collect(Collectors.toList());
     }
 
     @Override

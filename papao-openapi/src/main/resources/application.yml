@@ -34,7 +34,7 @@ ribbon:
 
 govdata:
   ribbon:
-    MaxAutoRetries: 1
+    MaxAutoRetries: 0
     MaxAutoRetriesNextServer: 0
     ReadTimeout: 2000
     ConnectTimeout: 500
