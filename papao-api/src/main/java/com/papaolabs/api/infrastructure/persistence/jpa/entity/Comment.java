@@ -1,4 +1,4 @@
-package com.papaolabs.api.domain.model;
+package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
