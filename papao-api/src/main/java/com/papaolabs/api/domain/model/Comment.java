@@ -21,22 +21,14 @@ public class Comment {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "POST_ID")
     private String postId;
-    @Column(name = "TYPE")
     private String type;
-    @Column(name = "USER_ID")
     private String userId;
-    @Column(name = "USER_NAME")
     private String userName;
-    @Column(name = "TEXT")
     private String text;
-    @Column(name = "DISPLAY_STATE")
     private Boolean isDisplay;
-    @Column(name = "CREATED_DATE")
     @CreatedDate
     private Date createdDate;
-    @Column(name = "UPDATED_DATE")
     @LastModifiedDate
     private Date lastModifiedDate;
 }
