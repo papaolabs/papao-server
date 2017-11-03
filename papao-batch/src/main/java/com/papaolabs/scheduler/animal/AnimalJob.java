@@ -26,8 +26,9 @@ public class AnimalJob {
     }
 
     @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
+    @Scheduled(fixedDelay = 10000000L)
     public void year() {
-        for (int i = 0; i < 12; i++) { // 최근 9년간
+        for (int i = 0; i < 12; i++) { // 최근 1년간
             batch(BatchType.MONTH, i);
         }
     }
