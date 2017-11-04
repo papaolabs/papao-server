@@ -22,11 +22,11 @@ public class PostDTO {
     private String userContact;
     private String happenDate;
     private String happenPlace;
-    private Long kindUpCode;
-    private Long kindCode;
+    private String kindUpCode;
+    private String kindCode;
     private String kindName;
-    private Integer age;
-    private Float weight;
+    private String age;
+    private String weight;
     // 신규추가
     private Long viewCount;
     private Boolean favorite;

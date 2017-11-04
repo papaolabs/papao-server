@@ -1,6 +1,6 @@
 package com.papaolabs.api.infrastructure.persistence.jpa.repository;
 
-import com.papaolabs.api.domain.model.Comment;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

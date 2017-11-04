@@ -20,11 +20,12 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
+    private Long uid;
+    private String postType;
     private String noticeId;
     private Date noticeBeginDate;
     private Date noticeEndDate;
     private String desertionId;
-    private String postType;
     private String stateType;
     private String imageUrl;
     private Long animalCode;

@@ -1,6 +1,6 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.domain.model.Comment;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
