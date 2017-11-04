@@ -33,41 +33,37 @@ public class V1PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestParam(required = false) String happenDate,
-                                              @RequestParam(required = false) String happenPlace,
-                                              @RequestParam(required = false) String uprCode,
-                                              @RequestParam(required = false) String orgCode,
-                                              @RequestParam(required = false) String uid,
-                                              @RequestParam(required = false) String contact,
-                                              @RequestParam(required = false) String postType,
-                                              @RequestParam(required = false) String imageUrl,
-                                              @RequestParam(required = false) String gender,
-                                              @RequestParam(required = false) String neuter,
+    public ResponseEntity<PostDTO> createPost(@RequestParam String happenDate,
+                                              @RequestParam String happenPlace,
+                                              @RequestParam String uid,
+                                              @RequestParam String postType,
+                                              @RequestParam List<String> imageUrls,
                                               @RequestParam(required = false) String kindUpCode,
                                               @RequestParam(required = false) String kindCode,
+                                              @RequestParam(required = false) String contact,
+                                              @RequestParam(required = false) String gender,
+                                              @RequestParam(required = false) String neuter,
                                               @RequestParam(required = false) String age,
                                               @RequestParam(required = false) Float weight,
-                                              @RequestParam(required = false) String introduction,
-                                              @RequestParam(required = false) String feature
+                                              @RequestParam(required = false) String feature,
+                                              @RequestParam(required = false) String uprCode,
+                                              @RequestParam(required = false) String orgCode
     ) {
-        return new ResponseEntity<>(postService.create(
-            imageUrl,
-            postType,
-            gender,
-            neuter,
-            uid,
-            contact,
-            happenDate,
-            happenPlace,
-            uprCode,
-            orgCode,
-            kindUpCode,
-            kindCode,
-            age,
-            weight,
-            introduction,
-            feature
-        ), HttpStatus.OK);
+        return new ResponseEntity<>(postService.create(happenDate,
+                                                       happenPlace,
+                                                       uid,
+                                                       postType,
+                                                       imageUrls,
+                                                       kindUpCode,
+                                                       kindCode,
+                                                       contact,
+                                                       gender,
+                                                       neuter,
+                                                       age,
+                                                       weight,
+                                                       feature,
+                                                       uprCode,
+                                                       orgCode), HttpStatus.OK);
     }
 
     @GetMapping

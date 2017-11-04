@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -53,41 +54,36 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO create(String imageUrl,
-                          String type,
-                          String gender,
-                          String neuterYn,
-                          String uid,
-                          String contact,
-                          String happenDate,
+    public PostDTO create(String happenDate,
                           String happenPlace,
-                          String uprCode,
-                          String orgCode,
+                          String uid,
+                          String postType,
+                          List<String> imageUrls,
                           String kindUpCode,
                           String kindCode,
+                          String contact,
+                          String gender,
+                          String neuter,
                           String age,
                           Float weight,
-                          String introduction,
-                          String feature) {
+                          String feature,
+                          String uprCode,
+                          String orgCode) {
         Post post = new Post();
-/*        post.setImageUrl(imageUrl);
-        post.setType(type);
-        post.setState(StateType.PROCESS.name());
-        post.setGender(isEmpty(gender) ? GenderType.Q.name() : gender);
-        post.setNeuter(isEmpty(neuterYn) ? NeuterType.U.name() : neuterYn);
-        post.setUserId(uid);
-        post.setUserContact(contact);
         post.setHappenDate(convertStringToDate(happenDate));
-        post.setHappenPlace(isNotEmpty(happenPlace) ? happenPlace : UNKNOWN);
-        post.setUprCode(uprCode);
-        post.setOrgCode(orgCode);
-        post.setKindUpCode(kindUpCode);
-        post.setKindCode(isNotEmpty(kindCode) ? kindCode : StringUtils.EMPTY);
-        post.setAge(isNotEmpty(age) ? Integer.valueOf(age) : -1);
+        post.setHappenPlace(happenPlace);
+        post.setManager(uid);
+        post.setPostType(postType);
+        post.setImageUrl(imageUrls.get(0));
+        post.setAnimalCode(Long.valueOf(kindCode));
+        post.setContact(contact);
+        post.setGenderCode(gender);
+        post.setNeuterCode(neuter);
+        post.setAge(Integer.valueOf(age));
         post.setWeight(weight);
-        post.setIntroduction(introduction);
         post.setFeature(feature);
-        post.setIsDisplay(TRUE);*/
+        post.setShelterCode(Long.valueOf(orgCode));
+        post.setIsDisplay(TRUE);
         return transform(postRepository.save(post));
     }
 
@@ -277,11 +273,11 @@ public class PostServiceImpl implements PostService {
         postDTO.setUserAddress();*/
         postDTO.setHappenDate(convertDateToString(post.getHappenDate()));
         postDTO.setHappenPlace(post.getHappenPlace());
-        postDTO.setKindUpCode(breed.getSpeciesCode());
-        postDTO.setKindCode(breed.getKindCode());
+        postDTO.setKindUpCode(String.valueOf(breed.getSpeciesCode()));
+        postDTO.setKindCode(String.valueOf(breed.getKindCode()));
         postDTO.setUserName(breed.getKindName());
-        postDTO.setAge(post.getAge());
-        postDTO.setWeight(post.getWeight());
+        postDTO.setAge(String.valueOf(post.getAge()));
+        postDTO.setWeight(String.valueOf(post.getWeight()));
         // Todo view count, favorite setting
         postDTO.setViewCount(-1L);
         postDTO.setFavorite(FALSE);
