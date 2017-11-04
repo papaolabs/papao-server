@@ -2,6 +2,7 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
@@ -9,6 +10,7 @@ import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
@@ -37,7 +40,7 @@ public class PostServiceImpl implements PostService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     private static final String UNKNOWN = "UNKNOWN";
-    private static final String DATE_FORMAT = "yyyyMMdd hh:MM:ss";
+    private static final String DATE_FORMAT = "yyyyMMdd";
     @NotNull
     private final PostRepository postRepository;
     @NotNull
@@ -92,9 +95,33 @@ public class PostServiceImpl implements PostService {
                                    String endDate,
                                    String kindUpCode,
                                    String uprCode,
-                                   String orgCode,
-                                   String page,
-                                   String size) {
+                                   String orgCode) {
+        if (isEmpty(beginDate)) {
+            beginDate = getDefaultDate(DATE_FORMAT);
+        }
+        if (isEmpty(endDate)) {
+            endDate = getDefaultDate(DATE_FORMAT);
+        }
+        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
+                                                                                         convertStringToDate(endDate))
+                             .stream()
+//                             .filter(Post::getIsDisplay)
+/*                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
+                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
+                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)*/
+                             .map((this::transform))
+                             .sorted(Comparator.comparing(PostDTO::getHappenDate))
+                             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostDTO> readPostsByPage(String beginDate,
+                                         String endDate,
+                                         String upKindCode,
+                                         String uprCode,
+                                         String orgCode,
+                                         String page,
+                                         String size) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
@@ -102,17 +129,26 @@ public class PostServiceImpl implements PostService {
             endDate = getDefaultDate(DATE_FORMAT);
         }
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
-        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(endDate),
-                                                                                         convertStringToDate(beginDate),
-                                                                                         pageRequest)
-                             .stream()
-                             .filter(Post::getIsDisplay)
-/*                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
-                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
-                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)*/
-                             .map((this::transform))
-                             .sorted(Comparator.comparing(PostDTO::getHappenDate))
-                             .collect(Collectors.toList());
+        Page<Post> results = postRepository
+            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
+                convertStringToDate(beginDate),
+                convertStringToDate(endDate),
+                pageRequest);
+        return results.getContent()
+                      .stream()
+//                             .filter(Post::getIsDisplay)
+                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getAnimalCode()) : TRUE)
+                      .filter(x -> {
+                          Shelter shelter = shelterRepository.findByShelterCode(String.valueOf(x.getShelterCode()));
+                          return isNotEmpty(uprCode) ? uprCode.equals(shelter.getSidoName()) : TRUE;
+                      })
+                      .filter(x -> {
+                          Shelter shelter = shelterRepository.findByShelterCode(String.valueOf(x.getShelterCode()));
+                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()) : TRUE;
+                      })
+                      .map((this::transform))
+                      .sorted(Comparator.comparing(PostDTO::getHappenDate))
+                      .collect(Collectors.toList());
     }
 
     @Override
@@ -153,110 +189,13 @@ public class PostServiceImpl implements PostService {
         return transform(post);
     }
 
-    /*public void syncPosts(String beginDate, String endDate) {
-        String beginDateParam = beginDate;
-        String endDateParam = endDate;
-        if (isEmpty(beginDate)) {
-            beginDateParam = getDefaultDate(DATE_FORMAT);
-        }
-        if (isEmpty(endDate)) {
-            endDateParam = getDefaultDate(DATE_FORMAT);
-        }
-        AnimalApiResponse response = animalApiClient.animal(appKey, beginDateParam, endDateParam, EMPTY, EMPTY,
-                                                            EMPTY, EMPTY, EMPTY, EMPTY, START_INDEX, MAX_SIZE);
-        if (response != null) {
-            List<Post> posts = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
-                                                                                                         convertStringToDate(endDate));
-            List<AnimalApiResponse.Body.Items.AnimalItemDTO> animalItems = response.getBody()
-                                                                                   .getItems()
-                                                                                   .getItem();
-            log.info("AnimalItemDTO, beginDate : {}, endDate : {}, size : {}", beginDate, endDate, animalItems.size());
-            postRepository.save(animalItems.stream()
-                                           .map(this::transform)
-                                           .map(x -> {
-                                               posts.forEach(y -> {
-                                                   if (y.getDesertionId()
-                                                        .equals(x.getDesertionId())) {
-                                                       x.setId(y.getId());
-                                                       x.setCreatedDate(y.getCreatedDate());
-                                                   }
-                                               });
-                                               return x;
-                                           })
-                                           .collect(Collectors.toList()));
-        } else {
-            log.info("PostJob, post not found.. beginDate : {}, endDate : {}", beginDate, endDate);
-        }
-    }*/
-
-    /*private Post transform(AnimalApiResponse.Body.Items.AnimalItemDTO animalItemDTO) {
-        String kindName = convertKindName(animalItemDTO.getKindCd());
-        Kind mockKind = new Kind();
-        mockKind.setUpKindCode(-1L);
-        mockKind.setKindCode(-1L);
-        Kind kind = Optional.ofNullable(kindRepository.findByKindName(kindName))
-                            .orElse(mockKind);
-        String[] orgNames = animalItemDTO.getOrgNm()
-                                         .split(SPACE);
-        Shelter mockShelter = new Shelter();
-        mockShelter.setCityCode(-1L);
-        mockShelter.setCityName(UNKNOWN);
-        mockShelter.setTownCode(-1L);
-        mockShelter.setTownName(UNKNOWN);
-        mockShelter.setShelterCode(-1L);
-        mockShelter.setShelterName(UNKNOWN);
-        Shelter shelter = new Shelter();
-        switch (orgNames.length) {
-            case 1:
-                shelter = shelterRepository.findBySidoName(orgNames[0])
-                                           .stream()
-                                           .findFirst()
-                                           .orElse(mockShelter);
-                break;
-            case 2:
-                shelter = shelterRepository.findByGunguName(orgNames[1])
-                                           .stream()
-                                           .findFirst()
-                                           .orElse(mockShelter);
-                break;
-        }
-        if ("-1".equals(shelter.getTownCode())) {
-            shelter = shelterRepository.findByShelterName(animalItemDTO.getCareNm())
-                                       .stream()
-                                       .findFirst()
-                                       .orElse(mockShelter);
-        }
-        Post post = new Post();
-        post.setDesertionId(Long.valueOf(animalItemDTO.getDesertionNo()));
-        post.setImageUrl(animalItemDTO.getPopfile());
-        post.setType(PostType.SYSTEM.getCode());
-        post.setState(animalItemDTO.getProcessState());
-        post.setGender(animalItemDTO.getSexCd());
-        post.setNeuter(isEmpty(animalItemDTO.getNeuterYn()) ? NeuterType.U.name() : animalItemDTO.getNeuterYn());
-        post.setUserId(PostType.SYSTEM.getCode());
-        post.setUserName(animalItemDTO.getCareNm());
-        post.setUserAddress(animalItemDTO.getCareAddr());
-        post.setUserContact(animalItemDTO.getCareTel());
-        post.setHappenDate(convertStringToDate(animalItemDTO.getHappenDt()));
-        post.setHappenPlace(isNotEmpty(animalItemDTO.getOrgNm()) ? animalItemDTO.getOrgNm() : UNKNOWN);
-        post.setUprCode(String.valueOf(shelter.getCityCode()));
-        post.setOrgCode(String.valueOf(shelter.getTownCode()));
-        post.setKindUpCode(String.valueOf(kind.getUpKindCode()));
-        post.setKindCode(String.valueOf(kind.getKindCode()));
-        try {
-            post.setAge(Integer.valueOf(convertAge(animalItemDTO.getAge())));
-        } catch (NumberFormatException nfe) {
-            post.setAge(-1);
-        }
-        post.setWeight(Float.valueOf(convertWeight(animalItemDTO.getWeight())));
-        post.setIntroduction(animalItemDTO.getNoticeComment());
-        post.setFeature(animalItemDTO.getSpecialMark());
-        post.setIsDisplay(TRUE);
-        return post;
-    }*/
-
     private PostDTO transform(Post post) {
-        Breed breed = breedRepository.findByKindCode(post.getAnimalCode());
+        Breed breed;
+        if (post.getAnimalCode() == -1L) {
+            breed = breedRepository.findByKindCode(117L);
+        } else {
+            breed = breedRepository.findByKindCode(post.getAnimalCode());
+        }
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
