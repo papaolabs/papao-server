@@ -54,29 +54,24 @@ public class Post extends BaseEntity {
     private Shelter shelter;
 
     public enum PostType {
-        SYSTEM("01"), ABSENCE("02"), PROTECT("03");
-        private String code;
+        SYSTEM, ABSENCE, PROTECT;
 
-        PostType(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
+        public static PostType getType(String name) {
+            if (StringUtils.isEmpty(name)) {
+                return null;
+            }
+            for (PostType type : PostType.values()) {
+                if (type.name()
+                        .equals(name)) {
+                    return type;
+                }
+            }
+            return SYSTEM;
         }
     }
 
     public enum GenderType {
-        M(0), F(1), U(2);
-        private Integer code;
-
-        GenderType(Integer code) {
-            this.code = code;
-        }
-
-        public Integer getCode() {
-            return this.code;
-        }
+        M, F, U;
 
         public static GenderType getType(String name) {
             if (StringUtils.isEmpty(name)) {
@@ -93,16 +88,7 @@ public class Post extends BaseEntity {
     }
 
     public enum NeuterType {
-        Y(0), N(1), U(2);
-        private Integer code;
-
-        NeuterType(Integer code) {
-            this.code = code;
-        }
-
-        public Integer getCode() {
-            return this.code;
-        }
+        Y, N, U;
 
         public static NeuterType getType(String name) {
             if (StringUtils.isEmpty(name)) {
