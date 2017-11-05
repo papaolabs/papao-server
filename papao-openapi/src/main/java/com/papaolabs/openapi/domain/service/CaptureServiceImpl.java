@@ -6,6 +6,7 @@ import com.papaolabs.openapi.domain.model.Shelter;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -70,21 +71,33 @@ public class CaptureServiceImpl implements CaptureService {
     @Override
     public String captureShelterList(String tableName) {
         String tbName = isNotEmpty(tableName) ? tableName : DEFAULT_SHELTER_TB_NAME;
-        List<Region> regionList = this.operationService.getRegionList();
-        for (int i = 0; i < regionList.size(); i++) {
-            regionList.get(i)
-                      .setId(Long.valueOf(i + 1));
+        List<Region> regionResults = this.operationService.getRegionList();
+        for (int i = 0; i < regionResults.size(); i++) {
+            regionResults.get(i)
+                         .setId(Long.valueOf(i + 1));
         }
         List<Shelter> shelterList = this.operationService.getShelterList();
+        List<Shelter> shelterResults = new ArrayList();
         for (int i = 0; i < shelterList.size(); i++) {
-            shelterList.get(i)
-                       .setId(Long.valueOf(i + 1));
+            Shelter shelter = shelterList.get(i);
+            Shelter result = new Shelter();
+            for (Region region : regionResults) {
+                if (region.getGunguCode()
+                          .equals(shelter.getRegion()
+                                         .getGunguCode())) {
+                    result.setRegion(region);
+                }
+            }
+            result.setId(Long.valueOf(i + 1));
+            result.setCode(shelter.getCode());
+            result.setName(shelter.getName());
+            shelterResults.add(result);
         }
         return this.operationService.getShelterList()
                                     .stream()
                                     .map(x -> {
                                         Long id = 0L;
-                                        for (Region region : regionList) {
+                                        for (Region region : regionResults) {
                                             if (region.getGunguCode()
                                                       .equals(x.getRegion()
                                                                .getGunguCode())) {
@@ -92,7 +105,7 @@ public class CaptureServiceImpl implements CaptureService {
                                             }
                                         }
                                         return "insert into " + tbName + " (id, region_id, code, name, " +
-                                            "created_date, updated_date) VALUES ("+ x.getId() + ", " + id + ", '" + x.getCode()
+                                            "created_date, updated_date) VALUES (" + x.getId() + ", " + id + ", '" + x.getCode()
                                             + "', '" + x.getName() + "', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n";
                                     })
                                     .collect(Collectors.joining());

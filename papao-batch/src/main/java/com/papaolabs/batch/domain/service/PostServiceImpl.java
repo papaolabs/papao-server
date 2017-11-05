@@ -1,15 +1,17 @@
 package com.papaolabs.batch.domain.service;
 
 import com.papaolabs.batch.infrastructure.feign.openapi.OpenApiClient;
-import com.papaolabs.batch.infrastructure.feign.openapi.dto.AnimalDTO;
-import com.papaolabs.batch.infrastructure.jpa.entity.Breed;
-import com.papaolabs.batch.infrastructure.jpa.entity.Post;
-import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
-import com.papaolabs.batch.infrastructure.jpa.repository.BreedRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
+import com.papaolabs.batch.infrastructure.jpa.entity.AnimalKind;
+import com.papaolabs.batch.infrastructure.jpa.entity.AnimalShelter;
+import com.papaolabs.batch.infrastructure.jpa.repository.AbandonedAnimalRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.AnimalHelperRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.AnimalImageRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.AnimalKindRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.AnimalPostRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.AnimalShelterRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.RegionRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
@@ -17,15 +19,12 @@ import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -35,29 +34,57 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final OpenApiClient openApiClient;
     @NotNull
-    private final BreedRepository breedRepository;
+    private final AbandonedAnimalRepository abandonedAnimalRepository;
+    @NotNull
+    private final AnimalHelperRepository animalHelperRepository;
+    @NotNull
+    private final AnimalImageRepository animalImageRepository;
+    @NotNull
+    private final AnimalKindRepository animalKindRepository;
+    @NotNull
+    private final AnimalPostRepository animalPostRepository;
+    @NotNull
+    private final AnimalShelterRepository animalShelterRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
     @NotNull
-    private final PostRepository postRepository;
+    private final RegionRepository regionRepository;
     public final static String DATE_FORMAT = "yyyyMMdd";
 
     public PostServiceImpl(OpenApiClient openApiClient,
-                           BreedRepository breedRepository,
+                           AbandonedAnimalRepository abandonedAnimalRepository,
+                           AnimalHelperRepository animalHelperRepository,
+                           AnimalImageRepository animalImageRepository,
+                           AnimalKindRepository animalKindRepository,
+                           AnimalPostRepository animalPostRepository,
+                           AnimalShelterRepository animalShelterRepository,
                            ShelterRepository shelterRepository,
-                           PostRepository postRepository) {
+                           RegionRepository regionRepository) {
         this.openApiClient = openApiClient;
-        this.breedRepository = breedRepository;
+        this.abandonedAnimalRepository = abandonedAnimalRepository;
+        this.animalHelperRepository = animalHelperRepository;
+        this.animalImageRepository = animalImageRepository;
+        this.animalKindRepository = animalKindRepository;
+        this.animalPostRepository = animalPostRepository;
+        this.animalShelterRepository = animalShelterRepository;
         this.shelterRepository = shelterRepository;
-        this.postRepository = postRepository;
+        this.regionRepository = regionRepository;
     }
 
     @Override
-    public List<Post> syncPostList(String beginDate, String endDate) {
+    public void syncPostList(String beginDate, String endDate) {
         log.info("[syncPostList] startDate : {}, endDate : {}", beginDate, endDate);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        List<Post> originalPostList = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual
+        Map<Long, AnimalKind> kindMap = animalKindRepository.findAll()
+                                                            .stream()
+                                                            .collect(Collectors.toMap(AnimalKind::getId, Function.identity()));
+        Map<Long, AnimalShelter> shelterMap = animalShelterRepository.findAll()
+                                                                     .stream()
+                                                                     .collect(Collectors.toMap(AnimalShelter::getId, Function.identity()));
+//        List<AnimalDTO> animal = openApiClient.animal(beginDate, endDate);
+
+        /*List<Post> originalPostList = postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual
             (convertStringToDate(beginDate),
              convertStringToDate(endDate));
         Map<String, Shelter> shelterMap = shelterRepository.findAll()
@@ -123,7 +150,7 @@ public class PostServiceImpl implements PostService {
                                                   x.setId(post.getId());
                                                   x.setCreatedDate(post.getCreatedDate());
                                               }
-/*
+*//*
                                               originalPostList.stream()
                                                               .filter(y -> y.getDesertionId()
                                                                             .equals(x.getDesertionId()))
@@ -132,14 +159,13 @@ public class PostServiceImpl implements PostService {
                                                                   x.setId(z.getId());
                                                                   x.setCreatedDate(z.getCreatedDate());
                                                               });
-*/
+*//*
                                               return x;
                                           })
                                           .collect(Collectors.toList());
-        stopWatch.stop();
-        log.info("[syncPostList_end} result size {} - executionTime : {} millis", results.size(), stopWatch.getLastTaskTimeMillis());
-        postRepository.save(results);
-        return results;
+        postRepository.save(results);*/
+/*        stopWatch.stop();
+        log.info("[syncPostList_end} result size {} - executionTime : {} millis", -1, stopWatch.getLastTaskTimeMillis());*/
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -203,12 +229,11 @@ public class PostServiceImpl implements PostService {
         }
         try {
             return Integer.valueOf(result);
-        }
-        catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             return -1;
         }
     }
-
+/*
     private Post transform(AnimalDTO animalDTO) {
         Breed mockBreed = new Breed();
         mockBreed.setKindCode(-1L);
@@ -251,5 +276,5 @@ public class PostServiceImpl implements PostService {
         post.setIsDisplay(TRUE);
         post.setPostType("01");
         return post;
-    }
+    }*/
 }

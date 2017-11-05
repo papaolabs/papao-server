@@ -1,7 +1,6 @@
 package com.papaolabs.scheduler.animal;
 
 import com.papaolabs.batch.domain.service.PostService;
-import com.papaolabs.batch.infrastructure.jpa.entity.Post;
 import com.papaolabs.scheduler.BatchType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -25,8 +23,7 @@ public class AnimalJob {
         this.postService = postService;
     }
 
-//    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
-    @Scheduled(fixedDelay = 10000000000L)
+    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
     public void year() {
         for (int i = 0; i < 120; i++) { // 최근 10년간
             batch(BatchType.MONTH, i);
@@ -38,7 +35,7 @@ public class AnimalJob {
         batch(BatchType.MONTH, 0);
     }
 
-    @Scheduled(cron = "0 0/1 * 1/1 * ?") // 1분마다 당일치 실행
+    @Scheduled(cron = "0 0/30 * 1/1 * ?") // 1분마다 당일치 실행
     public void day() {
         batch(BatchType.DAY, 0);
     }
@@ -65,8 +62,8 @@ public class AnimalJob {
         }
         log.info("[BATCH_START] type: {}, startDate : {}, endDate : {}", type, startDate.format(formatter), endDate.format(formatter));
         stopWatch.start();
-        List<Post> posts = this.postService.syncPostList(startDate.format(formatter), endDate.format(formatter));
+        this.postService.syncPostList(startDate.format(formatter), endDate.format(formatter));
         stopWatch.stop();
-        log.info("[BATCH_END} result size {} - executionTime : {} millis", posts.size(), stopWatch.getLastTaskTimeMillis());
+//        log.info("[BATCH_END} result size {} - executionTime : {} millis", posts.size(), stopWatch.getLastTaskTimeMillis());
     }
 }

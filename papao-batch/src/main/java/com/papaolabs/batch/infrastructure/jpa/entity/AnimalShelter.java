@@ -4,8 +4,11 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Data
@@ -19,5 +22,7 @@ public class AnimalShelter extends BaseEntity {
     @Column(unique = true)
     private Long code;
     private String name;
-    private String contact;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "regionId", insertable = false, updatable = false)
+    private Region region;
 }

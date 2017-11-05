@@ -93,7 +93,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> readPosts(String beginDate,
                                    String endDate,
-                                   String kindUpCode,
+                                   String upKindCode,
+                                   String kindCode,
                                    String uprCode,
                                    String orgCode) {
         if (isEmpty(beginDate)) {
@@ -118,6 +119,7 @@ public class PostServiceImpl implements PostService {
     public List<PostDTO> readPostsByPage(String beginDate,
                                          String endDate,
                                          String upKindCode,
+                                         String kindCode,
                                          String uprCode,
                                          String orgCode,
                                          String page,

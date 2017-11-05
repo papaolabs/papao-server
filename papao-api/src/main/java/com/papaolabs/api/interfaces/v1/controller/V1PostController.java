@@ -46,8 +46,8 @@ public class V1PostController {
                                               @RequestParam(required = false) String age,
                                               @RequestParam(required = false) Float weight,
                                               @RequestParam(required = false) String feature,
-                                              @RequestParam(required = false) String uprCode,
-                                              @RequestParam(required = false) String orgCode
+                                              @RequestParam(required = false) String sidoCode,
+                                              @RequestParam(required = false) String gunguCode
     ) {
         return new ResponseEntity<>(postService.create(happenDate,
                                                        happenPlace,
@@ -62,20 +62,22 @@ public class V1PostController {
                                                        age,
                                                        weight,
                                                        feature,
-                                                       uprCode,
-                                                       orgCode), HttpStatus.OK);
+                                                       sidoCode,
+                                                       gunguCode), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) String beginDate,
                                                    @RequestParam(required = false) String endDate,
-                                                   @RequestParam(required = false) String kindUpCode,
-                                                   @RequestParam(required = false) String uprCode,
-                                                   @RequestParam(required = false) String orgCode,
+                                                   @RequestParam(required = false) String upKindCode,
+                                                   @RequestParam(required = false) String kindCode,
+                                                   @RequestParam(required = false) String sidoCode,
+                                                   @RequestParam(required = false) String gunguCode,
                                                    @RequestParam(defaultValue = "1", required = false) String index,
                                                    @RequestParam(defaultValue = "100", required = false) String size
     ) {
-        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, kindUpCode, uprCode, orgCode, index, size), HttpStatus.OK);
+        return new ResponseEntity<>(postService.readPostsByPage(beginDate, endDate, upKindCode
+            , kindCode, sidoCode, gunguCode, index, size), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
