@@ -10,7 +10,6 @@ import com.papaolabs.batch.infrastructure.jpa.repository.AnimalKindRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.AnimalPostRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.AnimalShelterRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.RegionRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -46,8 +45,6 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final AnimalShelterRepository animalShelterRepository;
     @NotNull
-    private final ShelterRepository shelterRepository;
-    @NotNull
     private final RegionRepository regionRepository;
     public final static String DATE_FORMAT = "yyyyMMdd";
 
@@ -58,7 +55,6 @@ public class PostServiceImpl implements PostService {
                            AnimalKindRepository animalKindRepository,
                            AnimalPostRepository animalPostRepository,
                            AnimalShelterRepository animalShelterRepository,
-                           ShelterRepository shelterRepository,
                            RegionRepository regionRepository) {
         this.openApiClient = openApiClient;
         this.abandonedAnimalRepository = abandonedAnimalRepository;
@@ -67,7 +63,6 @@ public class PostServiceImpl implements PostService {
         this.animalKindRepository = animalKindRepository;
         this.animalPostRepository = animalPostRepository;
         this.animalShelterRepository = animalShelterRepository;
-        this.shelterRepository = shelterRepository;
         this.regionRepository = regionRepository;
     }
 

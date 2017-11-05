@@ -22,8 +22,8 @@ public class AnimalPost extends BaseEntity {
     private Long regionId;
     private Long abandonedAnimalId;
     private PostType postType;
-    private String contact;
     private String desertionId;
+    private String contact;
     private String noticeId;
     private Date noticeBeginDate;
     private Date noticeEndDate;

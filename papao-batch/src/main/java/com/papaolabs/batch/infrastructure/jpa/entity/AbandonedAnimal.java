@@ -5,8 +5,11 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Data
@@ -17,7 +20,6 @@ public class AbandonedAnimal extends BaseEntity {
     @GeneratedValue
     private Long id;
     private Long kindId;
-    private String desertionId;
     private Integer age;
     private Float weight;
     @Enumerated(EnumType.ORDINAL)
@@ -26,6 +28,9 @@ public class AbandonedAnimal extends BaseEntity {
     private NeuterType neuterType;
     @Enumerated(EnumType.STRING)
     private StateType stateType;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kindId", insertable = false, updatable = false)
+    private AnimalKind animalKind;
 
     public enum GenderType {
         M(0), F(1), U(2);
