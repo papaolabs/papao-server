@@ -22,7 +22,7 @@ public class AnimalShelter extends BaseEntity {
     @Column(unique = true)
     private Long code;
     private String name;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "regionId", insertable = false, updatable = false)
     private Region region;
 }

@@ -23,7 +23,8 @@ public class AnimalJob {
         this.postService = postService;
     }
 
-    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
+//    @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
+    @Scheduled(fixedRate = 1000000000L)
     public void year() {
         for (int i = 0; i < 120; i++) { // 최근 10년간
             batch(BatchType.MONTH, i);
@@ -64,6 +65,6 @@ public class AnimalJob {
         stopWatch.start();
         this.postService.syncPostList(startDate.format(formatter), endDate.format(formatter));
         stopWatch.stop();
-//        log.info("[BATCH_END} result size {} - executionTime : {} millis", posts.size(), stopWatch.getLastTaskTimeMillis());
+        log.info("[BATCH_END} executionTime : {} millis", stopWatch.getLastTaskTimeMillis());
     }
 }

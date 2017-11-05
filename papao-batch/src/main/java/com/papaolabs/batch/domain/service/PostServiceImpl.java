@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 @Slf4j
@@ -84,11 +85,12 @@ public class PostServiceImpl implements PostService {
                                                               .collect(Collectors.toMap(AnimalKind::getKindName, Function.identity()));
         Map<String, AnimalShelter> shelterMap = animalShelterRepository.findAll()
                                                                        .stream()
-                                                                       .collect(Collectors.toMap(x -> StringUtils.join(x.getRegion()
-                                                                                                                        .getSidoName(),
-                                                                                                                       x.getRegion()
-                                                                                                                        .getGunguName(),
-                                                                                                                       x.getName()),
+                                                                       .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
+                                                                           StringUtils.join(x.getRegion()
+                                                                                             .getSidoName(),
+                                                                                            x.getRegion()
+                                                                                             .getGunguName(),
+                                                                                            x.getName())),
                                                                                                  Function.identity()));
         Map<String, AnimalPost> postMap = animalPostRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
             convertStringToDate(beginDate),
@@ -105,9 +107,11 @@ public class PostServiceImpl implements PostService {
                                                  addressArr = x.getShelterAddress()
                                                                .split(StringUtils.SPACE);
                                              }
-                                             AnimalShelter animalShelter = shelterMap.get(StringUtils.join(addressArr[0],
-                                                                                                           addressArr[1],
-                                                                                                           x.getShelterName()));
+                                             AnimalShelter animalShelter = shelterMap.get(StringUtils.deleteWhitespace(StringUtils.join(
+                                                 addressArr[0],
+                                                 isNotEmpty(addressArr[1]) ? addressArr.length > 1 ? addressArr[1] : addressArr[0] :
+                                                     addressArr[0],
+                                                 x.getShelterName())));
                                              AnimalHelper animalHelper = new AnimalHelper();
                                              animalHelper.setName(x.getUserName());
                                              animalHelper.setContact(x.getUserContact());
@@ -135,12 +139,20 @@ public class PostServiceImpl implements PostService {
                                              animalPost.setShelter(animalShelter);
                                              animalPost.setAbandonedAnimal(abandonedAnimal);
                                              animalPost.setImage(Arrays.asList(animalImage));
+                                             log.debug("animalPost : {}", animalPost);
                                              return animalPost;
                                          })
                                          .map(x -> {
                                              AnimalPost post = postMap.get(x.getDesertionId());
                                              if (post != null) {
                                                  x.setId(post.getId());
+                                                 x.getAbandonedAnimal()
+                                                  .setId(post.getAbandonedAnimal()
+                                                             .getId());
+                                                 x.getAnimalHelper()
+                                                  .setId(post.getAnimalHelper()
+                                                             .getId());
+                                                 x.setImage(post.getImage());
                                              }
                                              return x;
                                          })
@@ -148,72 +160,6 @@ public class PostServiceImpl implements PostService {
         animalPostRepository.save(results);
         stopWatch.stop();
         log.info("[syncPostList_end} result size {} - executionTime : {} millis", -1, stopWatch.getLastTaskTimeMillis());
-        /*animal.stream()
-              .map()
-              .stream()
-              .map(x -> {
-                  Breed mockBreed = new Breed();
-                  mockBreed.setKindCode(-1L);
-                  Breed breed = Optional.ofNullable(breedMap.get(convertKindName(x.getBreedName())))
-                                        .orElse(mockBreed);
-                  String[] addressArr = x.getJurisdiction()
-                                         .split(" ");
-                  if (addressArr.length <= 1) {
-                      addressArr = x.getShelterAddress()
-                                    .split(" ");
-                  }
-                  Shelter mockShelter = new Shelter();
-                  mockShelter.setShelterCode(-1L);
-                  Shelter shelter = Optional.ofNullable(shelterMap
-                                                            .get(StringUtils.join(addressArr[0],
-                                                                                  addressArr[1],
-                                                                                  x.getShelterName())))
-                                            .orElse(mockShelter);
-                  Post post = new Post();
-                  post.setNoticeId(x.getNoticeId());
-                  post.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
-                  post.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
-                  post.setDesertionId(x.getDesertionId());
-                  post.setStateType(x.getStateType());
-                  post.setImageUrl(x.getImageUrl());
-                  post.setAnimalCode(breed.getKindCode());
-                  post.setAge(convertAge(x.getAge()));
-                  post.setWeight(convertWeight(x.getWeight()));
-                  post.setGenderCode(x.getGenderCode());
-                  post.setNeuterCode(x.getNeuterCode());
-                  post.setShelterCode(shelter.getShelterCode());
-                  post.setShelterContact(x.getShelterContact());
-                  post.setManager(x.getUserName());
-                  post.setContact(x.getUserContact());
-                  post.setFeature(x.getFeature());
-                  post.setHappenDate(convertStringToDate(x.getHappenDate()));
-                  post.setHappenPlace(x.getHappenPlace());
-                  post.setIsDisplay(TRUE);
-                  post.setPostType("01");
-                  return post;
-              })
-              .map(x -> {
-                  Post post = originalPosts.get(x.getDesertionId());
-                  if (post != null) {
-                      x.setId(post.getId());
-                      x.setCreatedDate(post.getCreatedDate());
-                  }*/
-/*
-                                              originalPostList.stream()
-                                                              .filter(y -> y.getDesertionId()
-                                                                            .equals(x.getDesertionId()))
-                                                              .findFirst()
-                                                              .ifPresent(z -> {
-                                                                  x.setId(z.getId());
-                                                                  x.setCreatedDate(z.getCreatedDate());
-                                                              });
-*//*
-                                              return x;
-                                          })
-                                          .collect(Collectors.toList());
-        postRepository.save(results);*/
-/*        stopWatch.stop();
-        log.info("[syncPostList_end} result size {} - executionTime : {} millis", -1, stopWatch.getLastTaskTimeMillis());*/
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
