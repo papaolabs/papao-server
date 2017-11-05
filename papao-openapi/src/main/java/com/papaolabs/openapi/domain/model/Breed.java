@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class Breed {
+    private Long id;
     private Species species;
     private Integer code;
     private String name;
