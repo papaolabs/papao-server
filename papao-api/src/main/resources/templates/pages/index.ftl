@@ -358,7 +358,7 @@
         // snackbar end
 
         // lazy
-        let images = document.querySelectorAll(".article-image");
+        let images = document.querySelectorAll(".article-images");
         lazyload(images);
         // lazy end
     }());

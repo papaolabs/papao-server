@@ -2,8 +2,6 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.type.StateType;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -28,12 +26,14 @@ public interface PostService {
     List<PostDTO> readPosts(String beginDate,
                             String endDate,
                             String upKindCode,
+                            String kindCode,
                             String uprCode,
                             String orgCode);
 
     List<PostDTO> readPostsByPage(String beginDate,
                                   String endDate,
                                   String upKindCode,
+                                  String kindCode,
                                   String uprCode,
                                   String orgCode,
                                   String page,

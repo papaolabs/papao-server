@@ -93,7 +93,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> readPosts(String beginDate,
                                    String endDate,
-                                   String kindUpCode,
+                                   String upKindCode,
+                                   String kindCode,
                                    String uprCode,
                                    String orgCode) {
         if (isEmpty(beginDate)) {
@@ -118,6 +119,7 @@ public class PostServiceImpl implements PostService {
     public List<PostDTO> readPostsByPage(String beginDate,
                                          String endDate,
                                          String upKindCode,
+                                         String kindCode,
                                          String uprCode,
                                          String orgCode,
                                          String page,
@@ -155,7 +157,7 @@ public class PostServiceImpl implements PostService {
     public PostDTO readPost(String postId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
-            log.debug("[NotFound] readPost - postId : {postId}", postId);
+            log.debug("[NotFound] readPost - id : {id}", postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
             return postDTO;
@@ -167,12 +169,12 @@ public class PostServiceImpl implements PostService {
     public PostDTO delete(String postId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
-            log.debug("[NotFound] delete - postId : {postId}", postId);
+            log.debug("[NotFound] delete - id : {id}", postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
             return postDTO;
         } else if (!post.getIsDisplay()) {
-            log.debug("[NotValid] delete - isDisplay : {isDisplay}, postId : {postId}", post.getIsDisplay(), postId);
+            log.debug("[NotValid] delete - isDisplay : {isDisplay}, id : {id}", post.getIsDisplay(), postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
             return postDTO;
@@ -185,7 +187,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO setState(String postId, StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-/*        post.setState(state.name());*/
+/*        post.setState(state.helperName());*/
         return transform(post);
     }
 

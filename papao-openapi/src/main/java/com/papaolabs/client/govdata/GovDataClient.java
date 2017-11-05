@@ -22,18 +22,18 @@ public interface GovDataClient {
                             @Param(value = "uprCd") String uprCd,
                             @Param(value = "orgCd") String orgCd);
 
-    @RequestLine("GET /kind?serviceKey={serviceKey}&up_kind_cd={upKindCd}")
+    @RequestLine("GET /breed?serviceKey={serviceKey}&up_kind_cd={upKindCd}")
     KindResponse kind(@Param(value = "serviceKey") String serviceKey, @Param(value = "upKindCd") String upKindCd);
 
     @RequestLine("GET /abandonmentPublic?serviceKey={serviceKey}"
-            + "&bgnde={bgnde}&endde={endde}&upkind={upkind}&kind={kind}"
+            + "&bgnde={bgnde}&endde={endde}&upkind={upkind}&breed={breed}"
             + "&upr_cd={upr_cd}&org_cd={org_cd}&care_reg_no={care_reg_no}"
             + "&state={state}&pageNo={pageNo}&numOfRows={numOfRows}")
     AnimalResponse animal(@Param(value = "serviceKey") String serviceKey,
                           @Param(value = "bgnde") String bgnde,
                           @Param(value = "endde") String endde,
                           @Param(value = "upkind") String upKind,
-                          @Param(value = "kind") String kind,
+                          @Param(value = "breed") String kind,
                           @Param(value = "upr_cd") String uprCd,
                           @Param(value = "org_cd") String orgCd,
                           @Param(value = "care_reg_no") String careRegNo,

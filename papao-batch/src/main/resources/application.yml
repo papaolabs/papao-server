@@ -11,16 +11,20 @@ spring:
     database: MYSQL
     showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties.hibernate.hbm2ddl.auto: update
+    properties.hibernate.hbm2ddl.auto: create-drop
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
+  h2:
+    console:
+      enabled: true
+      path: /console
 
 logging.level:
   com.papaolabs.batch: DEBUG
   com.papaolabs.scheduler: DEBUG
   org.springframework: INFO
-  org.hibernate: ERROR
   org.hibernate.SQL: ERROR
+  org.hibernate: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
 
 openapi:
@@ -38,7 +42,7 @@ spring:
     database: MYSQL
     showSql: false
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    properties.hibernate.hbm2ddl.auto: update
+    properties.hibernate.hbm2ddl.auto: create-drop
     properties.hibernate.format_sql: true
     properties.hibernate.use_sql_comments: true
 
@@ -47,7 +51,7 @@ spring.datasource:
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: org.mariadb.jdbc.Driver
-  initialize: false
+  initialize: true
   ## Pool Info ##
   maxActive: 100
   initialSize: 10
