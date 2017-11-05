@@ -18,7 +18,6 @@ public class AnimalShelter extends BaseEntity {
     private Long regionId;
     @Column(unique = true)
     private Long code;
-    @Column(unique = true)
     private String name;
     private String contact;
 }
