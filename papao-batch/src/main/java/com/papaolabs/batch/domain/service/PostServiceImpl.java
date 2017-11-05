@@ -2,18 +2,15 @@ package com.papaolabs.batch.domain.service;
 
 import com.papaolabs.batch.infrastructure.feign.openapi.OpenApiClient;
 import com.papaolabs.batch.infrastructure.feign.openapi.dto.AnimalDTO;
-import com.papaolabs.batch.infrastructure.jpa.entity.AbandonedAnimal;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalHelper;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalImage;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalKind;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalPost;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalShelter;
-import com.papaolabs.batch.infrastructure.jpa.repository.AbandonedAnimalRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalHelperRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalImageRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalKindRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalPostRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalShelterRepository;
+import com.papaolabs.batch.infrastructure.jpa.entity.Image;
+import com.papaolabs.batch.infrastructure.jpa.entity.Breed;
+import com.papaolabs.batch.infrastructure.jpa.entity.Post;
+import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
+import com.papaolabs.batch.infrastructure.jpa.entity.Region;
+import com.papaolabs.batch.infrastructure.jpa.repository.ImageRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.BreedRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.RegionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,32 +39,24 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final OpenApiClient openApiClient;
     @NotNull
-    private final AbandonedAnimalRepository abandonedAnimalRepository;
+    private final ImageRepository animalImageRepository;
     @NotNull
-    private final AnimalHelperRepository animalHelperRepository;
+    private final BreedRepository animalKindRepository;
     @NotNull
-    private final AnimalImageRepository animalImageRepository;
+    private final PostRepository animalPostRepository;
     @NotNull
-    private final AnimalKindRepository animalKindRepository;
-    @NotNull
-    private final AnimalPostRepository animalPostRepository;
-    @NotNull
-    private final AnimalShelterRepository animalShelterRepository;
+    private final ShelterRepository animalShelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
     public final static String DATE_FORMAT = "yyyyMMdd";
 
     public PostServiceImpl(OpenApiClient openApiClient,
-                           AbandonedAnimalRepository abandonedAnimalRepository,
-                           AnimalHelperRepository animalHelperRepository,
-                           AnimalImageRepository animalImageRepository,
-                           AnimalKindRepository animalKindRepository,
-                           AnimalPostRepository animalPostRepository,
-                           AnimalShelterRepository animalShelterRepository,
+                           ImageRepository animalImageRepository,
+                           BreedRepository animalKindRepository,
+                           PostRepository animalPostRepository,
+                           ShelterRepository animalShelterRepository,
                            RegionRepository regionRepository) {
         this.openApiClient = openApiClient;
-        this.abandonedAnimalRepository = abandonedAnimalRepository;
-        this.animalHelperRepository = animalHelperRepository;
         this.animalImageRepository = animalImageRepository;
         this.animalKindRepository = animalKindRepository;
         this.animalPostRepository = animalPostRepository;
@@ -80,86 +69,97 @@ public class PostServiceImpl implements PostService {
         log.info("[syncPostList] startDate : {}, endDate : {}", beginDate, endDate);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Map<String, AnimalKind> kindMap = animalKindRepository.findAll()
-                                                              .stream()
-                                                              .collect(Collectors.toMap(AnimalKind::getKindName, Function.identity()));
-        Map<String, AnimalShelter> shelterMap = animalShelterRepository.findAll()
-                                                                       .stream()
-                                                                       .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
-                                                                           StringUtils.join(x.getRegion()
-                                                                                             .getSidoName(),
-                                                                                            x.getRegion()
-                                                                                             .getGunguName(),
-                                                                                            x.getName())),
-                                                                                                 Function.identity()));
-        Map<String, AnimalPost> postMap = animalPostRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
+        Map<String, Breed> kindMap = animalKindRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(Breed::getKindName, Function.identity()));
+        Map<String, Shelter> shelterMap = animalShelterRepository.findAll()
+                                                                 .stream()
+                                                                 .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
+                                                                     StringUtils.join(x.getRegion()
+                                                                                       .getSidoName(),
+                                                                                      x.getRegion()
+                                                                                       .getGunguName(),
+                                                                                      x.getName())),
+                                                                                           Function.identity()));
+        Map<String, Region> regionMap = regionRepository.findAll()
+                                                        .stream()
+                                                        .collect(Collectors.toMap(x -> StringUtils
+                                                                                      .deleteWhitespace(
+                                                                                          StringUtils.join(x.getSidoName(),
+                                                                                                           x.getGunguName())),
+                                                                                  Function.identity()));
+        Map<String, Post> postMap = animalPostRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
             convertStringToDate(beginDate),
             convertStringToDate(endDate))
-                                                              .stream()
-                                                              .collect(Collectors.toMap(AnimalPost::getDesertionId, Function.identity()));
+                                                        .stream()
+                                                        .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
         List<AnimalDTO> animal = openApiClient.animal(beginDate, endDate);
-        List<AnimalPost> results = animal.stream()
-                                         .map(x -> {
-                                             AnimalKind kind = kindMap.get(convertKindName(x.getBreedName()));
-                                             String[] addressArr = x.getJurisdiction()
-                                                                    .split(StringUtils.SPACE);
-                                             if (addressArr.length <= 1) {
-                                                 addressArr = x.getShelterAddress()
-                                                               .split(StringUtils.SPACE);
-                                             }
-                                             AnimalShelter animalShelter = shelterMap.get(StringUtils.deleteWhitespace(StringUtils.join(
-                                                 addressArr[0],
-                                                 isNotEmpty(addressArr[1]) ? addressArr.length > 1 ? addressArr[1] : addressArr[0] :
-                                                     addressArr[0],
-                                                 x.getShelterName())));
-                                             AnimalHelper animalHelper = new AnimalHelper();
-                                             animalHelper.setName(x.getUserName());
-                                             animalHelper.setContact(x.getUserContact());
-                                             AnimalImage animalImage = new AnimalImage();
-                                             animalImage.setUrl(x.getImageUrl());
-                                             AbandonedAnimal abandonedAnimal = new AbandonedAnimal();
-                                             abandonedAnimal.setAge(Integer.valueOf(x.getAge()));
-                                             abandonedAnimal.setWeight(Float.valueOf(x.getWeight()));
-                                             abandonedAnimal.setGenderType(AbandonedAnimal.GenderType.getType(x.getGenderCode()));
-                                             abandonedAnimal.setNeuterType(AbandonedAnimal.NeuterType.getType(x.getNeuterCode()));
-                                             abandonedAnimal.setStateType(AbandonedAnimal.StateType.getType(x.getStateType()));
-                                             abandonedAnimal.setKind(kind);
-                                             AnimalPost animalPost = new AnimalPost();
-                                             animalPost.setPostType(AnimalPost.PostType.SYSTEM);
-                                             animalPost.setDesertionId(x.getDesertionId());
-                                             animalPost.setContact(x.getUserContact());
-                                             animalPost.setNoticeId(x.getNoticeId());
-                                             animalPost.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
-                                             animalPost.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
-                                             animalPost.setHappenDate(convertStringToDate(x.getHappenDate()));
-                                             animalPost.setHappenPlace(x.getHappenPlace());
-                                             animalPost.setFeature(x.getFeature());
-                                             animalPost.setAnimalHelper(animalHelper);
-                                             animalPost.setRegion(animalShelter.getRegion());
-                                             animalPost.setShelter(animalShelter);
-                                             animalPost.setAbandonedAnimal(abandonedAnimal);
-                                             animalPost.setImage(Arrays.asList(animalImage));
-                                             log.debug("animalPost : {}", animalPost);
-                                             return animalPost;
-                                         })
-                                         .map(x -> {
-                                             AnimalPost post = postMap.get(x.getDesertionId());
-                                             if (post != null) {
-                                                 x.setId(post.getId());
-                                                 x.getAbandonedAnimal()
-                                                  .setId(post.getAbandonedAnimal()
-                                                             .getId());
-                                                 x.getAnimalHelper()
-                                                  .setId(post.getAnimalHelper()
-                                                             .getId());
-                                                 x.setImage(post.getImage());
-                                             }
-                                             return x;
-                                         })
-                                         .collect(Collectors.toList());
+        List<Post> results = animal.stream()
+                                   .map(x -> {
+                                       Breed kind = kindMap.get(convertKindName(x.getBreedName()));
+                                       String[] addressArr = x.getJurisdiction()
+                                                              .split(StringUtils.SPACE);
+                                       if (addressArr.length <= 1) {
+                                           addressArr = x.getShelterAddress()
+                                                         .split(StringUtils.SPACE);
+                                       }
+                                       Shelter animalShelter = shelterMap.get(StringUtils.deleteWhitespace(StringUtils.join(
+                                           addressArr[0],
+                                           isNotEmpty(addressArr[1]) ? addressArr[1] : addressArr[0],
+                                           x.getShelterName())));
+                                       if (animalShelter == null) {
+                                           Region region = regionMap.get(StringUtils.deleteWhitespace(StringUtils.join(addressArr[0],
+                                                                                                                       isNotEmpty(
+                                                                                                                           addressArr[1]) ?
+                                                                                                                           addressArr[1] :
+                                                                                                                           addressArr[0])));
+                                           animalShelter = new Shelter();
+                                           animalShelter.setId(-1L);
+                                           animalShelter.setCode(-1L);
+                                           animalShelter.setName(x.getShelterName());
+                                           animalShelter.setRegion(region);
+                                       }
+                                       Image animalImage = new Image();
+                                       animalImage.setUrl(x.getImageUrl());
+                                       Post animalPost = new Post();
+                                       try {
+                                           animalPost.setAge(Integer.valueOf(x.getAge()));
+                                       } catch (NumberFormatException nfe) {
+                                           animalPost.setAge(-1);
+                                       }
+                                       animalPost.setWeight(Float.valueOf(x.getWeight()));
+                                       animalPost.setGenderType(Post.GenderType.getType(x.getGenderCode()));
+                                       animalPost.setNeuterType(Post.NeuterType.getType(x.getNeuterCode()));
+                                       animalPost.setStateType(Post.StateType.getType(x.getStateType()));
+                                       animalPost.setBreed(kind);
+                                       animalPost.setPostType(Post.PostType.SYSTEM);
+                                       animalPost.setDesertionId(x.getDesertionId());
+                                       animalPost.setContact(x.getUserContact());
+                                       animalPost.setNoticeId(x.getNoticeId());
+                                       animalPost.setNoticeBeginDate(convertStringToDate(x.getNoticeBeginDate()));
+                                       animalPost.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
+                                       animalPost.setHappenDate(convertStringToDate(x.getHappenDate()));
+                                       animalPost.setHappenPlace(x.getHappenPlace());
+                                       animalPost.setFeature(x.getFeature());
+                                       animalPost.setHelperName(x.getUserName());
+                                       animalPost.setHelperContact(x.getUserContact());
+                                       animalPost.setRegion(animalShelter.getRegion());
+                                       animalPost.setShelter(animalShelter);
+                                       animalPost.setImage(Arrays.asList(animalImage));
+                                       return animalPost;
+                                   })
+                                   .map(x -> {
+                                       Post post = postMap.get(x.getDesertionId());
+                                       if (post != null) {
+                                           x.setId(post.getId());
+                                           x.setImage(post.getImage());
+                                       }
+                                       return x;
+                                   })
+                                   .collect(Collectors.toList());
         animalPostRepository.save(results);
         stopWatch.stop();
-        log.info("[syncPostList_end} result size {} - executionTime : {} millis", -1, stopWatch.getLastTaskTimeMillis());
+        log.info("[syncPostList_end} result size {} - executionTime : {} millis", results.size(), stopWatch.getLastTaskTimeMillis());
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -263,7 +263,7 @@ public class PostServiceImpl implements PostService {
         post.setShelterCode(shelter.getShelterCode());
         post.setShelterContact(animalDTO.getShelterContact());
         post.setManager(animalDTO.getUserName());
-        post.setContact(animalDTO.getUserContact());
+        post.setHelperContact(animalDTO.getUserContact());
         post.setFeature(animalDTO.getFeature());
         post.setHappenDate(convertStringToDate(animalDTO.getHappenDate()));
         post.setHappenPlace(animalDTO.getHappenPlace());

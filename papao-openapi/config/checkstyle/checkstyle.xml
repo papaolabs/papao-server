@@ -101,48 +101,48 @@
         </module>
         <module name="PackageName">
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
-            <message key="name.invalidPattern"
-                     value="Package name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Package helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="TypeName">
-            <message key="name.invalidPattern"
-                     value="Type name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Type helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="MemberName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-            <message key="name.invalidPattern"
-                     value="Member name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Member helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="ParameterName">
             <property name="format" value="^[a-z]([a-zA-Z0-9]*)?$"/>
-            <message key="name.invalidPattern"
-                     value="Parameter name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Parameter helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="CatchParameterName">
             <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
-            <message key="name.invalidPattern"
-                     value="Catch parameter name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Catch parameter helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="LocalVariableName">
             <property name="tokens" value="VARIABLE_DEF"/>
             <property name="format" value="^[a-z]([a-zA-Z0-9]*)?$"/>
-            <message key="name.invalidPattern"
-                     value="Local variable name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Local variable helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="ClassTypeParameterName">
             <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
-            <message key="name.invalidPattern"
-                     value="Class type name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Class type helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="MethodTypeParameterName">
             <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
-            <message key="name.invalidPattern"
-                     value="Method type name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Method type helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="InterfaceTypeParameterName">
             <property name="format" value="(^[A-Z][0-9]?)$|([A-Z][a-zA-Z0-9]*[T]$)"/>
-            <message key="name.invalidPattern"
-                     value="Interface type name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Interface type helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="NoFinalizer"/>
         <module name="GenericWhitespace">
@@ -193,31 +193,31 @@
             <property name="allowSamelineMultipleAnnotations" value="true"/>
         </module>
         <!--
-        <module name="NonEmptyAtclauseDescription"/>
-        <module name="JavadocTagContinuationIndentation"/>
-        <module name="SummaryJavadoc">
-            <property name="forbiddenSummaryFragments"
+        <module helperName="NonEmptyAtclauseDescription"/>
+        <module helperName="JavadocTagContinuationIndentation"/>
+        <module helperName="SummaryJavadoc">
+            <property helperName="forbiddenSummaryFragments"
                       value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
         </module>
-        <module name="JavadocParagraph"/>
-        <module name="AtclauseOrder">
-            <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
-            <property name="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
+        <module helperName="JavadocParagraph"/>
+        <module helperName="AtclauseOrder">
+            <property helperName="tagOrder" value="@param, @return, @throws, @deprecated"/>
+            <property helperName="target" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
-        <module name="JavadocMethod">
-            <property name="scope" value="public"/>
-            <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingThrowsTags" value="true"/>
-            <property name="allowMissingReturnTag" value="true"/>
-            <property name="minLineCount" value="2"/>
-            <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="allowThrowsTagsForSubclasses" value="true"/>
+        <module helperName="JavadocMethod">
+            <property helperName="scope" value="public"/>
+            <property helperName="allowMissingParamTags" value="true"/>
+            <property helperName="allowMissingThrowsTags" value="true"/>
+            <property helperName="allowMissingReturnTag" value="true"/>
+            <property helperName="minLineCount" value="2"/>
+            <property helperName="allowedAnnotations" value="Override, Test"/>
+            <property helperName="allowThrowsTagsForSubclasses" value="true"/>
         </module>
         -->
         <module name="MethodName">
             <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
-            <message key="name.invalidPattern"
-                     value="Method name ''{0}'' must match pattern ''{1}''."/>
+            <message key="helperName.invalidPattern"
+                     value="Method helperName ''{0}'' must match pattern ''{1}''."/>
         </module>
         <module name="SingleLineJavadoc">
             <property name="ignoreInlineTags" value="false"/>
@@ -225,6 +225,6 @@
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected"/>
         </module>
-        <!--<module name="CommentsIndentation"/>-->
+        <!--<module helperName="CommentsIndentation"/>-->
     </module>
 </module>

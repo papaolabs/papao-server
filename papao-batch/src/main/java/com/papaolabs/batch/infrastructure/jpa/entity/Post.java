@@ -3,6 +3,7 @@ package com.papaolabs.batch.infrastructure.jpa.entity;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,16 +11,30 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "abandoned_animal_tb")
-public class AbandonedAnimal extends BaseEntity {
+@Table(name = "post_tb")
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
+    private PostType postType;
+    private String desertionId;
+    private String contact;
+    private String noticeId;
+    private Date noticeBeginDate;
+    private Date noticeEndDate;
+    private Date happenDate;
+    private String happenPlace;
+    private String feature;
+    private String helperName;
+    private String helperContact;
     private Integer age;
     private Float weight;
     @Enumerated(EnumType.ORDINAL)
@@ -28,9 +43,28 @@ public class AbandonedAnimal extends BaseEntity {
     private NeuterType neuterType;
     @Enumerated(EnumType.STRING)
     private StateType stateType;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", insertable = false, updatable = false)
-    private AnimalKind kind;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "postId")
+    private Collection<Image> image;
+    @OneToOne
+    private Breed breed;
+    @OneToOne
+    private Region region;
+    @OneToOne
+    private Shelter shelter;
+
+    public enum PostType {
+        SYSTEM("01"), ABSENCE("02"), PROTECT("03");
+        private String code;
+
+        PostType(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
+    }
 
     public enum GenderType {
         M(0), F(1), U(2);

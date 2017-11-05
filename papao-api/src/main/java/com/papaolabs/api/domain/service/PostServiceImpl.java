@@ -187,7 +187,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO setState(String postId, StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-/*        post.setState(state.name());*/
+/*        post.setState(state.helperName());*/
         return transform(post);
     }
 

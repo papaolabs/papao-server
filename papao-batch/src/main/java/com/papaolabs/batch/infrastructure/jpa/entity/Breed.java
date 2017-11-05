@@ -2,6 +2,7 @@ package com.papaolabs.batch.infrastructure.jpa.entity;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,11 +10,13 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "animal_helper_tb")
-public class AnimalHelper extends BaseEntity {
+@Table(name = "breed_tb")
+public class Breed extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private String contact;
+    private Long upKindCode;
+    @Column(unique = true)
+    private Long kindCode;
+    private String kindName;
 }

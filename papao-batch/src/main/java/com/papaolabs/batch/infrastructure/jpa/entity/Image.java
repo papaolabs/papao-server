@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "animal_image_tb")
-public class AnimalImage {
+@Table(name = "image_tb")
+public class Image {
     @Id
     @GeneratedValue
     private Long id;

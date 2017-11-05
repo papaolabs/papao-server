@@ -1,8 +1,8 @@
 package com.papaolabs.batch.interfaces.v1;
 
 import com.papaolabs.batch.domain.service.PostService;
-import com.papaolabs.batch.infrastructure.jpa.entity.AnimalPost;
-import com.papaolabs.batch.infrastructure.jpa.repository.AnimalPostRepository;
+import com.papaolabs.batch.infrastructure.jpa.entity.Post;
+import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +16,10 @@ public class V1SchedulerTestController {
     @NotNull
     private final PostService postService;
     @NotNull
-    private final AnimalPostRepository repository;
+    private final PostRepository repository;
 
     public V1SchedulerTestController(PostService postService,
-                                     AnimalPostRepository repository) {
+                                     PostRepository repository) {
         this.postService = postService;
         this.repository = repository;
     }
@@ -30,7 +30,7 @@ public class V1SchedulerTestController {
     }
 
     @GetMapping("/list")
-    public List<AnimalPost> read() {
+    public List<Post> read() {
         return this.repository.findAll();
     }
 }
