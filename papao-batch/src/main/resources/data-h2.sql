@@ -403,6 +403,7 @@ insert into region_tb (id, sido_code, sido_name, gungu_code, gungu_name, created
 insert into region_tb (id, sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) VALUES (234, 6500000, '제주특별자치도', 6520000, '서귀포시', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into region_tb (id, sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) VALUES (235, 6500000, '제주특별자치도', 6510000, '제주시', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into region_tb (id, sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) VALUES (236, 6500000, '제주특별자치도', 6500000, '제주특별자치도', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into region_tb (id, sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) VALUES (237, 9999999, '개인', 9999999, '개인', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (1, 1, '311611201500001', '테스트용시설', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (2, 2, '311322200900001', '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -468,7 +469,6 @@ insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (62, 16, '311312201100001', '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (63, 16, '311312201400001', '신영동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (64, 17, '311321201400004', '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (65, 17, '311321201400005', '2015길고양이TNR', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (66, 17, '311321201500001', '2015길고양이TNR', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (67, 18, '311303200900001', '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (68, 19, '311307200900001', '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -632,7 +632,6 @@ insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (226, 76, '331373201600003', '덕신동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (227, 76, '331373201600004', '삼성동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (228, 76, '331373201600001', '범서조은동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (229, 76, '331373201600005', '와우동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (230, 76, '331373201600009', '굴화종합동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (231, 76, '331373201600002', '초록동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (232, 76, '331373201600006', '남창미르동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -912,3 +911,4 @@ insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (506, 234, '350652200900001', '제주동물보호센터', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (507, 235, '350651201100001', '제주동물보호센터', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (508, 236, '350650201200001', '제주유기동물보호센터', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into animal_shelter_tb (id, region_id, code, name, created_date, updated_date) VALUES (509, 237, '100000000000000', '개인', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
