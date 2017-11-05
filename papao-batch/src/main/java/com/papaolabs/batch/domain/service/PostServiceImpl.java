@@ -111,6 +111,8 @@ public class PostServiceImpl implements PostService {
                                              AnimalHelper animalHelper = new AnimalHelper();
                                              animalHelper.setName(x.getUserName());
                                              animalHelper.setContact(x.getUserContact());
+                                             AnimalImage animalImage = new AnimalImage();
+                                             animalImage.setUrl(x.getImageUrl());
                                              AbandonedAnimal abandonedAnimal = new AbandonedAnimal();
                                              abandonedAnimal.setAge(Integer.valueOf(x.getAge()));
                                              abandonedAnimal.setWeight(Float.valueOf(x.getWeight()));
@@ -118,8 +120,6 @@ public class PostServiceImpl implements PostService {
                                              abandonedAnimal.setNeuterType(AbandonedAnimal.NeuterType.getType(x.getNeuterCode()));
                                              abandonedAnimal.setStateType(AbandonedAnimal.StateType.getType(x.getStateType()));
                                              abandonedAnimal.setKind(kind);
-                                             AnimalImage animalImage = new AnimalImage();
-                                             animalImage.setUrl(x.getImageUrl());
                                              AnimalPost animalPost = new AnimalPost();
                                              animalPost.setPostType(AnimalPost.PostType.SYSTEM);
                                              animalPost.setDesertionId(x.getDesertionId());
@@ -134,7 +134,7 @@ public class PostServiceImpl implements PostService {
                                              animalPost.setRegion(animalShelter.getRegion());
                                              animalPost.setShelter(animalShelter);
                                              animalPost.setAbandonedAnimal(abandonedAnimal);
-                                             animalPost.setImages(Arrays.asList(animalImage));
+                                             animalPost.setImage(Arrays.asList(animalImage));
                                              return animalPost;
                                          })
                                          .map(x -> {

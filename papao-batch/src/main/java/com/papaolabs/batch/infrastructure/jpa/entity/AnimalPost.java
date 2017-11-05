@@ -11,8 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
@@ -42,9 +42,9 @@ public class AnimalPost extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn
     private AbandonedAnimal abandonedAnimal;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name ="id")
-    private List<AnimalImage> images;
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="postId")
+    private Collection<AnimalImage> image;
 
     public enum PostType {
         SYSTEM("01"), ABSENCE("02"), PROTECT("03");

@@ -15,4 +15,5 @@ public class AnimalImage {
     @GeneratedValue
     private Long id;
     private String url;
+    private Long postId;
 }

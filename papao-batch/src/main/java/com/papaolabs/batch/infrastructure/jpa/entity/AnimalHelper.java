@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,5 +20,6 @@ public class AnimalHelper extends BaseEntity {
     private String name;
     private String contact;
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="id")
     private AnimalPost post;
 }
