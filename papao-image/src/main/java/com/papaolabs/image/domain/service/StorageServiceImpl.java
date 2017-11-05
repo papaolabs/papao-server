@@ -14,7 +14,9 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,24 +68,28 @@ public class StorageServiceImpl implements StorageService {
         return putObjectResults;
     }
 
-    public byte[] download(String key) {
+    public ResponseEntity<byte[]> download(String key) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, key);
         S3Object s3Object = amazonS3Client.getObject(getObjectRequest);
         S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
         byte[] bytes = new byte[0];
+        HttpHeaders httpHeaders = new HttpHeaders();
         try {
             bytes = IOUtils.toByteArray(objectInputStream);
             String fileName = URLEncoder.encode(key, "UTF-8")
                                         .replaceAll("\\+", "%20");
-            HttpHeaders httpHeaders = new HttpHeaders();
+
             httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             httpHeaders.setContentLength(bytes.length);
             httpHeaders.setContentDispositionFormData("attachment", fileName);
-            return bytes;
+            return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new byte[0];
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(bytes,
+                httpHeaders,
+                HttpStatus.BAD_REQUEST);
     }
 
     public List<S3ObjectSummary> list() {

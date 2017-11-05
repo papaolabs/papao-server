@@ -18,10 +18,10 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: ENC(w62VSwX5X6kj1uNjZRi6L83dkq8il01lYqdEp7F0oPQ=)
-      secretKey: ENC(W7StoBjtdHWucpV9nppzENEIuwxeDXe9k9gOF3oG6qFYDM3MimoZjOOo+yFaQMQ9JQiz3Aos2bQ=)
+      accessKey: ENC(SFUU9jwMUO5P2XgbavbkdpAUfeZNAvBNONUxHPOZJp0=)
+      secretKey: ENC(Vm1jcnhBCAoDYi72W2j8RHzZj2gvHHEDFcwaVGWPxlpQxP0e1aRU8UD0J7XBFD9sKWsU6ozd6Ig=)
     s3:
-      bucket: papaobucket
+      bucket: papao-s3-bucket
     region:
       static: ap-northeast-2
 
@@ -52,4 +52,4 @@ jasypt:
 google:
   application:
     imageUrl: https://vision.googleapis.com/v1
-    key: ENC(J10GTNRuMxFnd6Y04emdEj07yr7N+5Rl9td8K9jKbCc4T24UBh0yxmE08BXQRV8h)
+    key: ENC(+JKVXiKjp29iLTGMJXd+259u2fATaTorka6KDwxUdc9IILDKnHJ/Bypm7oUmYuhV)

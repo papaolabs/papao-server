@@ -39,7 +39,7 @@ public class V1ImageController {
 
     @GetMapping(value = "/download")
     public ResponseEntity<byte[]> download(@RequestParam String key) throws IOException {
-        return new ResponseEntity<byte[]>(storageService.download(key), HttpStatus.OK);
+        return storageService.download(key);
     }
 
     @GetMapping(value = "/list")
