@@ -15,7 +15,6 @@ public class AnimalKind extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique = true)
     private Long upKindCode;
     @Column(unique = true)
     private Long kindCode;

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import static java.time.LocalDateTime.ofInstant;
 import static java.time.ZoneId.systemDefault;
 import static java.util.Objects.isNull;
 
+@MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
 public class BaseEntity {
     @CreatedDate

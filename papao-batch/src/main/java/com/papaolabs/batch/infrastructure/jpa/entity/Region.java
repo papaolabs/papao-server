@@ -15,7 +15,6 @@ public class Region extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique = true)
     private Long sidoCode;
     private String sidoName;
     @Column(unique = true)

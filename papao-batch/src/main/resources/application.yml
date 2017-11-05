@@ -19,8 +19,8 @@ logging.level:
   com.papaolabs.batch: DEBUG
   com.papaolabs.scheduler: DEBUG
   org.springframework: INFO
-  org.hibernate: ERROR
   org.hibernate.SQL: ERROR
+  org.hibernate: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
 
 openapi:
