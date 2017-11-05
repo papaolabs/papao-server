@@ -31,8 +31,6 @@ public class AbandonedAnimal extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", insertable = false, updatable = false)
     private AnimalKind kind;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "abandonedAnimal")
-    private AnimalPost post;
 
     public enum GenderType {
         M(0), F(1), U(2);

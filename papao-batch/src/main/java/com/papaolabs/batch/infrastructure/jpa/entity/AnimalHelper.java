@@ -3,11 +3,8 @@ package com.papaolabs.batch.infrastructure.jpa.entity;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Data
@@ -19,7 +16,4 @@ public class AnimalHelper extends BaseEntity {
     private Long id;
     private String name;
     private String contact;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="id")
-    private AnimalPost post;
 }

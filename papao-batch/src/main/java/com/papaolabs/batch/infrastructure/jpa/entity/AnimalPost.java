@@ -30,16 +30,16 @@ public class AnimalPost extends BaseEntity {
     private Date happenDate;
     private String happenPlace;
     private String feature;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn
     private AnimalHelper animalHelper;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id", insertable = false, updatable = false)
     private Region region;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id", insertable = false, updatable = false)
     private AnimalShelter shelter;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn
     private AbandonedAnimal abandonedAnimal;
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)

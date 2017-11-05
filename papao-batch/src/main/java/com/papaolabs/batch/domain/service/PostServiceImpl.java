@@ -146,6 +146,8 @@ public class PostServiceImpl implements PostService {
                                          })
                                          .collect(Collectors.toList());
         animalPostRepository.save(results);
+        stopWatch.stop();
+        log.info("[syncPostList_end} result size {} - executionTime : {} millis", -1, stopWatch.getLastTaskTimeMillis());
         /*animal.stream()
               .map()
               .stream()
