@@ -1,4 +1,4 @@
-package com.papaolabs.api.infrastructure.persistence.jpa.entity;
+package com.papaolabs.image.infrastructure.jpa.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,14 +15,16 @@ import java.util.Date;
 @Data
 @Entity
 @EntityListeners(value = {AuditingEntityListener.class})
-@Table(name = "breed_info_tb")
-public class Breed {
+@Table(name = "post_info_tb")
+public class Image {
+
     @Id
     @GeneratedValue
     private Long id;
-    private Long speciesCode;
-    private Long kindCode;
-    private String kindName;
+    private String imageKey;
+    private String imageUrl;
+    private Long animalCode;
+
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate

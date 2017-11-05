@@ -2,17 +2,15 @@ package com.papaolabs.image.interfaces.v1;
 
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.papaolabs.image.domain.service.StorageService;
 import com.papaolabs.image.domain.service.StorageServiceImpl;
 import com.papaolabs.image.domain.service.VisionService;
+import com.papaolabs.image.infrastructure.dto.UploadResult;
 import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -33,13 +31,13 @@ public class V1ImageController {
     }
 
     @PostMapping(value = "/upload")
-    public List<PutObjectResult> upload(@RequestParam("file") MultipartFile[] multipartFiles) {
+    public List<UploadResult> upload(@RequestParam("file") MultipartFile[] multipartFiles) throws JsonProcessingException {
         return storageService.upload(multipartFiles);
     }
 
-    @GetMapping(value = "/download")
-    public ResponseEntity<byte[]> download(@RequestParam String key) throws IOException {
-        return storageService.download(key);
+    @GetMapping(value = "/download/{path:.*}")
+    public ResponseEntity<byte[]> download(@PathVariable("path") String path) throws IOException {
+        return storageService.download(path);
     }
 
     @GetMapping(value = "/list")

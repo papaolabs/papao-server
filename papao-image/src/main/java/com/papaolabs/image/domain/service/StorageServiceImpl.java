@@ -12,11 +12,11 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.IOUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.papaolabs.image.infrastructure.dto.UploadResult;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,34 +37,41 @@ public class StorageServiceImpl implements StorageService {
     private AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    @NotNull
+    private ObjectMapper mapper;
 
     public StorageServiceImpl(AmazonS3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
+        this.mapper = new ObjectMapper();
     }
 
-    private PutObjectResult upload(String filePath, String uploadKey) throws FileNotFoundException {
+    private UploadResult upload(String filePath, String uploadKey) throws FileNotFoundException {
         return upload(new FileInputStream(filePath), uploadKey);
     }
 
-    private PutObjectResult upload(InputStream inputStream, String uploadKey) {
+    private UploadResult upload(InputStream inputStream, String origFilename) {
+        String uploadKey = java.util.UUID.randomUUID().toString();
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadKey, inputStream, new ObjectMetadata());
         putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
         PutObjectResult putObjectResult = amazonS3Client.putObject(putObjectRequest);
         IOUtils.closeQuietly(inputStream, null);
-        return putObjectResult;
+        UploadResult uploadResult = new UploadResult();
+        uploadResult.setImageUrl(uploadKey);
+        uploadResult.setOrigFileName(origFilename);
+        return uploadResult;
     }
 
-    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) {
-        List<PutObjectResult> putObjectResults = new ArrayList<>();
+    public List<UploadResult> upload(MultipartFile[] multipartFiles) throws JsonProcessingException {
+        List<UploadResult> putObjectResults = new ArrayList<>();
         Arrays.stream(multipartFiles)
-              .filter(multipartFile -> !StringUtils.isEmpty(multipartFile.getOriginalFilename()))
-              .forEach(multipartFile -> {
-                  try {
-                      putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
-                  } catch (IOException e) {
-                      e.printStackTrace();
-                  }
-              });
+                .filter(multipartFile -> !StringUtils.isEmpty(multipartFile.getOriginalFilename()))
+                .forEach(multipartFile -> {
+                    try {
+                        putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
         return putObjectResults;
     }
 
@@ -77,7 +84,7 @@ public class StorageServiceImpl implements StorageService {
         try {
             bytes = IOUtils.toByteArray(objectInputStream);
             String fileName = URLEncoder.encode(key, "UTF-8")
-                                        .replaceAll("\\+", "%20");
+                    .replaceAll("\\+", "%20");
 
             httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             httpHeaders.setContentLength(bytes.length);
