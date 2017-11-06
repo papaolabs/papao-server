@@ -10,13 +10,14 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "breed_tb")
-public class Breed extends BaseEntity {
+@Table(name = "region_tb")
+public class Region extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private Long upKindCode;
+    private Long sidoCode;
+    private String sidoName;
     @Column(unique = true)
-    private Long kindCode;
-    private String kindName;
+    private Long gunguCode;
+    private String gunguName;
 }

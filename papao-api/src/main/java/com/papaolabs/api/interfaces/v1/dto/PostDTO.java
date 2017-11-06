@@ -3,6 +3,8 @@ package com.papaolabs.api.interfaces.v1.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
@@ -11,7 +13,7 @@ public class PostDTO {
     private Long id;
     private String desertionId;
     private String state;
-    private String imageUrl;
+    private List<String> imageUrl;
     private String type;
     private String gender;
     private String neuter;

@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Value
@@ -14,6 +16,6 @@ public class CommentDTO {
     private String userId;
     private String userName;
     private String text;
-    private String createdDate;
-    private String lastModifiedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 }

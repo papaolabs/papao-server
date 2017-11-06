@@ -2,9 +2,9 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,16 +38,16 @@ public class V1PostController {
                                               @RequestParam String uid,
                                               @RequestParam String postType,
                                               @RequestParam List<String> imageUrls,
-                                              @RequestParam(required = false) String kindUpCode,
-                                              @RequestParam(required = false) String kindCode,
-                                              @RequestParam(required = false) String contact,
-                                              @RequestParam(required = false) String gender,
-                                              @RequestParam(required = false) String neuter,
-                                              @RequestParam(required = false) String age,
-                                              @RequestParam(required = false) Float weight,
-                                              @RequestParam(required = false) String feature,
-                                              @RequestParam(required = false) String sidoCode,
-                                              @RequestParam(required = false) String gunguCode
+                                              @RequestParam(defaultValue = "417000", required = false) Long kindUpCode,
+                                              @RequestParam(defaultValue = "115", required = false) Long kindCode,
+                                              @RequestParam(defaultValue = "-1", required = false) String contact,
+                                              @RequestParam(defaultValue = "U", required = false) String gender,
+                                              @RequestParam(defaultValue = "U", required = false) String neuter,
+                                              @RequestParam(defaultValue = "-1", required = false) Integer age,
+                                              @RequestParam(defaultValue = "-1", required = false) Float weight,
+                                              @RequestParam(defaultValue = "", required = false) String feature,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long sidoCode,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long gunguCode
     ) {
         return new ResponseEntity<>(postService.create(happenDate,
                                                        happenPlace,
@@ -86,7 +86,7 @@ public class V1PostController {
     }
 
     @PostMapping("/{postId}/state")
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam StateType state) {
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam Post.StateType state) {
         return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
 

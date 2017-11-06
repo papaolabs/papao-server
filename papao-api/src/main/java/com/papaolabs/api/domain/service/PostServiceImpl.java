@@ -1,13 +1,14 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -47,13 +48,17 @@ public class PostServiceImpl implements PostService {
     private final BreedRepository breedRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
+    @NotNull
+    private final RegionRepository regionRepository;
 
     public PostServiceImpl(PostRepository postRepository,
                            BreedRepository breedRepository,
-                           ShelterRepository shelterRepository) {
+                           ShelterRepository shelterRepository,
+                           RegionRepository regionRepository) {
         this.postRepository = postRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
+        this.regionRepository = regionRepository;
     }
 
     @Override
@@ -62,31 +67,36 @@ public class PostServiceImpl implements PostService {
                           String uid,
                           String postType,
                           List<String> imageUrls,
-                          String kindUpCode,
-                          String kindCode,
+                          Long kindUpCode,
+                          Long kindCode,
                           String contact,
                           String gender,
                           String neuter,
-                          String age,
+                          Integer age,
                           Float weight,
                           String feature,
-                          String uprCode,
-                          String orgCode) {
+                          Long sidoCode,
+                          Long gunguCode) {
         Post post = new Post();
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(happenPlace);
-        post.setManager(uid);
-        post.setPostType(postType);
-        post.setImageUrl(imageUrls.get(0));
-        post.setAnimalCode(Long.valueOf(kindCode));
+        post.setPostType(Post.PostType.getType(postType));
+        post.setImage(imageUrls.stream()
+                               .map(x -> {
+                                   Image image = new Image();
+                                   image.setUrl(x);
+                                   return image;
+                               })
+                               .collect(Collectors.toList()));
+        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
         post.setContact(contact);
-        post.setGenderCode(gender);
-        post.setNeuterCode(neuter);
-        post.setAge(Integer.valueOf(age));
+        post.setGenderType(Post.GenderType.getType(gender));
+        post.setNeuterType(Post.NeuterType.getType(neuter));
+        post.setStateType(Post.StateType.UNKNOWN);
+        post.setAge(age);
         post.setWeight(weight);
         post.setFeature(feature);
-        post.setShelterCode(Long.valueOf(orgCode));
-        post.setIsDisplay(TRUE);
+        post.setRegion(regionRepository.findBySidoCodeAndGunguCode(sidoCode, gunguCode));
         return transform(postRepository.save(post));
     }
 
@@ -139,14 +149,19 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
 //                             .filter(Post::getIsDisplay)
-                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getAnimalCode()) : TRUE)
+                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
+                                                                               .getKindCode()) : TRUE)
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByShelterCode(String.valueOf(x.getShelterCode()));
-                          return isNotEmpty(uprCode) ? uprCode.equals(shelter.getSidoName()) : TRUE;
+                          Shelter shelter = shelterRepository.findByCode(x.getShelter()
+                                                                          .getCode());
+                          return isNotEmpty(uprCode) ? uprCode.equals(shelter.getRegion()
+                                                                             .getSidoCode()) : TRUE;
                       })
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByShelterCode(String.valueOf(x.getShelterCode()));
-                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()) : TRUE;
+                          Shelter shelter = shelterRepository.findByCode(x.getShelter()
+                                                                          .getCode());
+                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
+                                                                             .getGunguCode()) : TRUE;
                       })
                       .map((this::transform))
                       .sorted(Comparator.comparing(PostDTO::getHappenDate))
@@ -185,7 +200,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO setState(String postId, StateType state) {
+    public PostDTO setState(String postId, Post.StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
 /*        post.setState(state.helperName());*/
         return transform(post);
@@ -193,19 +208,28 @@ public class PostServiceImpl implements PostService {
 
     private PostDTO transform(Post post) {
         Breed breed;
-        if (post.getAnimalCode() == -1L) {
+        if (post.getBreed()
+                .getKindCode() == -1L) {
             breed = breedRepository.findByKindCode(117L);
         } else {
-            breed = breedRepository.findByKindCode(post.getAnimalCode());
+            breed = breedRepository.findByKindCode(post.getBreed()
+                                                       .getKindCode());
         }
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
-        postDTO.setState(post.getStateType());
-        postDTO.setImageUrl(post.getImageUrl());
-        postDTO.setType(post.getPostType());
-        postDTO.setGender(post.getGenderCode());
-        postDTO.setNeuter(post.getNeuterCode());
+        postDTO.setState(post.getStateType()
+                             .name());
+        postDTO.setImageUrl(post.getImage()
+                                .stream()
+                                .map(Image::getUrl)
+                                .collect(Collectors.toList()));
+        postDTO.setType(post.getPostType()
+                            .name());
+        postDTO.setGender(post.getGenderType()
+                              .name());
+        postDTO.setNeuter(post.getNeuterType()
+                              .name());
         postDTO.setFeature(post.getFeature());
         // Todo user 필요
 /*        postDTO.setUserId();
@@ -214,16 +238,19 @@ public class PostServiceImpl implements PostService {
         postDTO.setUserAddress();*/
         postDTO.setHappenDate(convertDateToString(post.getHappenDate()));
         postDTO.setHappenPlace(post.getHappenPlace());
-        postDTO.setKindUpCode(String.valueOf(breed.getSpeciesCode()));
+        postDTO.setKindUpCode(String.valueOf(breed.getUpKindCode()));
         postDTO.setKindCode(String.valueOf(breed.getKindCode()));
+        postDTO.setKindName(breed.getKindName());
         postDTO.setUserName(breed.getKindName());
         postDTO.setAge(String.valueOf(post.getAge()));
         postDTO.setWeight(String.valueOf(post.getWeight()));
         // Todo view count, favorite setting
         postDTO.setViewCount(-1L);
         postDTO.setFavorite(FALSE);
-        postDTO.setCreatedDate(convertDateToString(post.getCreatedDate()));
-        postDTO.setUpdatedDate(convertDateToString(post.getUpdatedDate()));
+        postDTO.setCreatedDate(post.getCreatedDateTime()
+                                   .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        postDTO.setUpdatedDate(post.getLastModifiedDateTime()
+                                   .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return postDTO;
     }
 
