@@ -73,7 +73,7 @@ public class V1PostController {
                                                    @RequestParam(required = false) String kindCode,
                                                    @RequestParam(required = false) String sidoCode,
                                                    @RequestParam(required = false) String gunguCode,
-                                                   @RequestParam(defaultValue = "1", required = false) String index,
+                                                   @RequestParam(defaultValue = "0", required = false) String index,
                                                    @RequestParam(defaultValue = "100", required = false) String size
     ) {
         return new ResponseEntity<>(postService.readPostsByPage(beginDate, endDate, upKindCode
