@@ -97,6 +97,9 @@ public class PostServiceImpl implements PostService {
         List<Post> results = animal.stream()
                                    .map(x -> {
                                        Breed kind = kindMap.get(convertKindName(x.getBreedName()));
+                                       if (kind == null) {
+                                           kind = animalKindRepository.findOne(-115L);
+                                       }
                                        String[] addressArr = x.getJurisdiction()
                                                               .split(StringUtils.SPACE);
                                        if (addressArr.length <= 1) {
@@ -117,7 +120,7 @@ public class PostServiceImpl implements PostService {
                                            animalShelter.setId(-1L);
                                            animalShelter.setCode(-1L);
                                            animalShelter.setName(x.getShelterName());
-                                           if(region == null) {
+                                           if (region == null) {
                                                region = regionRepository.findOne(-1L);
                                            }
                                            animalShelter.setRegion(region);
