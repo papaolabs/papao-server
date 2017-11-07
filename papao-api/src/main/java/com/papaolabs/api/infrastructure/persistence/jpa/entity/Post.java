@@ -37,6 +37,7 @@ public class Post extends BaseEntity {
     private String helperContact;
     private Integer age;
     private Float weight;
+    private Long hitCount;
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
     @Enumerated(EnumType.STRING)

@@ -173,6 +173,9 @@ public class PostServiceImpl implements PostService {
             postDTO.setId(-1L);
             return postDTO;
         }
+        Long hitCount = post.getHitCount() + 1;
+        post.setHitCount(hitCount);
+        postRepository.save(post);
         return transform(post);
     }
 
@@ -252,7 +255,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setAge(post.getAge());
         postDTO.setWeight(post.getWeight());
         // Todo view count, favorite setting
-        postDTO.setViewCount(-1L);
+        postDTO.setViewCount(post.getHitCount());
         postDTO.setCreatedDate(post.getCreatedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()

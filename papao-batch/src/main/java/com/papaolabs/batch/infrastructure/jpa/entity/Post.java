@@ -37,6 +37,7 @@ public class Post extends BaseEntity {
     private String helperContact;
     private Integer age;
     private Float weight;
+    private Long hitCount;
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
     @Enumerated(EnumType.STRING)
@@ -52,9 +53,10 @@ public class Post extends BaseEntity {
     private Region region;
     @OneToOne
     private Shelter shelter;
+    private Boolean isDisplay;
 
     public enum PostType {
-        SYSTEM, ABSENCE, PROTECT;
+        SYSTEM, PROTECTING, ROADREPORT, MISSING;
 
         public static PostType getType(String name) {
             if (StringUtils.isEmpty(name)) {
