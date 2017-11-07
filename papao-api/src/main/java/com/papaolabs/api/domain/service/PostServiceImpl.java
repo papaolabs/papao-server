@@ -2,6 +2,7 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
@@ -25,8 +26,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
@@ -112,10 +115,13 @@ public class PostServiceImpl implements PostService {
         return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
                                                                                          convertStringToDate(endDate))
                              .stream()
-//                             .filter(Post::getIsDisplay)
-/*                             .filter(x -> isNotEmpty(kindUpCode) ? kindUpCode.equals(x.getKindUpCode()) : TRUE)
-                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getUprCode()) : TRUE)
-                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getOrgCode()) : TRUE)*/
+                             .filter(Post::getIsDisplay)
+                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
+                                                                                      .getUpKindCode()) : TRUE)
+                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getRegion()
+                                                                                .getSidoCode()) : TRUE)
+                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getRegion()
+                                                                                .getGunguCode()) : TRUE)
                              .map((this::transform))
                              .sorted(Comparator.comparing(PostDTO::getHappenDate))
                              .collect(Collectors.toList());
@@ -144,8 +150,8 @@ public class PostServiceImpl implements PostService {
                 pageRequest);
         return results.getContent()
                       .stream()
-//                             .filter(Post::getIsDisplay)
-                      /*.filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
+                      .filter(Post::getIsDisplay)
+                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                .getKindCode()) : TRUE)
                       .filter(x -> {
                           Shelter shelter = shelterRepository.findByCode(x.getShelter()
@@ -158,7 +164,7 @@ public class PostServiceImpl implements PostService {
                                                                           .getCode());
                           return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
                                                                              .getGunguCode()) : TRUE;
-                      })*/
+                      })
                       .map((this::transform))
                       .sorted(Comparator.comparing(PostDTO::getHappenDate))
                       .collect(Collectors.toList());

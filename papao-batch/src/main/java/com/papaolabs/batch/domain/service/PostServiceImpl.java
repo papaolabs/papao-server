@@ -153,6 +153,7 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setShelter(animalShelter);
                                        animalPost.setImage(Arrays.asList(animalImage));
                                        animalPost.setHitCount(0L);
+                                       animalPost.setIsDisplay(Boolean.TRUE);
                                        return animalPost;
                                    })
                                    .map(x -> {
