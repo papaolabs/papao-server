@@ -1,6 +1,5 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
@@ -25,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.FALSE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -179,7 +179,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO delete(String postId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-        /*if (post == null) {
+        if (post == null) {
             log.debug("[NotFound] delete - id : {id}", postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
@@ -191,7 +191,7 @@ public class PostServiceImpl implements PostService {
             return postDTO;
         }
         post.setIsDisplay(FALSE);
-        postRepository.save(post);*/
+        postRepository.save(post);
         return transform(post);
     }
 
@@ -203,14 +203,14 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostDTO transform(Post post) {
-        Breed breed;
+/*        Breed breed;
         if (post.getBreed()
                 .getKindCode() == -1L) {
             breed = breedRepository.findByKindCode(117L);
         } else {
             breed = breedRepository.findByKindCode(post.getBreed()
                                                        .getKindCode());
-        }
+        }*/
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
@@ -234,12 +234,12 @@ public class PostServiceImpl implements PostService {
         postDTO.setKindUpCode(breed.getUpKindCode());
         postDTO.setKindCode(breed.getKindCode());
 */
-        postDTO.setKindName(breed.getKindName());
+        postDTO.setKindName(post.getBreed().getKindName());
         postDTO.setSidoName(post.getRegion()
                                 .getSidoName());
         postDTO.setGunguName(post.getRegion()
                                  .getGunguName());
-        postDTO.setManagerName(breed.getKindName());
+        postDTO.setManagerName(post.getBreed().getKindName());
         postDTO.setAge(post.getAge());
         postDTO.setWeight(post.getWeight());
         // Todo view count, favorite setting
