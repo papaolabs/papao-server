@@ -146,7 +146,11 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setNoticeEndDate(convertStringToDate(x.getNoticeEndDate()));
                                        animalPost.setHappenDate(convertStringToDate(x.getHappenDate()));
                                        animalPost.setHappenPlace(x.getHappenPlace());
-                                       animalPost.setFeature(x.getFeature());
+                                       String feature = x.getFeature();
+                                       if(breed.getUpKindCode() == 429900) {
+                                           feature = StringUtils.join(breed.getKindName(), StringUtils.LF, feature);
+                                       }
+                                       animalPost.setFeature(feature);
                                        animalPost.setHelperName(x.getUserName());
                                        animalPost.setHelperContact(x.getUserContact());
                                        animalPost.setRegion(animalShelter.getRegion());
