@@ -239,7 +239,9 @@ public class PostServiceImpl implements PostService {
                                 .getSidoName());
         postDTO.setGunguName(post.getRegion()
                                  .getGunguName());
-        postDTO.setManagerName(post.getBreed().getKindName());
+        postDTO.setShelterName(post.getShelter().getName());
+        postDTO.setManagerName(post.getHelperName());
+        postDTO.setManagerContact(post.getHelperContact());
         postDTO.setAge(post.getAge());
         postDTO.setWeight(post.getWeight());
         // Todo view count, favorite setting

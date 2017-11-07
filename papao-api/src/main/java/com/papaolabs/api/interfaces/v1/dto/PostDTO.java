@@ -19,6 +19,7 @@ public class PostDTO {
     private Post.NeuterType neuterType;
     private List<String> imageUrls;
     private String feature;
+    private String shelterName;
     private String managerId;
     private String managerName;
     private String managerAddress;
