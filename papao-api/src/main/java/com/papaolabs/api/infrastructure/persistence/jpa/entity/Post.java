@@ -47,12 +47,9 @@ public class Post extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private Collection<Image> image;
-    @OneToOne
-    private Breed breed;
-    @OneToOne
-    private Region region;
-    @OneToOne
-    private Shelter shelter;
+    private Long breedId;
+    private Long regionId;
+    private Long shelterId;
     private Boolean isDisplay;
 
     public enum PostType {

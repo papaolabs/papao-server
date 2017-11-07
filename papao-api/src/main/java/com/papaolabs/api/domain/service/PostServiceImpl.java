@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
                                    return image;
                                })
                                .collect(Collectors.toList()));
-        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
+//        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
         post.setContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService {
         post.setAge(age);
         post.setWeight(weight);
         post.setFeature(feature);
-        post.setRegion(regionRepository.findBySidoCodeAndGunguCode(sidoCode, gunguCode));
+//        post.setRegion(regionRepository.findBySidoCodeAndGunguCode(sidoCode, gunguCode));
         return transform(postRepository.save(post));
     }
 
@@ -116,7 +116,7 @@ public class PostServiceImpl implements PostService {
                                                                                          convertStringToDate(endDate))
                              .stream()
                              .filter(Post::getIsDisplay)
-                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
+/*                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                       .getUpKindCode().toString()) : TRUE)
                              .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
                                                                                   .getKindCode().toString()) : TRUE)
@@ -131,7 +131,7 @@ public class PostServiceImpl implements PostService {
                                                                                  .getCode());
                                  return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
                                                                                     .getGunguCode().toString()) : TRUE;
-                             })
+                             })*/
                              .map((this::transform))
                              .sorted(Comparator.comparing(PostDTO::getHappenDate))
                              .collect(Collectors.toList());
@@ -161,7 +161,7 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .filter(Post::getIsDisplay)
-                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
+/*                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                .getUpKindCode().toString()) : TRUE)
                       .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
                                                                            .getKindCode().toString()) : TRUE)
@@ -176,7 +176,7 @@ public class PostServiceImpl implements PostService {
                                                                           .getCode());
                           return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
                                                                              .getGunguCode().toString()) : TRUE;
-                      })
+                      })*/
                       .map((this::transform))
                       .sorted(Comparator.comparing(PostDTO::getHappenDate))
                       .collect(Collectors.toList());
@@ -260,14 +260,14 @@ public class PostServiceImpl implements PostService {
         postDTO.setKindUpCode(breed.getUpKindCode());
         postDTO.setKindCode(breed.getKindCode());
 */
-        postDTO.setKindName(post.getBreed()
+/*        postDTO.setKindName(post.getBreed()
                                 .getKindName());
         postDTO.setSidoName(post.getRegion()
                                 .getSidoName());
         postDTO.setGunguName(post.getRegion()
                                  .getGunguName());
         postDTO.setShelterName(post.getShelter()
-                                   .getName());
+                                   .getName());*/
         postDTO.setManagerName(post.getHelperName());
         postDTO.setManagerContact(post.getHelperContact());
         postDTO.setAge(post.getAge());
