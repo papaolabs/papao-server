@@ -117,6 +117,9 @@ public class PostServiceImpl implements PostService {
                                            animalShelter.setId(-1L);
                                            animalShelter.setCode(-1L);
                                            animalShelter.setName(x.getShelterName());
+                                           if(region == null) {
+                                               region = regionRepository.findOne(-1L);
+                                           }
                                            animalShelter.setRegion(region);
                                        }
                                        Image animalImage = new Image();
