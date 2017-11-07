@@ -148,7 +148,7 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setHappenPlace(x.getHappenPlace());
                                        String feature = x.getFeature();
                                        if(breed.getUpKindCode() == 429900) {
-                                           feature = StringUtils.join(breed.getKindName(), StringUtils.LF, feature);
+                                           feature = StringUtils.join(x.getBreedName(), StringUtils.LF, feature);
                                        }
                                        animalPost.setFeature(feature);
                                        animalPost.setHelperName(x.getUserName());
