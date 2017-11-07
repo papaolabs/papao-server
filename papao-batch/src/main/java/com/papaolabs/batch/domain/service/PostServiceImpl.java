@@ -96,9 +96,9 @@ public class PostServiceImpl implements PostService {
         List<AnimalDTO> animal = openApiClient.animal(beginDate, endDate);
         List<Post> results = animal.stream()
                                    .map(x -> {
-                                       Breed kind = kindMap.get(convertKindName(x.getBreedName()));
-                                       if (kind == null) {
-                                           kind = animalKindRepository.findOne(-115L);
+                                       Breed breed = kindMap.get(convertKindName(x.getBreedName()));
+                                       if (breed == null) {
+                                           breed = animalKindRepository.findOne(115L);
                                        }
                                        String[] addressArr = x.getJurisdiction()
                                                               .split(StringUtils.SPACE);
@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setGenderType(Post.GenderType.getType(x.getGenderCode()));
                                        animalPost.setNeuterType(Post.NeuterType.getType(x.getNeuterCode()));
                                        animalPost.setStateType(Post.StateType.getType(x.getStateType()));
-                                       animalPost.setBreed(kind);
+                                       animalPost.setBreed(breed);
                                        animalPost.setPostType(Post.PostType.SYSTEM);
                                        animalPost.setDesertionId(x.getDesertionId());
                                        animalPost.setContact(x.getUserContact());
