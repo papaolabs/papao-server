@@ -52,7 +52,7 @@ public class Post extends BaseEntity {
     private Region region;
     @OneToOne
     private Shelter shelter;
-    private Boolean isDisplay;
+//    private Boolean isDisplay;
 
     public enum PostType {
         SYSTEM, PROTECTING, ROADREPORT, MISSING;

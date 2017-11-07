@@ -72,9 +72,21 @@ public class V1PostController {
                                                    @RequestParam(required = false) String upKindCode,
                                                    @RequestParam(required = false) String kindCode,
                                                    @RequestParam(required = false) String sidoCode,
-                                                   @RequestParam(required = false) String gunguCode,
-                                                   @RequestParam(defaultValue = "0", required = false) String index,
-                                                   @RequestParam(defaultValue = "100", required = false) String size
+                                                   @RequestParam(required = false) String gunguCode
+    ) {
+        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, upKindCode
+            , kindCode, sidoCode, gunguCode), HttpStatus.OK);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<List<PostDTO>> readPostsByPage(@RequestParam(required = false) String beginDate,
+                                                         @RequestParam(required = false) String endDate,
+                                                         @RequestParam(required = false) String upKindCode,
+                                                         @RequestParam(required = false) String kindCode,
+                                                         @RequestParam(required = false) String sidoCode,
+                                                         @RequestParam(required = false) String gunguCode,
+                                                         @RequestParam(defaultValue = "0", required = false) String index,
+                                                         @RequestParam(defaultValue = "100", required = false) String size
     ) {
         return new ResponseEntity<>(postService.readPostsByPage(beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, index, size), HttpStatus.OK);

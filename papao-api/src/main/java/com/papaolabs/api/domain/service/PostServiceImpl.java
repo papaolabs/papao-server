@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.FALSE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -180,7 +179,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO delete(String postId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-        if (post == null) {
+        /*if (post == null) {
             log.debug("[NotFound] delete - id : {id}", postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
@@ -192,7 +191,7 @@ public class PostServiceImpl implements PostService {
             return postDTO;
         }
         post.setIsDisplay(FALSE);
-        postRepository.save(post);
+        postRepository.save(post);*/
         return transform(post);
     }
 
