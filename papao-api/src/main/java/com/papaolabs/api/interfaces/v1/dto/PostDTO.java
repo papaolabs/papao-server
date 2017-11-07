@@ -32,7 +32,7 @@ public class PostDTO {
     private Integer age;
     private Float weight;
     // 신규추가
-    private Long viewCount;
+    private Long hitCount;
     private String createdDate;
     private String updatedDate;
 

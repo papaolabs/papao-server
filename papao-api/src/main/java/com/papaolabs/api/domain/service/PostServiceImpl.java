@@ -255,7 +255,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setAge(post.getAge());
         postDTO.setWeight(post.getWeight());
         // Todo view count, favorite setting
-        postDTO.setViewCount(post.getHitCount());
+        postDTO.setHitCount(post.getHitCount());
         postDTO.setCreatedDate(post.getCreatedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
