@@ -217,7 +217,12 @@ public class PostServiceImpl implements PostService {
         postDTO.setStateType(post.getStateType());
         postDTO.setImageUrls(post.getImage()
                                  .stream()
-                                 .map(Image::getUrl)
+                                 .map(x -> {
+                                     PostDTO.ImageUrl imageUrl = new PostDTO.ImageUrl();
+                                     imageUrl.setKey(x.getId());
+                                     imageUrl.setUrl(x.getUrl());
+                                     return imageUrl;
+                                 })
                                  .collect(Collectors.toList()));
         postDTO.setPostType(post.getPostType());
         postDTO.setGenderType(post.getGenderType());
@@ -234,12 +239,14 @@ public class PostServiceImpl implements PostService {
         postDTO.setKindUpCode(breed.getUpKindCode());
         postDTO.setKindCode(breed.getKindCode());
 */
-        postDTO.setKindName(post.getBreed().getKindName());
+        postDTO.setKindName(post.getBreed()
+                                .getKindName());
         postDTO.setSidoName(post.getRegion()
                                 .getSidoName());
         postDTO.setGunguName(post.getRegion()
                                  .getGunguName());
-        postDTO.setShelterName(post.getShelter().getName());
+        postDTO.setShelterName(post.getShelter()
+                                   .getName());
         postDTO.setManagerName(post.getHelperName());
         postDTO.setManagerContact(post.getHelperContact());
         postDTO.setAge(post.getAge());

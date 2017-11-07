@@ -17,7 +17,7 @@ public class PostDTO {
     private Post.PostType postType;
     private Post.GenderType genderType;
     private Post.NeuterType neuterType;
-    private List<String> imageUrls;
+    private List<ImageUrl> imageUrls;
     private String feature;
     private String shelterName;
     private String managerId;
@@ -35,4 +35,10 @@ public class PostDTO {
     private Long viewCount;
     private String createdDate;
     private String updatedDate;
+
+    @Data
+    public static class ImageUrl {
+        private Long key;
+        private String url;
+    }
 }
