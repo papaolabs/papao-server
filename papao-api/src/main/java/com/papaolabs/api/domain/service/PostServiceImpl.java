@@ -117,11 +117,21 @@ public class PostServiceImpl implements PostService {
                              .stream()
                              .filter(Post::getIsDisplay)
                              .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
-                                                                                      .getUpKindCode()) : TRUE)
-                             .filter(x -> isNotEmpty(uprCode) ? uprCode.equals(x.getRegion()
-                                                                                .getSidoCode()) : TRUE)
-                             .filter(x -> isNotEmpty(orgCode) ? orgCode.equals(x.getRegion()
-                                                                                .getGunguCode()) : TRUE)
+                                                                                      .getUpKindCode().toString()) : TRUE)
+                             .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
+                                                                                  .getKindCode().toString()) : TRUE)
+                             .filter(x -> {
+                                 Shelter shelter = shelterRepository.findByCode(x.getShelter()
+                                                                                 .getCode());
+                                 return isNotEmpty(uprCode) ? uprCode.equals(shelter.getRegion()
+                                                                                    .getSidoCode().toString()) : TRUE;
+                             })
+                             .filter(x -> {
+                                 Shelter shelter = shelterRepository.findByCode(x.getShelter()
+                                                                                 .getCode());
+                                 return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
+                                                                                    .getGunguCode().toString()) : TRUE;
+                             })
                              .map((this::transform))
                              .sorted(Comparator.comparing(PostDTO::getHappenDate))
                              .collect(Collectors.toList());
@@ -152,18 +162,20 @@ public class PostServiceImpl implements PostService {
                       .stream()
                       .filter(Post::getIsDisplay)
                       .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
-                                                                               .getKindCode()) : TRUE)
+                                                                               .getUpKindCode().toString()) : TRUE)
+                      .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
+                                                                           .getKindCode().toString()) : TRUE)
                       .filter(x -> {
                           Shelter shelter = shelterRepository.findByCode(x.getShelter()
                                                                           .getCode());
                           return isNotEmpty(uprCode) ? uprCode.equals(shelter.getRegion()
-                                                                             .getSidoCode()) : TRUE;
+                                                                             .getSidoCode().toString()) : TRUE;
                       })
                       .filter(x -> {
                           Shelter shelter = shelterRepository.findByCode(x.getShelter()
                                                                           .getCode());
                           return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
-                                                                             .getGunguCode()) : TRUE;
+                                                                             .getGunguCode().toString()) : TRUE;
                       })
                       .map((this::transform))
                       .sorted(Comparator.comparing(PostDTO::getHappenDate))

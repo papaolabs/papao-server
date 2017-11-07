@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
                                    .map(x -> {
                                        Breed breed = kindMap.get(convertKindName(x.getBreedName()));
                                        if (breed == null) {
-                                           breed = animalKindRepository.findOne(115L);
+                                           breed = animalKindRepository.findOne(117L);
                                        }
                                        String[] addressArr = x.getJurisdiction()
                                                               .split(StringUtils.SPACE);
