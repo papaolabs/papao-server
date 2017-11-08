@@ -5,6 +5,7 @@ import com.papaolabs.batch.infrastructure.jpa.entity.Post;
 import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
@@ -25,8 +26,8 @@ public class V1SchedulerTestController {
     }
 
     @GetMapping
-    public void sync() {
-        this.postService.syncPostList("20171105", "20171105");
+    public void sync(@RequestParam String beginDate, @RequestParam String endDate) {
+        this.postService.syncPostList(beginDate, endDate);
     }
 
     @GetMapping("/list")

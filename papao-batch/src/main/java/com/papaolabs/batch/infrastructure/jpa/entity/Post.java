@@ -33,7 +33,6 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StateType stateType;
     private String desertionId;
-    private String contact;
     private String noticeId;
     private Date noticeBeginDate;
     private Date noticeEndDate;
@@ -49,6 +48,7 @@ public class Post extends BaseEntity {
     private Long sidoCode;
     private Long gunguCode;
     private Long shelterCode;
+    private String shelterContact;
     private Boolean isDisplay;
 
     public enum PostType {
