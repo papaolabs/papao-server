@@ -88,6 +88,13 @@ public class PostServiceImpl implements PostService {
             convertStringToDate(endDate))
                                                         .stream()
                                                         .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
+        Map<String, Region> regionMap = regionRepository.findAll()
+                                                        .stream()
+                                                        .collect(Collectors.toMap(x -> StringUtils
+                                                                                      .deleteWhitespace(
+                                                                                          StringUtils.join(x.getSidoName(),
+                                                                                                           x.getGunguName())),
+                                                                                  Function.identity()));
         List<AnimalDTO> animal = openApiClient.animal(beginDate, endDate);
         List<Post> results = animal.stream()
                                    .map(x -> {
@@ -124,9 +131,22 @@ public class PostServiceImpl implements PostService {
                                            address[0],
                                            address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0],
                                            x.getShelterName())));
+                                       if (shelter == null) {
+                                           Region region = regionMap.get(StringUtils.deleteWhitespace(StringUtils.join(
+                                               address[0],
+                                               address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0])));
+                                           shelter = new Shelter();
+                                           shelter.setSidoCode(region.getSidoCode());
+                                           shelter.setSidoCode(region.getGunguCode());
+                                           shelter.setShelterCode(-1L);
+                                       }
                                        post.setSidoCode(shelter.getSidoCode());
                                        post.setGunguCode(shelter.getGunguCode());
                                        post.setShelterCode(shelter.getShelterCode());
+                                       // Image 세팅
+                                       Image image = new Image();
+                                       image.setUrl(x.getImageUrl());
+                                       post.setImages(Arrays.asList(image));
                                        return post;
                                    })
                                    .map(x -> {

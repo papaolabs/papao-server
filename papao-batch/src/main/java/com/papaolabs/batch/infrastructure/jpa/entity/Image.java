@@ -18,7 +18,5 @@ public class Image {
     @GeneratedValue
     private Long id;
     private String url;
-    @ManyToOne(targetEntity = Post.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
-    private Post post;
+    private Long postId;
 }
