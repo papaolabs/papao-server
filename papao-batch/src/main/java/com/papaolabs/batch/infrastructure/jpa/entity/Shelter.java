@@ -19,8 +19,10 @@ public class Shelter extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private Long code;
-    private String name;
-    @OneToOne
-    private Region region;
+    private Long sidoCode;
+    private String sidoName;
+    private Long gunguCode;
+    private String gunguName;
+    private Long shelterCode;
+    private String shelterName;
 }

@@ -24,7 +24,14 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
+    @Enumerated(EnumType.STRING)
     private PostType postType;
+    @Enumerated(EnumType.STRING)
+    private GenderType genderType;
+    @Enumerated(EnumType.STRING)
+    private NeuterType neuterType;
+    @Enumerated(EnumType.STRING)
+    private StateType stateType;
     private String desertionId;
     private String contact;
     private String noticeId;
@@ -38,21 +45,10 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    @Enumerated(EnumType.STRING)
-    private GenderType genderType;
-    @Enumerated(EnumType.STRING)
-    private NeuterType neuterType;
-    @Enumerated(EnumType.STRING)
-    private StateType stateType;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "postId")
-    private Collection<Image> image;
-    @OneToOne
-    private Breed breed;
-    @OneToOne
-    private Region region;
-    @OneToOne
-    private Shelter shelter;
+    private Long breedCode;
+    private Long sidoCode;
+    private Long gunguCode;
+    private Long shelterCode;
     private Boolean isDisplay;
 
     public enum PostType {

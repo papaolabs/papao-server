@@ -75,11 +75,9 @@ public class PostServiceImpl implements PostService {
         Map<String, Shelter> shelterMap = animalShelterRepository.findAll()
                                                                  .stream()
                                                                  .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
-                                                                     StringUtils.join(x.getRegion()
-                                                                                       .getSidoName(),
-                                                                                      x.getRegion()
-                                                                                       .getGunguName(),
-                                                                                      x.getName())),
+                                                                     StringUtils.join(x.getSidoName(),
+                                                                                      x.getGunguName(),
+                                                                                      x.getShelterName())),
                                                                                            Function.identity()));
         Map<String, Region> regionMap = regionRepository.findAll()
                                                         .stream()
@@ -118,12 +116,13 @@ public class PostServiceImpl implements PostService {
                                                                                                                            addressArr[0])));
                                            animalShelter = new Shelter();
                                            animalShelter.setId(-1L);
-                                           animalShelter.setCode(-1L);
-                                           animalShelter.setName(x.getShelterName());
+                                           animalShelter.setShelterCode(-1L);
+                                           animalShelter.setShelterName(x.getShelterName());
                                            if (region == null) {
                                                region = regionRepository.findOne(-1L);
                                            }
-                                           animalShelter.setRegion(region);
+                                           animalShelter.setSidoCode(region.getSidoCode());
+                                           animalShelter.setGunguCode(region.getGunguCode());
                                        }
                                        Image animalImage = new Image();
                                        animalImage.setUrl(x.getImageUrl());
@@ -137,7 +136,7 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setGenderType(Post.GenderType.getType(x.getGenderCode()));
                                        animalPost.setNeuterType(Post.NeuterType.getType(x.getNeuterCode()));
                                        animalPost.setStateType(Post.StateType.getType(x.getStateType()));
-                                       animalPost.setBreed(breed);
+                                       animalPost.setBreedCode(breed.getKindCode());
                                        animalPost.setPostType(Post.PostType.SYSTEM);
                                        animalPost.setDesertionId(x.getDesertionId());
                                        animalPost.setContact(x.getUserContact());
@@ -147,15 +146,16 @@ public class PostServiceImpl implements PostService {
                                        animalPost.setHappenDate(convertStringToDate(x.getHappenDate()));
                                        animalPost.setHappenPlace(x.getHappenPlace());
                                        String feature = x.getFeature();
-                                       if(breed.getUpKindCode() == 429900) {
+                                       if (breed.getUpKindCode() == 429900) {
                                            feature = StringUtils.join(x.getBreedName(), StringUtils.LF, feature);
                                        }
                                        animalPost.setFeature(feature);
                                        animalPost.setHelperName(x.getUserName());
                                        animalPost.setHelperContact(x.getUserContact());
-                                       animalPost.setRegion(animalShelter.getRegion());
-                                       animalPost.setShelter(animalShelter);
-                                       animalPost.setImage(Arrays.asList(animalImage));
+                                       animalPost.setSidoCode(animalShelter.getSidoCode());
+                                       animalPost.setGunguCode(animalShelter.getGunguCode());
+                                       animalPost.setShelterCode(animalShelter.getShelterCode());
+//                                       animalPost.setImage(Arrays.asList(animalImage));
                                        animalPost.setHitCount(0L);
                                        animalPost.setIsDisplay(Boolean.TRUE);
                                        return animalPost;
@@ -164,7 +164,7 @@ public class PostServiceImpl implements PostService {
                                        Post post = postMap.get(x.getDesertionId());
                                        if (post != null) {
                                            x.setId(post.getId());
-                                           x.setImage(post.getImage());
+//                                           x.setImage(post.getImage());
                                        }
                                        return x;
                                    })
