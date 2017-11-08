@@ -234,6 +234,7 @@ insert into region_tb (sido_code, sido_name, gungu_code, gungu_name, created_dat
 insert into region_tb (sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) values (6500000, '제주특별자치도', 6510000, '제주시', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into region_tb (sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) values (6500000, '제주특별자치도', 6500000, '제주특별자치도', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into region_tb (sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) values (-1, '알수없음', -1, '알수없음', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into region_tb (sido_code, sido_name, gungu_code, gungu_name, created_date, updated_date) VALUES (5690000, '세종특별자치시', 5690000, '세종특별자치시', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (6110000, '서울특별시', 6119999, '가정보호', 311611201500001, '테스트용시설', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (6110000, '서울특별시', 3220000, '강남구', 311322200900001, '한국동물구조관리협회', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -743,6 +744,7 @@ insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_co
 insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (6500000, '제주특별자치도', 6510000, '제주시', 350651201100001, '제주동물보호센터', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (6500000, '제주특별자치도', 6500000, '제주특별자치도', 350650201200001, '제주유기동물보호센터', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (-1, '알수없음', -1, '알수없음', -1, '알수없음', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into shelter_tb (sido_code, sido_name, gungu_code, gungu_name, shelter_code, shelter_name, created_date, updated_date) values (5690000, '세종특별자치시', 5690000, '세종특별자치시', 900000000000001, '리얼펫동물병원', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 insert into breed_tb (up_kind_code, up_kind_name, kind_code, kind_name, created_date, updated_date) values (417000, '개', 000054, '골든 리트리버', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 insert into breed_tb (up_kind_code, up_kind_name, kind_code, kind_name, created_date, updated_date) values (417000, '개', 000056, '그레이 하운드', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
