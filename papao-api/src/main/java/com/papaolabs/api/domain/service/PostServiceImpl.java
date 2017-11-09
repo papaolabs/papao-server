@@ -268,9 +268,9 @@ public class PostServiceImpl implements PostService {
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Breed 세팅
-        Breed breed = post.getBreed();
+        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
         // Region/Shelter 세팅
-        Shelter shelter = post.getShelter();
+        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
         // Todo User 세팅
         postDTO.setUpKindName(breed.getUpKindName());
         postDTO.setKindName(breed.getKindName());
