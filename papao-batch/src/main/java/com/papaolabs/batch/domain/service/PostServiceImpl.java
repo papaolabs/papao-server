@@ -116,7 +116,7 @@ public class PostServiceImpl implements PostService {
                                        post.setAge(convertAge(x.getAge()));
                                        post.setWeight(convertWeight(x.getWeight()));
                                        post.setHitCount(0L);
-                                       post.setIsDisplay(TRUE);
+                                       post.setDisplay(TRUE);
                                        // Breed 세팅
                                        String breedName = convertKindName(x.getBreedName());
                                        Breed breed = breedMap.get(breedName);
