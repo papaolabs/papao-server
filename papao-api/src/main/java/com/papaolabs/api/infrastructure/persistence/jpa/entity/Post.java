@@ -48,7 +48,7 @@ public class Post extends BaseEntity {
     private Long gunguCode;
     private Long shelterCode;
     private String shelterContact;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private Collection<Image> images;
     private Boolean isDisplay;

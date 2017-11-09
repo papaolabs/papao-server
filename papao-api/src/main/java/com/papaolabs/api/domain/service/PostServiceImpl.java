@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -78,12 +79,12 @@ public class PostServiceImpl implements PostService {
         post.setHappenPlace(happenPlace);
         post.setPostType(Post.PostType.getType(postType));
         post.setImages(imageUrls.stream()
-                               .map(x -> {
-                                   Image image = new Image();
-                                   image.setUrl(x);
-                                   return image;
-                               })
-                               .collect(Collectors.toList()));
+                                .map(x -> {
+                                    Image image = new Image();
+                                    image.setUrl(x);
+                                    return image;
+                                })
+                                .collect(Collectors.toList()));
 //        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
@@ -109,10 +110,17 @@ public class PostServiceImpl implements PostService {
         if (isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
-        return postRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(convertStringToDate(beginDate),
-                                                                                         convertStringToDate(endDate))
-                             .stream()
-                             .filter(Post::getIsDisplay)
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        List<Post> originalPosts = postRepository
+            .findByHappenDate(
+                convertStringToDate(beginDate),
+                convertStringToDate(endDate));
+        stopWatch.stop();
+        log.debug("originalPosts get time :: {} ", stopWatch.getLastTaskTimeMillis());
+        return originalPosts
+            .stream()
+            .filter(Post::getIsDisplay)
 /*                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                       .getUpKindCode().toString()) : TRUE)
                              .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
@@ -129,9 +137,9 @@ public class PostServiceImpl implements PostService {
                                  return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
                                                                                     .getGunguCode().toString()) : TRUE;
                              })*/
-                             .map((this::transform))
-                             .sorted(Comparator.comparing(PostDTO::getHappenDate))
-                             .collect(Collectors.toList());
+            .map(this::transform)
+            .sorted(Comparator.comparing(PostDTO::getHappenDate))
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
@@ -49,7 +48,7 @@ public class Post extends BaseEntity {
     private Long gunguCode;
     private Long shelterCode;
     private String shelterContact;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private Collection<Image> images;
     private Boolean isDisplay;
