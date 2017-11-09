@@ -1,7 +1,9 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
@@ -254,35 +256,26 @@ public class PostServiceImpl implements PostService {
         postDTO.setGenderType(post.getGenderType());
         postDTO.setNeuterType(post.getNeuterType());
         postDTO.setFeature(post.getFeature());
-        // Todo user 필요
-/*        postDTO.setUserId();
-        postDTO.setUserName();
-        postDTO.setUserContact();
-        postDTO.setUserAddress();*/
         postDTO.setHappenDate(convertDateToString(post.getHappenDate()));
         postDTO.setHappenPlace(post.getHappenPlace());
-/*
-        postDTO.setKindUpCode(breed.getUpKindCode());
-        postDTO.setKindCode(breed.getKindCode());
-*/
-/*        postDTO.setKindName(post.getBreed()
-                                .getKindName());
-        postDTO.setSidoName(post.getRegion()
-                                .getSidoName());
-        postDTO.setGunguName(post.getRegion()
-                                 .getGunguName());
-        postDTO.setShelterName(post.getShelter()
-                                   .getName());*/
         postDTO.setManagerName(post.getHelperName());
         postDTO.setManagerContact(post.getHelperContact());
         postDTO.setAge(post.getAge());
         postDTO.setWeight(post.getWeight());
-        // Todo view count, favorite setting
         postDTO.setHitCount(post.getHitCount());
         postDTO.setCreatedDate(post.getCreatedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        // Breed 세팅
+        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        // Region/Shelter 세팅
+        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
+        // Todo User 세팅
+        postDTO.setKindName(breed.getKindName());
+        postDTO.setSidoName(shelter.getSidoName());
+        postDTO.setGunguName(shelter.getGunguName());
+        postDTO.setShelterName(shelter.getShelterName());
         return postDTO;
     }
 
