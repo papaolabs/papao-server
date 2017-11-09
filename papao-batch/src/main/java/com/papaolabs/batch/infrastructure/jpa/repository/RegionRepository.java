@@ -9,4 +9,4 @@ import java.util.List;
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
     List<Region> findBySidoCodeAndGunguCode(Long sidoCode, Long gunguCode);
-    Region findByRegionCode();}
+}
