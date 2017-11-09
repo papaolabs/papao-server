@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO create(String postId, String userId, String userName, String text) {
         Comment comment = new Comment();
-        comment.setPostId(postId);
+        comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
         comment.setUserName(userName);
         comment.setText(text);
@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
         List<Breed> kind = breedRepository.findAll();
         Random random = new Random();
         Comment comment = new Comment();
-        comment.setPostId(postId);
+        comment.setPostId(Long.valueOf(postId));
         comment.setUserId("0");
         comment.setUserName(kind.get(random.nextInt(kind.size()))
                                 .getKindName());
@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> readComments(String postId) {
-        return commentRepository.findByPostId(postId)
+        return commentRepository.findByPostId(Long.valueOf(postId))
                                 .stream()
                                 .map(this::transform)
                                 .sorted(Comparator.comparing(CommentDTO::getCreatedDate))

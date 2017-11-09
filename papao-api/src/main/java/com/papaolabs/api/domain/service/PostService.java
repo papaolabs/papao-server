@@ -2,6 +2,7 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
 
 import java.util.List;
 
@@ -23,21 +24,21 @@ public interface PostService {
                    Long gunguCode
     );
 
-    List<PostDTO> readPosts(String beginDate,
+    List<PostPreviewDTO> readPosts(String beginDate,
                             String endDate,
                             String upKindCode,
                             String kindCode,
                             String uprCode,
                             String orgCode);
 
-    List<PostDTO> readPostsByPage(String beginDate,
-                                  String endDate,
-                                  String upKindCode,
-                                  String kindCode,
-                                  String uprCode,
-                                  String orgCode,
-                                  String page,
-                                  String size);
+    List<PostPreviewDTO> readPostsByPage(String beginDate,
+                                         String endDate,
+                                         String upKindCode,
+                                         String kindCode,
+                                         String uprCode,
+                                         String orgCode,
+                                         String page,
+                                         String size);
 
     PostDTO readPost(String postId);
 
