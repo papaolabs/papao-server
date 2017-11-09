@@ -28,8 +28,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
@@ -123,22 +125,28 @@ public class PostServiceImpl implements PostService {
         return originalPosts
             .stream()
             .filter(Post::getDisplay)
-/*                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
-                                                                                      .getUpKindCode().toString()) : TRUE)
-                             .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
-                                                                                  .getKindCode().toString()) : TRUE)
-                             .filter(x -> {
-                                 Shelter shelter = shelterRepository.findByCode(x.getShelter()
-                                                                                 .getCode());
-                                 return isNotEmpty(uprCode) ? uprCode.equals(shelter.getRegion()
-                                                                                    .getSidoCode().toString()) : TRUE;
-                             })
-                             .filter(x -> {
-                                 Shelter shelter = shelterRepository.findByCode(x.getShelter()
-                                                                                 .getCode());
-                                 return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
-                                                                                    .getGunguCode().toString()) : TRUE;
-                             })*/
+            .filter(x -> {
+                Breed breed = breedRepository.findByKindCode(x.getBreedCode());
+                return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
+                                                                       .toString()) : TRUE;
+            })
+            .filter(x -> {
+                Breed breed = breedRepository.findByKindCode(x.getBreedCode());
+                return isNotEmpty(kindCode) ? kindCode.equals(breed
+                                                                  .getKindCode()
+                                                                  .toString()) : TRUE;
+            })
+            .filter(x -> {
+                Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                return isNotEmpty(uprCode) ? uprCode.equals(shelter
+                                                                .getSidoCode()
+                                                                .toString()) : TRUE;
+            })
+            .filter(x -> {
+                Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
+                                                                   .toString()) : TRUE;
+            })
             .map(this::transform)
             .sorted(Comparator.comparing(PostDTO::getHappenDate))
             .collect(Collectors.toList());
@@ -168,22 +176,28 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .filter(Post::getDisplay)
-/*                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
-                                                                               .getUpKindCode().toString()) : TRUE)
-                      .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
-                                                                           .getKindCode().toString()) : TRUE)
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByCode(x.getShelter()
-                                                                          .getCode());
-                          return isNotEmpty(uprCode) ? uprCode.equals(shelter.getRegion()
-                                                                             .getSidoCode().toString()) : TRUE;
+                          Breed breed = breedRepository.findByKindCode(x.getBreedCode());
+                          return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
+                                                                                 .toString()) : TRUE;
                       })
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByCode(x.getShelter()
-                                                                          .getCode());
-                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getRegion()
-                                                                             .getGunguCode().toString()) : TRUE;
-                      })*/
+                          Breed breed = breedRepository.findByKindCode(x.getBreedCode());
+                          return isNotEmpty(kindCode) ? kindCode.equals(breed
+                                                                            .getKindCode()
+                                                                            .toString()) : TRUE;
+                      })
+                      .filter(x -> {
+                          Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                          return isNotEmpty(uprCode) ? uprCode.equals(shelter
+                                                                          .getSidoCode()
+                                                                          .toString()) : TRUE;
+                      })
+                      .filter(x -> {
+                          Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
+                                                                             .toString()) : TRUE;
+                      })
                       .map((this::transform))
                       .sorted(Comparator.comparing(PostDTO::getHappenDate))
                       .collect(Collectors.toList());
