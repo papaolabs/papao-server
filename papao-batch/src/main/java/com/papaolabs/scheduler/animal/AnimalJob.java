@@ -36,7 +36,6 @@ public class AnimalJob {
     }
 
     @Scheduled(cron = "0 0/10 * 1/1 * ?") // 1분마다 당일치 실행
-    @Scheduled(fixedRate = 9000000000L)
     public void day() {
         batch(BatchType.DAY, 0);
     }
