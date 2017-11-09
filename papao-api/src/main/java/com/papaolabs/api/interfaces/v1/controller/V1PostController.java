@@ -110,9 +110,8 @@ public class V1PostController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId,
                                                     @RequestParam("userId") String userId,
-                                                    @RequestParam("userName") String userName,
                                                     @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.create(postId, userId, userName, text), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.create(postId, userId, text), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/comments/guest")

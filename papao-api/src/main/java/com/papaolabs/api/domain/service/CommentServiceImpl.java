@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO create(String postId, String userId, String userName, String text) {
+    public CommentDTO create(String postId, String userId, String text) {
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
-        comment.setUserName(userName);
         comment.setText(text);
         return transform(commentRepository.save(comment));
     }
@@ -49,9 +49,9 @@ public class CommentServiceImpl implements CommentService {
         Random random = new Random();
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
-        comment.setUserId("0");
-        comment.setUserName(kind.get(random.nextInt(kind.size()))
-                                .getKindName());
+        comment.setUserId("-1");
+/*        comment.setUserName(kind.get(random.nextInt(kind.size()))
+                                .getKindName());*/
         comment.setText(text);
         return transform(commentRepository.save(comment));
     }
@@ -101,25 +101,11 @@ public class CommentServiceImpl implements CommentService {
                          .id(comment.getId())
                          .postId(Long.valueOf(comment.getPostId()))
                          .userId(comment.getUserId())
-                         .userName(comment.getUserName())
                          .text(comment.getText())
-                         .createdDate(comment.getCreatedDateTime())
-                         .lastModifiedDate(comment.getLastModifiedDateTime())
+                         .createdDate(comment.getCreatedDateTime()
+                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                         .lastModifiedDate(comment.getLastModifiedDateTime()
+                                                  .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                          .build();
-    }
-
-    private String convertDateToString(Date date) {
-        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
-        return transFormat.format(date);
-    }
-
-    private Date convertStringToDate(String from) {
-        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return transFormat.parse(from);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
     }
 }

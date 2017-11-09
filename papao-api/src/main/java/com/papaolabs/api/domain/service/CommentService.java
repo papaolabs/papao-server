@@ -5,7 +5,7 @@ import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import java.util.List;
 
 public interface CommentService {
-    CommentDTO create(String postId, String userId, String userName, String text);
+    CommentDTO create(String postId, String userId, String text);
 
     CommentDTO createByGuest(String postId, String text);
 
