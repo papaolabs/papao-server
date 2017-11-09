@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
                                                                                       x.getGunguName(),
                                                                                       x.getShelterName())),
                                                                                            Function.identity()));
-        Map<String, Post> postMap = animalPostRepository.findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
+        Map<String, Post> postMap = animalPostRepository.findByHappenDate(
             convertStringToDate(beginDate),
             convertStringToDate(endDate))
                                                         .stream()
