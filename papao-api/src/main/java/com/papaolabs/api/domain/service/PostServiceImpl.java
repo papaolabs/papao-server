@@ -241,7 +241,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
         postDTO.setStateType(post.getStateType());
-/*        postDTO.setImageUrls(post.getImages()
+        postDTO.setImageUrls(post.getImages()
                                  .stream()
                                  .map(x -> {
                                      PostDTO.ImageUrl imageUrl = new PostDTO.ImageUrl();
@@ -249,7 +249,7 @@ public class PostServiceImpl implements PostService {
                                      imageUrl.setUrl(x.getUrl());
                                      return imageUrl;
                                  })
-                                 .collect(Collectors.toList()));*/
+                                 .collect(Collectors.toList()));
         postDTO.setPostType(post.getPostType());
         postDTO.setGenderType(post.getGenderType());
         postDTO.setNeuterType(post.getNeuterType());
