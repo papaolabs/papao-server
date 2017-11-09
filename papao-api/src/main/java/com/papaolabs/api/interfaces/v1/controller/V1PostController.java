@@ -2,9 +2,9 @@ package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -38,27 +38,27 @@ public class V1PostController {
                                               @RequestParam String uid,
                                               @RequestParam String postType,
                                               @RequestParam List<String> imageUrls,
-                                              @RequestParam(required = false) String kindUpCode,
-                                              @RequestParam(required = false) String kindCode,
-                                              @RequestParam(required = false) String contact,
-                                              @RequestParam(required = false) String gender,
-                                              @RequestParam(required = false) String neuter,
-                                              @RequestParam(required = false) String age,
-                                              @RequestParam(required = false) Float weight,
-                                              @RequestParam(required = false) String feature,
-                                              @RequestParam(required = false) String sidoCode,
-                                              @RequestParam(required = false) String gunguCode
+                                              @RequestParam(defaultValue = "417000", required = false) Long upKindCode,
+                                              @RequestParam(defaultValue = "115", required = false) Long kindCode,
+                                              @RequestParam(defaultValue = "-1", required = false) String contact,
+                                              @RequestParam(defaultValue = "U", required = false) String genderType,
+                                              @RequestParam(defaultValue = "U", required = false) String neuterType,
+                                              @RequestParam(defaultValue = "-1", required = false) Integer age,
+                                              @RequestParam(defaultValue = "-1", required = false) Float weight,
+                                              @RequestParam(defaultValue = "", required = false) String feature,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long sidoCode,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long gunguCode
     ) {
         return new ResponseEntity<>(postService.create(happenDate,
                                                        happenPlace,
                                                        uid,
                                                        postType,
                                                        imageUrls,
-                                                       kindUpCode,
+                                                       upKindCode,
                                                        kindCode,
                                                        contact,
-                                                       gender,
-                                                       neuter,
+                                                       genderType,
+                                                       neuterType,
                                                        age,
                                                        weight,
                                                        feature,
@@ -72,9 +72,21 @@ public class V1PostController {
                                                    @RequestParam(required = false) String upKindCode,
                                                    @RequestParam(required = false) String kindCode,
                                                    @RequestParam(required = false) String sidoCode,
-                                                   @RequestParam(required = false) String gunguCode,
-                                                   @RequestParam(defaultValue = "1", required = false) String index,
-                                                   @RequestParam(defaultValue = "100", required = false) String size
+                                                   @RequestParam(required = false) String gunguCode
+    ) {
+        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, upKindCode
+            , kindCode, sidoCode, gunguCode), HttpStatus.OK);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<List<PostDTO>> readPostsByPage(@RequestParam(required = false) String beginDate,
+                                                         @RequestParam(required = false) String endDate,
+                                                         @RequestParam(required = false) String upKindCode,
+                                                         @RequestParam(required = false) String kindCode,
+                                                         @RequestParam(required = false) String sidoCode,
+                                                         @RequestParam(required = false) String gunguCode,
+                                                         @RequestParam(defaultValue = "0", required = false) String index,
+                                                         @RequestParam(defaultValue = "100", required = false) String size
     ) {
         return new ResponseEntity<>(postService.readPostsByPage(beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, index, size), HttpStatus.OK);
@@ -86,7 +98,7 @@ public class V1PostController {
     }
 
     @PostMapping("/{postId}/state")
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam StateType state) {
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam Post.StateType state) {
         return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
 

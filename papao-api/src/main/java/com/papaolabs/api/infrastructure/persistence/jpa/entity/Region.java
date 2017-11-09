@@ -1,4 +1,4 @@
-package com.papaolabs.batch.infrastructure.jpa.entity;
+package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

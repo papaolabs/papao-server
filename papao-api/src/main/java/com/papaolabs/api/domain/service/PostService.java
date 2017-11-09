@@ -1,7 +1,7 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ public interface PostService {
                    String uid,
                    String postType,
                    List<String> imageUrls,
-                   String kindUpCode,
-                   String kindCode,
+                   Long kindUpCode,
+                   Long kindCode,
                    String contact,
                    String gender,
                    String neuter,
-                   String age,
+                   Integer age,
                    Float weight,
                    String feature,
-                   String uprCode,
-                   String orgCode
+                   Long sidoCode,
+                   Long gunguCode
     );
 
     List<PostDTO> readPosts(String beginDate,
@@ -43,7 +43,7 @@ public interface PostService {
 
     PostDTO delete(String id);
 
-    PostDTO setState(String postId, StateType state);
+    PostDTO setState(String postId, Post.StateType state);
 
 /*    void syncPosts(String beginDate, String endDate);*/
 }
