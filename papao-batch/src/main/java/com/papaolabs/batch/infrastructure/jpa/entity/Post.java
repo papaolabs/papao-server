@@ -262,19 +262,19 @@ public class Post extends BaseEntity {
         this.hitCount = hitCount;
     }
 
-    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed getBreed() {
+    public com.papaolabs.batch.infrastructure.jpa.entity.Breed getBreed() {
         return Breed;
     }
 
-    public void setBreed(com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed breed) {
+    public void setBreed(com.papaolabs.batch.infrastructure.jpa.entity.Breed breed) {
         Breed = breed;
     }
 
-    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter getShelter() {
+    public com.papaolabs.batch.infrastructure.jpa.entity.Shelter getShelter() {
         return Shelter;
     }
 
-    public void setShelter(com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter shelter) {
+    public void setShelter(com.papaolabs.batch.infrastructure.jpa.entity.Shelter shelter) {
         Shelter = shelter;
     }
 
