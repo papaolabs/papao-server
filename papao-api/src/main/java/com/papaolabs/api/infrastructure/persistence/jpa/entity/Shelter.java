@@ -1,5 +1,6 @@
 package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ public class Shelter extends BaseEntity {
     private String sidoName;
     private Long gunguCode;
     private String gunguName;
+    @Column(unique = true)
     private Long shelterCode;
     private String shelterName;
 

@@ -1,6 +1,5 @@
 package com.papaolabs.batch.infrastructure.jpa.entity;
 
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -12,11 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
 
-@Data
 @Entity
 @Table(name = "post_tb")
 public class Post extends BaseEntity {
@@ -43,10 +42,12 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    private Long breedCode;
-    private Long sidoCode;
-    private Long gunguCode;
-    private Long shelterCode;
+    @OneToOne
+    @JoinColumn(name = "kindCode")
+    private Breed Breed;
+    @OneToOne
+    @JoinColumn(name = "shelterCode")
+    private Shelter Shelter;
     private String shelterContact;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
@@ -123,5 +124,181 @@ public class Post extends BaseEntity {
             }
             return UNKNOWN;
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public PostType getPostType() {
+        return postType;
+    }
+
+    public void setPostType(PostType postType) {
+        this.postType = postType;
+    }
+
+    public GenderType getGenderType() {
+        return genderType;
+    }
+
+    public void setGenderType(GenderType genderType) {
+        this.genderType = genderType;
+    }
+
+    public NeuterType getNeuterType() {
+        return neuterType;
+    }
+
+    public void setNeuterType(NeuterType neuterType) {
+        this.neuterType = neuterType;
+    }
+
+    public StateType getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(StateType stateType) {
+        this.stateType = stateType;
+    }
+
+    public String getDesertionId() {
+        return desertionId;
+    }
+
+    public void setDesertionId(String desertionId) {
+        this.desertionId = desertionId;
+    }
+
+    public String getNoticeId() {
+        return noticeId;
+    }
+
+    public void setNoticeId(String noticeId) {
+        this.noticeId = noticeId;
+    }
+
+    public Date getNoticeBeginDate() {
+        return noticeBeginDate;
+    }
+
+    public void setNoticeBeginDate(Date noticeBeginDate) {
+        this.noticeBeginDate = noticeBeginDate;
+    }
+
+    public Date getNoticeEndDate() {
+        return noticeEndDate;
+    }
+
+    public void setNoticeEndDate(Date noticeEndDate) {
+        this.noticeEndDate = noticeEndDate;
+    }
+
+    public Date getHappenDate() {
+        return happenDate;
+    }
+
+    public void setHappenDate(Date happenDate) {
+        this.happenDate = happenDate;
+    }
+
+    public String getHappenPlace() {
+        return happenPlace;
+    }
+
+    public void setHappenPlace(String happenPlace) {
+        this.happenPlace = happenPlace;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    public String getHelperName() {
+        return helperName;
+    }
+
+    public void setHelperName(String helperName) {
+        this.helperName = helperName;
+    }
+
+    public String getHelperContact() {
+        return helperContact;
+    }
+
+    public void setHelperContact(String helperContact) {
+        this.helperContact = helperContact;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public Long getHitCount() {
+        return hitCount;
+    }
+
+    public void setHitCount(Long hitCount) {
+        this.hitCount = hitCount;
+    }
+
+    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed getBreed() {
+        return Breed;
+    }
+
+    public void setBreed(com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed breed) {
+        Breed = breed;
+    }
+
+    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter getShelter() {
+        return Shelter;
+    }
+
+    public void setShelter(com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter shelter) {
+        Shelter = shelter;
+    }
+
+    public String getShelterContact() {
+        return shelterContact;
+    }
+
+    public void setShelterContact(String shelterContact) {
+        this.shelterContact = shelterContact;
+    }
+
+    public Collection<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Collection<Image> images) {
+        this.images = images;
+    }
+
+    public Boolean getDisplay() {
+        return isDisplay;
+    }
+
+    public void setDisplay(Boolean display) {
+        isDisplay = display;
     }
 }

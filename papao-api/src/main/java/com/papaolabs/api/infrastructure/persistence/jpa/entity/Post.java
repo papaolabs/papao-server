@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
@@ -41,12 +42,14 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    private Long breedCode;
-    private Long sidoCode;
-    private Long gunguCode;
-    private Long shelterCode;
+    @OneToOne
+    @JoinColumn(name = "kindCode")
+    private Breed Breed;
+    @OneToOne
+    @JoinColumn(name = "shelterCode")
+    private Shelter Shelter;
     private String shelterContact;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private Collection<Image> images;
     private Boolean isDisplay;
@@ -259,36 +262,20 @@ public class Post extends BaseEntity {
         this.hitCount = hitCount;
     }
 
-    public Long getBreedCode() {
-        return breedCode;
+    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed getBreed() {
+        return Breed;
     }
 
-    public void setBreedCode(Long breedCode) {
-        this.breedCode = breedCode;
+    public void setBreed(com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed breed) {
+        Breed = breed;
     }
 
-    public Long getSidoCode() {
-        return sidoCode;
+    public com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter getShelter() {
+        return Shelter;
     }
 
-    public void setSidoCode(Long sidoCode) {
-        this.sidoCode = sidoCode;
-    }
-
-    public Long getGunguCode() {
-        return gunguCode;
-    }
-
-    public void setGunguCode(Long gunguCode) {
-        this.gunguCode = gunguCode;
-    }
-
-    public Long getShelterCode() {
-        return shelterCode;
-    }
-
-    public void setShelterCode(Long shelterCode) {
-        this.shelterCode = shelterCode;
+    public void setShelter(com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter shelter) {
+        Shelter = shelter;
     }
 
     public String getShelterContact() {

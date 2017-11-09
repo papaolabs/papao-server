@@ -120,7 +120,7 @@ public class PostServiceImpl implements PostService {
                                        // Breed 세팅
                                        String breedName = convertKindName(x.getBreedName());
                                        Breed breed = breedMap.get(breedName);
-                                       post.setBreedCode(breed.getKindCode());
+                                       post.setBreed(breed);
                                        if (ETC_KIND_CODE.equals(breed.getUpKindCode())) {
                                            post.setFeature(StringUtils.join(x.getBreedName(), LF, post.getFeature()));
                                        }
@@ -140,9 +140,7 @@ public class PostServiceImpl implements PostService {
                                            shelter.setSidoCode(region.getGunguCode());
                                            shelter.setShelterCode(-1L);
                                        }
-                                       post.setSidoCode(shelter.getSidoCode());
-                                       post.setGunguCode(shelter.getGunguCode());
-                                       post.setShelterCode(shelter.getShelterCode());
+                                       post.setShelter(shelter);
                                        // Image 세팅
                                        Image image = new Image();
                                        image.setUrl(x.getImageUrl());
