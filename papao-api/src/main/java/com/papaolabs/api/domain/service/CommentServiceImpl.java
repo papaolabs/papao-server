@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
             if (comment.getPostId()
                        .equals(postId) && comment.getUserId()
                                                  .equals(userId)) {
-                comment.setIsDisplay(FALSE);
+                comment.setDisplay(FALSE);
                 commentRepository.save(comment);
                 return transform(comment);
             }
