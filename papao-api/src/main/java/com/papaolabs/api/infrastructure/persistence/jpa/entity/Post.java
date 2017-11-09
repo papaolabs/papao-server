@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
@@ -24,9 +23,15 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
+    @Enumerated(EnumType.STRING)
     private PostType postType;
+    @Enumerated(EnumType.STRING)
+    private GenderType genderType;
+    @Enumerated(EnumType.STRING)
+    private NeuterType neuterType;
+    @Enumerated(EnumType.STRING)
+    private StateType stateType;
     private String desertionId;
-    private String contact;
     private String noticeId;
     private Date noticeBeginDate;
     private Date noticeEndDate;
@@ -38,18 +43,14 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    @Enumerated(EnumType.STRING)
-    private GenderType genderType;
-    @Enumerated(EnumType.STRING)
-    private NeuterType neuterType;
-    @Enumerated(EnumType.STRING)
-    private StateType stateType;
+    private Long breedCode;
+    private Long sidoCode;
+    private Long gunguCode;
+    private Long shelterCode;
+    private String shelterContact;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
-    private Collection<Image> image;
-    private Long breedId;
-    private Long regionId;
-    private Long shelterId;
+    private Collection<Image> images;
     private Boolean isDisplay;
 
     public enum PostType {

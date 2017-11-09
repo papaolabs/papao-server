@@ -4,7 +4,9 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
-    Region findBySidoCodeAndGunguCode(Long sidoCode, Long gunguCode);
+    List<Region> findBySidoCodeAndGunguCode(Long sidoCode, Long gunguCode);
 }

@@ -2,7 +2,6 @@ package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
@@ -26,10 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.isAllBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Slf4j
 @Service
@@ -80,7 +77,7 @@ public class PostServiceImpl implements PostService {
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(happenPlace);
         post.setPostType(Post.PostType.getType(postType));
-        post.setImage(imageUrls.stream()
+        post.setImages(imageUrls.stream()
                                .map(x -> {
                                    Image image = new Image();
                                    image.setUrl(x);
@@ -88,7 +85,7 @@ public class PostServiceImpl implements PostService {
                                })
                                .collect(Collectors.toList()));
 //        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
-        post.setContact(contact);
+        post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
         post.setStateType(Post.StateType.UNKNOWN);
@@ -236,7 +233,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
         postDTO.setStateType(post.getStateType());
-        postDTO.setImageUrls(post.getImage()
+        postDTO.setImageUrls(post.getImages()
                                  .stream()
                                  .map(x -> {
                                      PostDTO.ImageUrl imageUrl = new PostDTO.ImageUrl();

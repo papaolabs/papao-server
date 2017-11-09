@@ -16,6 +16,7 @@ public class Breed extends BaseEntity {
     @GeneratedValue
     private Long id;
     private Long upKindCode;
+    private String upKindName;
     @Column(unique = true)
     private Long kindCode;
     private String kindName;
