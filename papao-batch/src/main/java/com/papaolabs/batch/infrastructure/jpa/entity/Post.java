@@ -42,10 +42,10 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "kindCode")
     private Breed Breed;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "shelterCode")
     private Shelter Shelter;
     private String shelterContact;
