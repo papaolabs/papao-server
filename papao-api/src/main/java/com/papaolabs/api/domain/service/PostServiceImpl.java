@@ -272,6 +272,7 @@ public class PostServiceImpl implements PostService {
         // Region/Shelter 세팅
         Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
         // Todo User 세팅
+        postDTO.setUpKindName(breed.getUpKindName());
         postDTO.setKindName(breed.getKindName());
         postDTO.setSidoName(shelter.getSidoName());
         postDTO.setGunguName(shelter.getGunguName());

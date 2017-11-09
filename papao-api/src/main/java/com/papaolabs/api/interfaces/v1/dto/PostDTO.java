@@ -26,6 +26,7 @@ public class PostDTO {
     private String managerContact;
     private String happenDate;
     private String happenPlace;
+    private String upKindName;
     private String kindName;
     private String sidoName;
     private String gunguName;
