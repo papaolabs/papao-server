@@ -113,14 +113,14 @@ public class PostServiceImpl implements PostService {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         List<Post> originalPosts = postRepository
-            .findByHappenDate(
+            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
                 convertStringToDate(beginDate),
                 convertStringToDate(endDate));
         stopWatch.stop();
         log.debug("originalPosts get time :: {} ", stopWatch.getLastTaskTimeMillis());
         return originalPosts
             .stream()
-            .filter(Post::getIsDisplay)
+            .filter(Post::getDisplay)
 /*                             .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                       .getUpKindCode().toString()) : TRUE)
                              .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
@@ -165,7 +165,7 @@ public class PostServiceImpl implements PostService {
                 pageRequest);
         return results.getContent()
                       .stream()
-                      .filter(Post::getIsDisplay)
+                      .filter(Post::getDisplay)
 /*                      .filter(x -> isNotEmpty(upKindCode) ? upKindCode.equals(x.getBreed()
                                                                                .getUpKindCode().toString()) : TRUE)
                       .filter(x -> isNotEmpty(kindCode) ? kindCode.equals(x.getBreed()
@@ -210,13 +210,13 @@ public class PostServiceImpl implements PostService {
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
             return postDTO;
-        } else if (!post.getIsDisplay()) {
-            log.debug("[NotValid] delete - isDisplay : {isDisplay}, id : {id}", post.getIsDisplay(), postId);
+        } else if (!post.getDisplay()) {
+            log.debug("[NotValid] delete - isDisplay : {isDisplay}, id : {id}", post.getDisplay(), postId);
             PostDTO postDTO = new PostDTO();
             postDTO.setId(-1L);
             return postDTO;
         }
-        post.setIsDisplay(FALSE);
+        post.setDisplay(FALSE);
         postRepository.save(post);
         return transform(post);
     }
@@ -241,7 +241,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
         postDTO.setStateType(post.getStateType());
-        postDTO.setImageUrls(post.getImages()
+/*        postDTO.setImageUrls(post.getImages()
                                  .stream()
                                  .map(x -> {
                                      PostDTO.ImageUrl imageUrl = new PostDTO.ImageUrl();
@@ -249,7 +249,7 @@ public class PostServiceImpl implements PostService {
                                      imageUrl.setUrl(x.getUrl());
                                      return imageUrl;
                                  })
-                                 .collect(Collectors.toList()));
+                                 .collect(Collectors.toList()));*/
         postDTO.setPostType(post.getPostType());
         postDTO.setGenderType(post.getGenderType());
         postDTO.setNeuterType(post.getNeuterType());
