@@ -256,7 +256,6 @@ public class PostServiceImpl implements PostService {
     private PostPreviewDTO previewTransform(Post post) {
         PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
         postPreviewDTO.setId(post.getId());
-        postPreviewDTO.setDesertionId(post.getDesertionId());
         postPreviewDTO.setStateType(post.getStateType());
         Image image = post.getImages()
                           .stream()
