@@ -1,15 +1,19 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +34,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.apache.commons.lang3.StringUtils.isAllBlank;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -51,15 +56,19 @@ public class PostServiceImpl implements PostService {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
+    @NotNull
+    private final CommentRepository commentRepository;
 
     public PostServiceImpl(PostRepository postRepository,
                            BreedRepository breedRepository,
                            ShelterRepository shelterRepository,
-                           RegionRepository regionRepository) {
+                           RegionRepository regionRepository,
+                           CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
         this.regionRepository = regionRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -102,12 +111,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> readPosts(String beginDate,
-                                   String endDate,
-                                   String upKindCode,
-                                   String kindCode,
-                                   String uprCode,
-                                   String orgCode) {
+    public List<PostPreviewDTO> readPosts(String beginDate,
+                                          String endDate,
+                                          String upKindCode,
+                                          String kindCode,
+                                          String uprCode,
+                                          String orgCode) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
@@ -147,20 +156,20 @@ public class PostServiceImpl implements PostService {
                 return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
                                                                    .toString()) : TRUE;
             })
-            .map(this::transform)
-            .sorted(Comparator.comparing(PostDTO::getHappenDate))
+            .map(this::previewTransform)
+            .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
             .collect(Collectors.toList());
     }
 
     @Override
-    public List<PostDTO> readPostsByPage(String beginDate,
-                                         String endDate,
-                                         String upKindCode,
-                                         String kindCode,
-                                         String uprCode,
-                                         String orgCode,
-                                         String page,
-                                         String size) {
+    public List<PostPreviewDTO> readPostsByPage(String beginDate,
+                                                String endDate,
+                                                String upKindCode,
+                                                String kindCode,
+                                                String uprCode,
+                                                String orgCode,
+                                                String page,
+                                                String size) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
@@ -198,8 +207,8 @@ public class PostServiceImpl implements PostService {
                           return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
                                                                              .toString()) : TRUE;
                       })
-                      .map((this::transform))
-                      .sorted(Comparator.comparing(PostDTO::getHappenDate))
+                      .map((this::previewTransform))
+                      .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
                       .collect(Collectors.toList());
     }
 
@@ -244,15 +253,38 @@ public class PostServiceImpl implements PostService {
         return transform(post);
     }
 
+    private PostPreviewDTO previewTransform(Post post) {
+        PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
+        postPreviewDTO.setId(post.getId());
+        postPreviewDTO.setStateType(post.getStateType());
+        Image image = post.getImages()
+                          .stream()
+                          .findFirst()
+                          .get();
+        PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
+        imageUrl.setKey(image.getId());
+        imageUrl.setUrl(image.getUrl());
+        postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
+        postPreviewDTO.setGenderType(post.getGenderType());
+        postPreviewDTO.setHappenDate(convertDateToString(post.getHappenDate()));
+        postPreviewDTO.setHitCount(post.getHitCount());
+        postPreviewDTO.setCreatedDate(post.getCreatedDateTime()
+                                          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
+                                          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        // Comment 세팅
+        List<Comment> comments = commentRepository.findByPostId(post.getId());
+        postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
+        // Breed 세팅
+        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        postPreviewDTO.setKindName(breed.getKindName());
+        // Region/Shelter 세팅
+        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
+        postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
+        return postPreviewDTO;
+    }
+
     private PostDTO transform(Post post) {
-/*        Breed breed;
-        if (post.getBreed()
-                .getKindCode() == -1L) {
-            breed = breedRepository.findByKindCode(117L);
-        } else {
-            breed = breedRepository.findByKindCode(post.getBreed()
-                                                       .getKindCode());
-        }*/
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
         postDTO.setDesertionId(post.getDesertionId());
@@ -294,19 +326,6 @@ public class PostServiceImpl implements PostService {
         return postDTO;
     }
 
-    private String convertKindName(String kindName) {
-        if (kindName.contains("[개] ")) {
-            return kindName.replace("[개] ", "");
-        }
-        if (kindName.contains("[기타축종] ")) {
-            return kindName.replace("[기타축종] ", "");
-        }
-        if (kindName.contains("[고양이]")) {
-            return kindName.replace("[고양이]", "고양이");
-        }
-        return kindName;
-    }
-
     private String getDefaultDate(String format) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
@@ -326,31 +345,5 @@ public class PostServiceImpl implements PostService {
             e.printStackTrace();
         }
         return new Date();
-    }
-
-    private String convertWeight(String weight) {
-        if (isEmpty(weight)) {
-            return "-1";
-        }
-        if (weight.contains("(Kg)")) {
-            weight = weight.replace("(Kg)", "");
-            try {
-                Float.valueOf(weight);
-            } catch (NumberFormatException nfe) {
-                weight = "-1";
-            }
-        }
-        return weight;
-    }
-
-    private String convertAge(String age) {
-        String result = age.replace(" ", "");
-        if (isEmpty(result) || isAllBlank(result)) {
-            return "-1";
-        }
-        if (result.contains("(년생)")) {
-            return result.replace("(년생)", "");
-        }
-        return result;
     }
 }
