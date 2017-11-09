@@ -11,7 +11,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class PostPreviewDTO {
     private Long id;
-    private String desertionId;
     private Post.StateType stateType;
     private Post.GenderType genderType;
     private List<ImageUrl> imageUrls;
@@ -35,14 +34,6 @@ public class PostPreviewDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getDesertionId() {
-        return desertionId;
-    }
-
-    public void setDesertionId(String desertionId) {
-        this.desertionId = desertionId;
     }
 
     public Post.StateType getStateType() {
@@ -137,9 +128,6 @@ public class PostPreviewDTO {
         if (id != null ? !id.equals(that.id) : that.id != null) {
             return false;
         }
-        if (desertionId != null ? !desertionId.equals(that.desertionId) : that.desertionId != null) {
-            return false;
-        }
         if (stateType != that.stateType) {
             return false;
         }
@@ -173,7 +161,6 @@ public class PostPreviewDTO {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (desertionId != null ? desertionId.hashCode() : 0);
         result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
         result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
         result = 31 * result + (imageUrls != null ? imageUrls.hashCode() : 0);
@@ -191,7 +178,6 @@ public class PostPreviewDTO {
     public String toString() {
         return "PostPreviewDTO{" +
             "id=" + id +
-            ", desertionId='" + desertionId + '\'' +
             ", stateType=" + stateType +
             ", genderType=" + genderType +
             ", imageUrls=" + imageUrls +
