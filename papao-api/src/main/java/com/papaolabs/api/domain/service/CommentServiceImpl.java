@@ -1,20 +1,17 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
-import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -34,55 +31,51 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO create(String postId, String userId, String userName, String text) {
+    public CommentDTO create(String postId, String userId, String text) {
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
-        comment.setUserName(userName);
         comment.setText(text);
-        return transform(commentRepository.save(comment));
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPostId(Long.valueOf(postId));
+        commentDTO.setContents(Arrays.asList(transform(commentRepository.save(comment))));
+        return commentDTO;
     }
 
-    @Override
+    /*@Override
     public CommentDTO createByGuest(String postId, String text) {
         List<Breed> kind = breedRepository.findAll();
         Random random = new Random();
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
-        comment.setUserId("0");
-        comment.setUserName(kind.get(random.nextInt(kind.size()))
-                                .getKindName());
+        comment.setUserId("-1");
+*//*        comment.setUserName(kind.get(random.nextInt(kind.size()))
+                                .getKindName());*//*
         comment.setText(text);
         return transform(commentRepository.save(comment));
-    }
+    }*/
 
     @Override
-    public CommentDTO delete(String postId, String commentId, String userId) {
+    public void delete(String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
-        if (comment != null) {
-            if (comment.getPostId()
-                       .equals(postId) && comment.getUserId()
-                                                 .equals(userId)) {
-                comment.setDisplay(FALSE);
-                commentRepository.save(comment);
-                return transform(comment);
-            }
-        }
-        comment = new Comment();
-        comment.setId(-1L);
-        return transform(comment);
+        comment.setDisplay(FALSE);
+        commentRepository.save(comment);
     }
 
     @Override
-    public List<CommentDTO> readComments(String postId) {
-        return commentRepository.findByPostId(Long.valueOf(postId))
-                                .stream()
-                                .map(this::transform)
-                                .sorted(Comparator.comparing(CommentDTO::getCreatedDate))
-                                .collect(Collectors.toList());
+    public CommentDTO readComments(String postId) {
+        List<CommentDTO.Content> contents = commentRepository.findByPostId(Long.valueOf(postId))
+                                                             .stream()
+                                                             .map(this::transform)
+                                                             .sorted(Comparator.comparing(CommentDTO.Content::getCreatedDate))
+                                                             .collect(Collectors.toList());
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPostId(Long.valueOf(postId));
+        commentDTO.setContents(contents);
+        return commentDTO;
     }
 
-    @Override
+/*    @Override
     public CommentDTO readComment(String postId, String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
         if (comment != null) {
@@ -94,32 +87,17 @@ public class CommentServiceImpl implements CommentService {
         comment = new Comment();
         comment.setId(-1L);
         return transform(comment);
-    }
+    }*/
 
-    private CommentDTO transform(Comment comment) {
-        return CommentDTO.builder()
-                         .id(comment.getId())
-                         .postId(Long.valueOf(comment.getPostId()))
-                         .userId(comment.getUserId())
-                         .userName(comment.getUserName())
-                         .text(comment.getText())
-                         .createdDate(comment.getCreatedDateTime())
-                         .lastModifiedDate(comment.getLastModifiedDateTime())
-                         .build();
-    }
-
-    private String convertDateToString(Date date) {
-        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
-        return transFormat.format(date);
-    }
-
-    private Date convertStringToDate(String from) {
-        SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return transFormat.parse(from);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
+    private CommentDTO.Content transform(Comment comment) {
+        CommentDTO.Content content = new CommentDTO.Content();
+        content.setId(comment.getId());
+        content.setUserId(comment.getUserId());
+        content.setText(comment.getText());
+        content.setCreatedDate(comment.getCreatedDateTime()
+                                      .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        content.setLastModifiedDate(comment.getLastModifiedDateTime()
+                                           .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return content;
     }
 }

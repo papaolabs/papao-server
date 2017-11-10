@@ -110,32 +110,30 @@ public class V1PostController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId,
                                                     @RequestParam("userId") String userId,
-                                                    @RequestParam("userName") String userName,
                                                     @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.create(postId, userId, userName, text), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.create(postId, userId, text), HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/comments/guest")
+/*    @PostMapping("/{postId}/comments/guest")
     public ResponseEntity<CommentDTO> createCommentByGuest(@PathVariable("postId") String postId,
                                                            @RequestParam("text") String text) {
         return new ResponseEntity<>(commentService.createByGuest(postId, text), HttpStatus.OK);
-    }
+    }*/
 
-    @PostMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("postId") String postId,
-                                                    @PathVariable("commentId") String commentId,
-                                                    @RequestParam("userId") String userId) {
-        return new ResponseEntity<>(commentService.delete(postId, commentId, userId), HttpStatus.OK);
+    @PostMapping("/comments/{commentId}")
+    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("commentId") String commentId) {
+        commentService.delete(commentId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/comments")
     public ResponseEntity<List<CommentDTO>> readComments(@PathVariable("postId") String postId) {
-        return new ResponseEntity<>(commentService.readComments(postId), HttpStatus.OK);
+        return new ResponseEntity(commentService.readComments(postId), HttpStatus.OK);
     }
 
-    @GetMapping("/{postId}/comments/{commentId}")
+/*    @GetMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> readComment(@PathVariable("postId") String postId,
                                                   @PathVariable("commentId") String commentId) {
         return new ResponseEntity<>(commentService.readComment(postId, commentId), HttpStatus.OK);
-    }
+    }*/
 }
