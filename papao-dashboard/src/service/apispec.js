@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const hostName = 'http://localhost:8080';
+const hostName = 'http://220.230.124.9:9010';
 
 export default {
   readPosts(cb, {beginDate, endDate, index, size}) {
-    axios.get(`${hostName}/api/v1/posts`, {
+    axios.get(`${hostName}/api/v1/posts/pages`, {
       params: {
         beginDate: beginDate,
         endDate: endDate,

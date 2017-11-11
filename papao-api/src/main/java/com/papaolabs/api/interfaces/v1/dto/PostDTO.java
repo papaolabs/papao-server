@@ -36,11 +36,57 @@ public class PostDTO {
     private String createdDate;
     private String updatedDate;
     private Long commentCount;
+    private Long bookmarkCount;
 
-    @Data
     public static class ImageUrl {
         private Long key;
         private String url;
+
+        public Long getKey() {
+            return key;
+        }
+
+        public void setKey(Long key) {
+            this.key = key;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ImageUrl imageUrl = (ImageUrl) o;
+            if (key != null ? !key.equals(imageUrl.key) : imageUrl.key != null) {
+                return false;
+            }
+            return url != null ? url.equals(imageUrl.url) : imageUrl.url == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = key != null ? key.hashCode() : 0;
+            result = 31 * result + (url != null ? url.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "ImageUrl{" +
+                "key=" + key +
+                ", url='" + url + '\'' +
+                '}';
+        }
     }
 
     public Long getId() {
@@ -243,6 +289,14 @@ public class PostDTO {
         this.commentCount = commentCount;
     }
 
+    public Long getBookmarkCount() {
+        return bookmarkCount;
+    }
+
+    public void setBookmarkCount(Long bookmarkCount) {
+        this.bookmarkCount = bookmarkCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -324,7 +378,10 @@ public class PostDTO {
         if (updatedDate != null ? !updatedDate.equals(postDTO.updatedDate) : postDTO.updatedDate != null) {
             return false;
         }
-        return commentCount != null ? commentCount.equals(postDTO.commentCount) : postDTO.commentCount == null;
+        if (commentCount != null ? !commentCount.equals(postDTO.commentCount) : postDTO.commentCount != null) {
+            return false;
+        }
+        return bookmarkCount != null ? bookmarkCount.equals(postDTO.bookmarkCount) : postDTO.bookmarkCount == null;
     }
 
     @Override
@@ -354,6 +411,7 @@ public class PostDTO {
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (commentCount != null ? commentCount.hashCode() : 0);
+        result = 31 * result + (bookmarkCount != null ? bookmarkCount.hashCode() : 0);
         return result;
     }
 
@@ -385,6 +443,7 @@ public class PostDTO {
             ", createdDate='" + createdDate + '\'' +
             ", updatedDate='" + updatedDate + '\'' +
             ", commentCount=" + commentCount +
+            ", bookmarkCount=" + bookmarkCount +
             '}';
     }
 }

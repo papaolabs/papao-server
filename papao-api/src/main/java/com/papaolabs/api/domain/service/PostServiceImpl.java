@@ -8,7 +8,6 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
-import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
@@ -42,11 +41,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
-    private static final String MAX_SIZE = "500000";
-    private static final String START_INDEX = "1";
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
-    private static final String UNKNOWN = "UNKNOWN";
     private static final String DATE_FORMAT = "yyyyMMdd";
     @NotNull
     private final PostRepository postRepository;
@@ -55,20 +51,19 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final ShelterRepository shelterRepository;
     @NotNull
-    private final RegionRepository regionRepository;
-    @NotNull
     private final CommentRepository commentRepository;
+    @NotNull
+    private final BookmarkService bookmarkService;
 
     public PostServiceImpl(PostRepository postRepository,
                            BreedRepository breedRepository,
                            ShelterRepository shelterRepository,
-                           RegionRepository regionRepository,
-                           CommentRepository commentRepository) {
+                           CommentRepository commentRepository, BookmarkService bookmarkService) {
         this.postRepository = postRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
-        this.regionRepository = regionRepository;
         this.commentRepository = commentRepository;
+        this.bookmarkService = bookmarkService;
     }
 
     @Override
@@ -323,6 +318,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setSidoName(shelter.getSidoName());
         postDTO.setGunguName(shelter.getGunguName());
         postDTO.setShelterName(shelter.getShelterName());
+        postDTO.setBookmarkCount(bookmarkService.countBookmark(String.valueOf(post.getId())));
         return postDTO;
     }
 
