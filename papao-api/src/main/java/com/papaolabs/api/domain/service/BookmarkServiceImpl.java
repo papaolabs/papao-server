@@ -16,22 +16,22 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public Long registerBookmark(Long postId, Long userId) {
+    public Long registerBookmark(String postId, String userId) {
         Bookmark bookmark = new Bookmark();
-        bookmark.setPostId(postId);
-        bookmark.setUserId(userId);
+        bookmark.setPostId(Long.valueOf(postId));
+        bookmark.setUserId(Long.valueOf(userId));
         this.bookmarkRepository.save(bookmark);
-        return this.bookmarkRepository.countByPostId(postId);
+        return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
 
     @Override
-    public Long cancelBookmark(Long postId, Long userId) {
-        this.bookmarkRepository.deleteByPostIdAndUserId(postId, userId);
-        return this.bookmarkRepository.countByPostId(postId);
+    public Long cancelBookmark(String postId, String userId) {
+        this.bookmarkRepository.deleteByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
 
     @Override
-    public Long countBookmark(Long postId) {
-        return this.bookmarkRepository.countByPostId(postId);
+    public Long countBookmark(String postId) {
+        return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
 }

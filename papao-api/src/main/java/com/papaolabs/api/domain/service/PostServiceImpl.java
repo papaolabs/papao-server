@@ -318,7 +318,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setSidoName(shelter.getSidoName());
         postDTO.setGunguName(shelter.getGunguName());
         postDTO.setShelterName(shelter.getShelterName());
-        postDTO.setBookmarkCount(bookmarkService.countBookmark(post.getId()));
+        postDTO.setBookmarkCount(bookmarkService.countBookmark(String.valueOf(post.getId())));
         return postDTO;
     }
 
