@@ -34,7 +34,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional
     @Override
     public Long cancelBookmark(String postId, String userId) {
-        this.bookmarkRepository.deleteByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        if (Objects.isNull(bookmark)) {
+            this.bookmarkRepository.delete(bookmark.getId());
+        }
         return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
 
