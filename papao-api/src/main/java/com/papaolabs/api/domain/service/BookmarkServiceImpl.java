@@ -4,6 +4,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Bookmark;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BookmarkRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -24,6 +25,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
 
+    @Transactional
     @Override
     public Long cancelBookmark(String postId, String userId) {
         this.bookmarkRepository.deleteByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
