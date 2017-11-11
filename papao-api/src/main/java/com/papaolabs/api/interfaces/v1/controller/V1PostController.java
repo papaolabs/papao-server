@@ -154,4 +154,9 @@ public class V1PostController {
     public ResponseEntity<Long> countBookmark(@PathVariable("postId") String postId) {
         return new ResponseEntity(bookmarkService.countBookmark(postId), HttpStatus.OK);
     }
+
+    @GetMapping("/{postId}/bookmarks/check")
+    public ResponseEntity<Boolean> checkBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.checkBookmark(postId, userId), HttpStatus.OK);
+    }
 }
