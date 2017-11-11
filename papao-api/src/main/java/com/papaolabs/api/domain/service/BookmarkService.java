@@ -6,4 +6,6 @@ public interface BookmarkService {
     Long cancelBookmark(String postId, String userId);
 
     Long countBookmark(String postId);
+
+    Boolean checkBookmark(String postId, String userId);
 }

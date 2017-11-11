@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     Long countByPostId(Long postId);
     Long deleteByPostIdAndUserId(Long postId, Long userId);
+    Bookmark findByPostIdAndUserId(Long postId, Long userId);
 }
