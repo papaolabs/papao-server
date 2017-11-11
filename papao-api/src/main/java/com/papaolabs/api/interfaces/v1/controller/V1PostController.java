@@ -1,5 +1,6 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
+import com.papaolabs.api.domain.service.BookmarkService;
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
@@ -26,12 +27,20 @@ public class V1PostController {
     private final PostService postService;
     @NotNull
     private final CommentService commentService;
+    @NotNull
+    private final BookmarkService bookmarkService;
 
-    public V1PostController(PostService postService, CommentService commentService) {
+    public V1PostController(PostService postService,
+                            CommentService commentService,
+                            BookmarkService bookmarkService) {
         this.postService = postService;
         this.commentService = commentService;
+        this.bookmarkService = bookmarkService;
     }
 
+    /*
+        Posts
+    */
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestParam String happenDate,
                                               @RequestParam String happenPlace,
@@ -107,18 +116,15 @@ public class V1PostController {
         return new ResponseEntity<>(postService.delete(postId), HttpStatus.OK);
     }
 
+    /*
+        Comments
+     */
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId,
                                                     @RequestParam("userId") String userId,
                                                     @RequestParam("text") String text) {
         return new ResponseEntity<>(commentService.create(postId, userId, text), HttpStatus.OK);
     }
-
-/*    @PostMapping("/{postId}/comments/guest")
-    public ResponseEntity<CommentDTO> createCommentByGuest(@PathVariable("postId") String postId,
-                                                           @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.createByGuest(postId, text), HttpStatus.OK);
-    }*/
 
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<CommentDTO> deleteComment(@PathVariable("commentId") String commentId) {
@@ -131,9 +137,21 @@ public class V1PostController {
         return new ResponseEntity(commentService.readComments(postId), HttpStatus.OK);
     }
 
-/*    @GetMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> readComment(@PathVariable("postId") String postId,
-                                                  @PathVariable("commentId") String commentId) {
-        return new ResponseEntity<>(commentService.readComment(postId, commentId), HttpStatus.OK);
-    }*/
+    /*
+        Bookmark
+     */
+    @PostMapping("/{postId}/bookmarks")
+    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.registerBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{postId}/bookmarks/cancel")
+    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/bookmarks/count")
+    public ResponseEntity<Long> countBookmark(@PathVariable("postId") String postId) {
+        return new ResponseEntity(bookmarkService.countBookmark(postId), HttpStatus.OK);
+    }
 }
