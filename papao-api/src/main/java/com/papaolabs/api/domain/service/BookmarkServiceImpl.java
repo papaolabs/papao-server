@@ -24,6 +24,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public Long registerBookmark(String postId, String userId) {
         Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
         if (Objects.isNull(bookmark)) {
+            bookmark = new Bookmark();
             bookmark.setPostId(Long.valueOf(postId));
             bookmark.setUserId(Long.valueOf(userId));
             this.bookmarkRepository.save(bookmark);
