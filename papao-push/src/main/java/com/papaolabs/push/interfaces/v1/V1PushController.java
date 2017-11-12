@@ -24,7 +24,7 @@ public class V1PushController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity sendPush(@RequestParam PushRequest pushRequest) {
+    public ResponseEntity sendPush(PushRequest pushRequest) {
         this.pushService.sendPush(pushRequest);
         return new ResponseEntity(HttpStatus.OK);
     }

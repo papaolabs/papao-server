@@ -25,6 +25,12 @@ logging.level:
   org.hibernate: ERROR
   org.hibernate.SQL: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
+
+apns:
+  client:
+    password: ENC(LSxAl4sa7QG+TZeg2sPEWi32uvrvqjyn)
+    topic: ENC(m/hLwapBFHx3UZt+8L3B48ZeS6AaxJrcjBNAwY2DPvs=)
+
 ---
 spring.profiles: dev
 

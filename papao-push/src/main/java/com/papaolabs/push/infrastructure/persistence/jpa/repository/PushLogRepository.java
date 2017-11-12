@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface PushLogRepository extends JpaRepository<PushLog, Long> {
     List<PushLog> findByUserId(Long userId);
-    Long deleteByUserIdAndPushId(Long userId, Long pushId);
 }

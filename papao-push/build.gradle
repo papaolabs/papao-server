@@ -36,7 +36,9 @@ dependencies {
 
     compile 'com.clevertap.apns:apns-http2:1.0.2'
 
+    compile group: 'org.mortbay.jetty.alpn', name: 'alpn-boot', version: '8.1.7.v20160121'
+
     runtime 'com.h2database:h2'
-    
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

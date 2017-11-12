@@ -5,7 +5,6 @@ import com.clevertap.apns.Notification;
 import com.clevertap.apns.NotificationResponse;
 import com.clevertap.apns.NotificationResponseListener;
 import com.clevertap.apns.clients.ApnsClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -18,18 +17,17 @@ import java.security.cert.CertificateException;
 
 @Component
 public class PushClient {
-    @Value(value = "")
-    private Resource cert;
     private ApnsClient client;
 
-    public PushClient() {
+    public PushClient(Resource cert, String password, String topic) {
+        System.out.println(password);
         try {
             client = new ApnsClientBuilder()
                 .withProductionGateway()
-                .inSynchronousMode()
+                .inAsynchronousMode()
                 .withCertificate(cert.getInputStream())
-                .withPassword("")
-                .withDefaultTopic("papao")
+                .withPassword(password)
+                .withDefaultTopic(topic)
                 .build();
         } catch (CertificateException e) {
             e.printStackTrace();

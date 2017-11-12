@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "push_user_tb")
-public class PushUser {
+public class PushUser extends BaseEntity{
     @Id
     @GeneratedValue
     private Long id;
