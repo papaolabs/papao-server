@@ -8,6 +8,7 @@ public class PushHistory {
 
     public static class PushLog {
         private Long id;
+        private Long postId;
         private String message;
         private String createdDate;
         private String updatedDate;
@@ -18,6 +19,14 @@ public class PushHistory {
 
         public void setId(Long id) {
             this.id = id;
+        }
+
+        public Long getPostId() {
+            return postId;
+        }
+
+        public void setPostId(Long postId) {
+            this.postId = postId;
         }
 
         public String getMessage() {
@@ -56,6 +65,9 @@ public class PushHistory {
             if (id != null ? !id.equals(pushLog.id) : pushLog.id != null) {
                 return false;
             }
+            if (postId != null ? !postId.equals(pushLog.postId) : pushLog.postId != null) {
+                return false;
+            }
             if (message != null ? !message.equals(pushLog.message) : pushLog.message != null) {
                 return false;
             }
@@ -68,6 +80,7 @@ public class PushHistory {
         @Override
         public int hashCode() {
             int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (postId != null ? postId.hashCode() : 0);
             result = 31 * result + (message != null ? message.hashCode() : 0);
             result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
             result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
@@ -78,6 +91,7 @@ public class PushHistory {
         public String toString() {
             return "PushLog{" +
                 "id=" + id +
+                ", postId=" + postId +
                 ", message='" + message + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", updatedDate='" + updatedDate + '\'' +

@@ -11,6 +11,7 @@ public class PushLog extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
+    private Long postId;
     private Long userId;
     private String message;
 
@@ -20,6 +21,14 @@ public class PushLog extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public Long getUserId() {
@@ -50,6 +59,9 @@ public class PushLog extends BaseEntity {
         if (id != null ? !id.equals(pushLog.id) : pushLog.id != null) {
             return false;
         }
+        if (postId != null ? !postId.equals(pushLog.postId) : pushLog.postId != null) {
+            return false;
+        }
         if (userId != null ? !userId.equals(pushLog.userId) : pushLog.userId != null) {
             return false;
         }
@@ -59,6 +71,7 @@ public class PushLog extends BaseEntity {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
@@ -68,6 +81,7 @@ public class PushLog extends BaseEntity {
     public String toString() {
         return "PushLog{" +
             "id=" + id +
+            ", postId=" + postId +
             ", userId=" + userId +
             ", message='" + message + '\'' +
             '}';

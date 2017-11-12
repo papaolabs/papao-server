@@ -6,9 +6,9 @@ import com.papaolabs.push.interfaces.dto.PushHistory;
 import java.util.List;
 
 public interface PushService {
-    void sendPush(PushRequest request);
+    void sendPush(PushRequest request, String postId);
 
-    void sendPush(List<PushRequest> requests);
+    void sendPush(List<PushRequest> requests, String postId);
 
     PushHistory getOwnPushLogs(String userId);
 

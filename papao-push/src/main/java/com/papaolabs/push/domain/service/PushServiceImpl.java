@@ -7,6 +7,7 @@ import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushLogRepository;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushUserRepository;
 import com.papaolabs.push.interfaces.dto.PushHistory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -33,20 +34,21 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public void sendPush(PushRequest request) {
+    public void sendPush(PushRequest request, String postId) {
         PushUser pushUser = pushUserRepository.findByUserId(request.getUserId());
         String deviceId = pushUser.getDeviceId();
         PushLog pushLog = new PushLog();
         pushLog.setUserId(pushUser.getUserId());
+        pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
         pushLog.setMessage(request.getMessage());
         pushClient.send(deviceId, request.getMessage());
         pushLogRepository.save(pushLog);
     }
 
     @Override
-    public void sendPush(List<PushRequest> requests) {
+    public void sendPush(List<PushRequest> requests, String postId) {
         for (PushRequest req : requests) {
-            this.sendPush(req);
+            this.sendPush(req, postId);
         }
     }
 
@@ -59,6 +61,7 @@ public class PushServiceImpl implements PushService {
                                                  .map(x -> {
                                                      PushHistory.PushLog pushLog = new PushHistory.PushLog();
                                                      pushLog.setId(x.getId());
+                                                     pushLog.setPostId(x.getPostId());
                                                      pushLog.setMessage(x.getMessage());
                                                      pushLog.setCreatedDate(x.getCreatedDateTime()
                                                                              .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

@@ -25,14 +25,14 @@ public class V1PushController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity sendPush(PushRequest pushRequest) {
-        this.pushService.sendPush(pushRequest);
+    public ResponseEntity sendPush(PushRequest pushRequest, @RequestParam(required = false) String postId) {
+        this.pushService.sendPush(pushRequest, postId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/send/list")
-    public ResponseEntity sendPush(@RequestBody List<PushRequest> pushRequests) {
-        this.pushService.sendPush(pushRequests);
+    public ResponseEntity sendPush(@RequestBody List<PushRequest> pushRequests, @RequestParam(required = false) String postId) {
+        this.pushService.sendPush(pushRequests, postId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
