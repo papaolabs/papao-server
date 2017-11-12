@@ -22,7 +22,7 @@ public class PushClient {
     private Resource cert;
     private ApnsClient client;
 
-    public void init() {
+    public PushClient() {
         try {
             client = new ApnsClientBuilder()
                 .withProductionGateway()
