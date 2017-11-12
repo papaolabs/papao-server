@@ -6,10 +6,14 @@ import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushLog;
 import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushLogRepository;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushUserRepository;
+import com.papaolabs.push.interfaces.dto.PushHistory;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PushServiceImpl implements PushService {
@@ -47,9 +51,23 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public List<PushLog> getOwnPushLogs(String userId) {
-        List<PushLog> pushLogs = pushLogRepository.findByUserId(Long.valueOf(userId));
-        return pushLogs;
+    public PushHistory getOwnPushLogs(String userId) {
+        PushHistory pushHistory = new PushHistory();
+        pushHistory.setUserId(Long.valueOf(userId));
+        pushHistory.setPushLogs(pushLogRepository.findByUserId(Long.valueOf(userId))
+                                                 .stream()
+                                                 .map(x -> {
+                                                     PushHistory.PushLog pushLog = new PushHistory.PushLog();
+                                                     pushLog.setMessage(x.getMessage());
+                                                     pushLog.setCreatedDate(x.getCreatedDateTime()
+                                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                                     pushLog.setUpdatedDate(x.getLastModifiedDateTime()
+                                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                                     return pushLog;
+                                                 })
+                                                 .sorted(Comparator.comparing(PushHistory.PushLog::getCreatedDate))
+                                                 .collect(Collectors.toList()));
+        return pushHistory;
     }
 
     @Override
