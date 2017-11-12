@@ -1,4 +1,4 @@
-package com.papaolabs.push;
+package com.papaolabs.push.interfaces;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

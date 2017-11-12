@@ -27,11 +27,16 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter:1.5.6.RELEASE',
             'org.springframework.boot:spring-boot-starter-validation:1.5.6.RELEASE',
             'org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE',
+            'org.springframework.boot:spring-boot-starter-data-jpa:1.5.6.RELEASE',
             'com.github.ulisesbocchio:jasypt-spring-boot-starter:1.14'
+
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
 
     compile 'org.apache.commons:commons-lang3:3.6'
 
     compile 'com.clevertap.apns:apns-http2:1.0.2'
 
+    runtime 'com.h2database:h2'
+    
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
