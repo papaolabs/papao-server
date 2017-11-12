@@ -58,6 +58,7 @@ public class PushServiceImpl implements PushService {
                                                  .stream()
                                                  .map(x -> {
                                                      PushHistory.PushLog pushLog = new PushHistory.PushLog();
+                                                     pushLog.setId(x.getId());
                                                      pushLog.setMessage(x.getMessage());
                                                      pushLog.setCreatedDate(x.getCreatedDateTime()
                                                                              .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

@@ -7,9 +7,18 @@ public class PushHistory {
     private List<PushLog> pushLogs;
 
     public static class PushLog {
+        private Long id;
         private String message;
         private String createdDate;
         private String updatedDate;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
 
         public String getMessage() {
             return message;
@@ -44,6 +53,9 @@ public class PushHistory {
                 return false;
             }
             PushLog pushLog = (PushLog) o;
+            if (id != null ? !id.equals(pushLog.id) : pushLog.id != null) {
+                return false;
+            }
             if (message != null ? !message.equals(pushLog.message) : pushLog.message != null) {
                 return false;
             }
@@ -55,7 +67,8 @@ public class PushHistory {
 
         @Override
         public int hashCode() {
-            int result = message != null ? message.hashCode() : 0;
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (message != null ? message.hashCode() : 0);
             result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
             result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
             return result;
@@ -64,7 +77,8 @@ public class PushHistory {
         @Override
         public String toString() {
             return "PushLog{" +
-                "message='" + message + '\'' +
+                "id=" + id +
+                ", message='" + message + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", updatedDate='" + updatedDate + '\'' +
                 '}';
