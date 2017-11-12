@@ -20,7 +20,6 @@ public class PushClient {
     private ApnsClient client;
 
     public PushClient(Resource cert, String password, String topic) {
-        System.out.println(password);
         try {
             client = new ApnsClientBuilder()
                 .withProductionGateway()
