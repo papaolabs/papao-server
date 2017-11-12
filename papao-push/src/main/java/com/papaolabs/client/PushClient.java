@@ -46,8 +46,8 @@ public class PushClient {
         }
     }
 
-    public void send(String deviceToken, String message) {
-        Notification n = new Notification.Builder(deviceToken)
+    public void send(String deviceId, String message) {
+        Notification n = new Notification.Builder(deviceId)
             .alertBody(message)
             .build();
         client.push(n, new NotificationResponseListener() {

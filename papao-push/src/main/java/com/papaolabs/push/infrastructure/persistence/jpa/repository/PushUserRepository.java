@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PushUserRepository extends JpaRepository<PushUser, Long> {
+    PushUser findByUserId(Long userId);
 }

@@ -2,8 +2,8 @@ package com.papaolabs.push.domain.service;
 
 import com.papaolabs.client.PushClient;
 import com.papaolabs.push.domain.model.PushRequest;
-import com.papaolabs.push.domain.model.PushResult;
 import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushLog;
+import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushLogRepository;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushUserRepository;
 import org.springframework.stereotype.Service;
@@ -29,21 +29,31 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public PushResult sendPush(PushRequest request) {
-        return null;
+    public void sendPush(PushRequest request) {
+        PushUser pushUser = pushUserRepository.findByUserId(request.getUserId());
+        String deviceId = pushUser.getDeviceId();
+        PushLog pushLog = new PushLog();
+        pushLog.setUserId(pushUser.getUserId());
+        pushLog.setMessage(request.getMessage());
+        pushClient.send(deviceId, request.getMessage());
+        pushLogRepository.save(pushLog);
     }
 
     @Override
-    public PushResult sendPush(List<PushRequest> requests) {
-        return null;
+    public void sendPush(List<PushRequest> requests) {
+        for (PushRequest req : requests) {
+            this.sendPush(req);
+        }
     }
 
     @Override
     public List<PushLog> getOwnPushLogs(String userId) {
-        return null;
+        List<PushLog> pushLogs = pushLogRepository.findByUserId(Long.valueOf(userId));
+        return pushLogs;
     }
 
     @Override
-    public void deletePushLog(String userId, String pushId) {
+    public void deletePushLog(String pushId) {
+        pushLogRepository.delete(Long.valueOf(pushId));
     }
 }
