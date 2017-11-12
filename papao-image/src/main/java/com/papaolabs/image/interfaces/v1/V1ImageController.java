@@ -32,7 +32,9 @@ public class V1ImageController {
 
     @PostMapping(value = "/upload")
     public List<UploadResult> upload(@RequestParam("file") MultipartFile[] multipartFiles) throws JsonProcessingException {
-        return storageService.upload(multipartFiles);
+        List<UploadResult> uploadReseult = storageService.upload(multipartFiles);
+        uploadReseult.stream()
+                .forEach(item -> visionService.getVisionResult(item.getImageUrl()));
     }
 
     @GetMapping(value = "/download/{path:.*}")

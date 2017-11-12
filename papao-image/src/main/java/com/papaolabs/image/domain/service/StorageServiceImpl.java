@@ -15,6 +15,7 @@ import com.amazonaws.util.IOUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.papaolabs.image.infrastructure.dto.UploadResult;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class StorageServiceImpl implements StorageService {
     private String bucket;
     @NotNull
     private ObjectMapper mapper;
+
+    @NonNull
+    private VisionService visionService;
 
     public StorageServiceImpl(AmazonS3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;
