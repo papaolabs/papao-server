@@ -7,6 +7,7 @@ public class PostRequest {
     private String happenPlace;
     private String uid;
     private String postType;
+    private String stateType;
     private List<String> imageUrls;
     private Long upKindCode;
     private Long kindCode;
@@ -49,6 +50,14 @@ public class PostRequest {
 
     public void setPostType(String postType) {
         this.postType = postType;
+    }
+
+    public String getStateType() {
+        return stateType;
+    }
+
+    public void setStateType(String stateType) {
+        this.stateType = stateType;
     }
 
     public List<String> getImageUrls() {
@@ -160,6 +169,9 @@ public class PostRequest {
         if (postType != null ? !postType.equals(that.postType) : that.postType != null) {
             return false;
         }
+        if (stateType != null ? !stateType.equals(that.stateType) : that.stateType != null) {
+            return false;
+        }
         if (imageUrls != null ? !imageUrls.equals(that.imageUrls) : that.imageUrls != null) {
             return false;
         }
@@ -199,6 +211,7 @@ public class PostRequest {
         result = 31 * result + (happenPlace != null ? happenPlace.hashCode() : 0);
         result = 31 * result + (uid != null ? uid.hashCode() : 0);
         result = 31 * result + (postType != null ? postType.hashCode() : 0);
+        result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
         result = 31 * result + (imageUrls != null ? imageUrls.hashCode() : 0);
         result = 31 * result + (upKindCode != null ? upKindCode.hashCode() : 0);
         result = 31 * result + (kindCode != null ? kindCode.hashCode() : 0);
@@ -220,6 +233,7 @@ public class PostRequest {
             ", happenPlace='" + happenPlace + '\'' +
             ", uid='" + uid + '\'' +
             ", postType='" + postType + '\'' +
+            ", stateType='" + stateType + '\'' +
             ", imageUrls=" + imageUrls +
             ", upKindCode=" + upKindCode +
             ", kindCode=" + kindCode +

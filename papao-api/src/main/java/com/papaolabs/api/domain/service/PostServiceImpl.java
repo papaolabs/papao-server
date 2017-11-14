@@ -77,6 +77,7 @@ public class PostServiceImpl implements PostService {
                           String happenPlace,
                           String uid,
                           String postType,
+                          String stateType,
                           List<String> imageUrls,
                           Long kindUpCode,
                           Long kindCode,
@@ -104,7 +105,7 @@ public class PostServiceImpl implements PostService {
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
-        post.setStateType(Post.StateType.UNKNOWN);
+        post.setStateType(Post.StateType.getType(stateType));
         post.setAge(age);
         post.setWeight(weight);
         post.setFeature(feature);

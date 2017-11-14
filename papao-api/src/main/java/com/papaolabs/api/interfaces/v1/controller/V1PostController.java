@@ -51,6 +51,7 @@ public class V1PostController {
                                                        postRequest.getHappenPlace(),
                                                        postRequest.getUid(),
                                                        postRequest.getPostType(),
+                                                       postRequest.getStateType(),
                                                        postRequest.getImageUrls(),
                                                        postRequest.getUpKindCode(),
                                                        postRequest.getKindCode(),

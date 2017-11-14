@@ -11,6 +11,7 @@ public interface PostService {
                    String happenPlace,
                    String uid,
                    String postType,
+                   String stateType,
                    List<String> imageUrls,
                    Long kindUpCode,
                    Long kindCode,

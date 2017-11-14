@@ -115,7 +115,7 @@ public class Post extends BaseEntity {
                 return null;
             }
             for (StateType type : StateType.values()) {
-                if (type.code.equals(name)) {
+                if (type.name().equals(name)) {
                     return type;
                 }
             }
