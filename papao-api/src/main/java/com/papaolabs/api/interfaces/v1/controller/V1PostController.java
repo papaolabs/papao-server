@@ -1,10 +1,11 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
+import com.papaolabs.api.domain.service.BookmarkService;
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.type.StateType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,56 +27,78 @@ public class V1PostController {
     private final PostService postService;
     @NotNull
     private final CommentService commentService;
+    @NotNull
+    private final BookmarkService bookmarkService;
 
-    public V1PostController(PostService postService, CommentService commentService) {
+    public V1PostController(PostService postService,
+                            CommentService commentService,
+                            BookmarkService bookmarkService) {
         this.postService = postService;
         this.commentService = commentService;
+        this.bookmarkService = bookmarkService;
     }
 
+    /*
+        Posts
+    */
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestParam String happenDate,
                                               @RequestParam String happenPlace,
                                               @RequestParam String uid,
                                               @RequestParam String postType,
                                               @RequestParam List<String> imageUrls,
-                                              @RequestParam(required = false) String kindUpCode,
-                                              @RequestParam(required = false) String kindCode,
-                                              @RequestParam(required = false) String contact,
-                                              @RequestParam(required = false) String gender,
-                                              @RequestParam(required = false) String neuter,
-                                              @RequestParam(required = false) String age,
-                                              @RequestParam(required = false) Float weight,
-                                              @RequestParam(required = false) String feature,
-                                              @RequestParam(required = false) String uprCode,
-                                              @RequestParam(required = false) String orgCode
+                                              @RequestParam(defaultValue = "417000", required = false) Long upKindCode,
+                                              @RequestParam(defaultValue = "115", required = false) Long kindCode,
+                                              @RequestParam(defaultValue = "-1", required = false) String contact,
+                                              @RequestParam(defaultValue = "U", required = false) String genderType,
+                                              @RequestParam(defaultValue = "U", required = false) String neuterType,
+                                              @RequestParam(defaultValue = "-1", required = false) Integer age,
+                                              @RequestParam(defaultValue = "-1", required = false) Float weight,
+                                              @RequestParam(defaultValue = "", required = false) String feature,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long sidoCode,
+                                              @RequestParam(defaultValue = "9999999", required = false) Long gunguCode
     ) {
         return new ResponseEntity<>(postService.create(happenDate,
                                                        happenPlace,
                                                        uid,
                                                        postType,
                                                        imageUrls,
-                                                       kindUpCode,
+                                                       upKindCode,
                                                        kindCode,
                                                        contact,
-                                                       gender,
-                                                       neuter,
+                                                       genderType,
+                                                       neuterType,
                                                        age,
                                                        weight,
                                                        feature,
-                                                       uprCode,
-                                                       orgCode), HttpStatus.OK);
+                                                       sidoCode,
+                                                       gunguCode), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) String beginDate,
                                                    @RequestParam(required = false) String endDate,
-                                                   @RequestParam(required = false) String kindUpCode,
-                                                   @RequestParam(required = false) String uprCode,
-                                                   @RequestParam(required = false) String orgCode,
-                                                   @RequestParam(defaultValue = "1", required = false) String index,
-                                                   @RequestParam(defaultValue = "100", required = false) String size
+                                                   @RequestParam(required = false) String upKindCode,
+                                                   @RequestParam(required = false) String kindCode,
+                                                   @RequestParam(required = false) String sidoCode,
+                                                   @RequestParam(required = false) String gunguCode
     ) {
-        return new ResponseEntity<>(postService.readPosts(beginDate, endDate, kindUpCode, uprCode, orgCode, index, size), HttpStatus.OK);
+        return new ResponseEntity(postService.readPosts(beginDate, endDate, upKindCode
+            , kindCode, sidoCode, gunguCode), HttpStatus.OK);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<List<PostDTO>> readPostsByPage(@RequestParam(required = false) String beginDate,
+                                                         @RequestParam(required = false) String endDate,
+                                                         @RequestParam(required = false) String upKindCode,
+                                                         @RequestParam(required = false) String kindCode,
+                                                         @RequestParam(required = false) String sidoCode,
+                                                         @RequestParam(required = false) String gunguCode,
+                                                         @RequestParam(defaultValue = "0", required = false) String index,
+                                                         @RequestParam(defaultValue = "100", required = false) String size
+    ) {
+        return new ResponseEntity(postService.readPostsByPage(beginDate, endDate, upKindCode
+            , kindCode, sidoCode, gunguCode, index, size), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
@@ -84,7 +107,7 @@ public class V1PostController {
     }
 
     @PostMapping("/{postId}/state")
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam StateType state) {
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam Post.StateType state) {
         return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
     }
 
@@ -93,35 +116,47 @@ public class V1PostController {
         return new ResponseEntity<>(postService.delete(postId), HttpStatus.OK);
     }
 
+    /*
+        Comments
+     */
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId,
                                                     @RequestParam("userId") String userId,
-                                                    @RequestParam("userName") String userName,
                                                     @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.create(postId, userId, userName, text), HttpStatus.OK);
+        return new ResponseEntity<>(commentService.create(postId, userId, text), HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/comments/guest")
-    public ResponseEntity<CommentDTO> createCommentByGuest(@PathVariable("postId") String postId,
-                                                           @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.createByGuest(postId, text), HttpStatus.OK);
-    }
-
-    @PostMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("postId") String postId,
-                                                    @PathVariable("commentId") String commentId,
-                                                    @RequestParam("userId") String userId) {
-        return new ResponseEntity<>(commentService.delete(postId, commentId, userId), HttpStatus.OK);
+    @PostMapping("/comments/{commentId}")
+    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("commentId") String commentId) {
+        commentService.delete(commentId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/comments")
     public ResponseEntity<List<CommentDTO>> readComments(@PathVariable("postId") String postId) {
-        return new ResponseEntity<>(commentService.readComments(postId), HttpStatus.OK);
+        return new ResponseEntity(commentService.readComments(postId), HttpStatus.OK);
     }
 
-    @GetMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> readComment(@PathVariable("postId") String postId,
-                                                  @PathVariable("commentId") String commentId) {
-        return new ResponseEntity<>(commentService.readComment(postId, commentId), HttpStatus.OK);
+    /*
+        Bookmark
+     */
+    @PostMapping("/{postId}/bookmarks")
+    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.registerBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{postId}/bookmarks/cancel")
+    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/bookmarks/count")
+    public ResponseEntity<Long> countBookmark(@PathVariable("postId") String postId) {
+        return new ResponseEntity(bookmarkService.countBookmark(postId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/bookmarks/check")
+    public ResponseEntity<Boolean> checkBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+        return new ResponseEntity(bookmarkService.checkBookmark(postId, userId), HttpStatus.OK);
     }
 }

@@ -48,7 +48,7 @@ public class GovDataClientFallbackFactory implements LoggingFallbackFactory<GovD
 
         @Override
         public KindResponse kind(@Param(value = "serviceKey") String serviceKey, @Param(value = "upKindCd") String upKindCd) {
-            log.debug("AnimalApiFallback.kind() : serviceKey {}, upKindCd : {}", serviceKey, upKindCd);
+            log.debug("AnimalApiFallback.breed() : serviceKey {}, upKindCd : {}", serviceKey, upKindCd);
             return new KindResponse();
         }
 
@@ -57,7 +57,7 @@ public class GovDataClientFallbackFactory implements LoggingFallbackFactory<GovD
                                      @Param(value = "bgnde") String bgnde,
                                      @Param(value = "endde") String endde,
                                      @Param(value = "upkind") String upKind,
-                                     @Param(value = "kind") String kind,
+                                     @Param(value = "breed") String kind,
                                      @Param(value = "upr_cd") String uprCd,
                                      @Param(value = "org_cd") String orgCd,
                                      @Param(value = "care_reg_no") String careRegNo,

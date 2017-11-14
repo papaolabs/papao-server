@@ -27,12 +27,12 @@ public class V1OperationController {
         this.captureService = captureService;
     }
 
-    @GetMapping("/breeds")
+    @GetMapping("/kinds")
     public List<Breed> getBreedList() {
         return this.operationService.getBreedList();
     }
 
-    @GetMapping("/capture/breeds")
+    @GetMapping("/capture/kinds")
     public String captureBreedList(@RequestParam(required = false) String tableName) {
         return this.captureService.captureBreedList(tableName);
     }
@@ -45,6 +45,11 @@ public class V1OperationController {
     @GetMapping("/shelters")
     public List<Shelter> getShelterList() {
         return this.operationService.getShelterList();
+    }
+
+    @GetMapping("/capture/regions")
+    public String captureregionList(@RequestParam(required = false) String tableName) {
+        return this.captureService.captureRegionList(tableName);
     }
 
     @GetMapping("/capture/shelters")
