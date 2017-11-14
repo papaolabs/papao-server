@@ -32,7 +32,8 @@ public interface PostService {
                             String uprCode,
                             String orgCode);
 
-    List<PostPreviewDTO> readPostsByPage(String beginDate,
+    List<PostPreviewDTO> readPostsByPage(String postType,
+                                         String beginDate,
                                          String endDate,
                                          String upKindCode,
                                          String kindCode,

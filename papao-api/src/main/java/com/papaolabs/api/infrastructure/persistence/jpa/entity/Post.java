@@ -52,7 +52,7 @@ public class Post extends BaseEntity {
     private Boolean isDisplay;
 
     public enum PostType {
-        SYSTEM, PROTECTING, ROADREPORT, MISSING;
+        SYSTEM, PROTECTING, ROADREPORT, MISSING, UNKNOWN;
 
         public static PostType getType(String name) {
             if (StringUtils.isEmpty(name)) {
@@ -64,7 +64,7 @@ public class Post extends BaseEntity {
                     return type;
                 }
             }
-            return SYSTEM;
+            return UNKNOWN;
         }
     }
 

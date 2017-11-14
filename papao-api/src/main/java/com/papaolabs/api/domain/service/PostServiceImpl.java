@@ -167,7 +167,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPreviewDTO> readPostsByPage(String beginDate,
+    public List<PostPreviewDTO> readPostsByPage(String postType,
+                                                String beginDate,
                                                 String endDate,
                                                 String upKindCode,
                                                 String kindCode,
@@ -190,6 +191,7 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .filter(Post::getDisplay)
+                      .filter(x -> x.getPostType() == Post.PostType.getType(postType))
                       .filter(x -> {
                           Breed breed = breedRepository.findByKindCode(x.getBreedCode());
                           return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
