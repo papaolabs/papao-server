@@ -8,6 +8,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
@@ -47,6 +48,8 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final PostRepository postRepository;
     @NotNull
+    private final RegionRepository regionRepository;
+    @NotNull
     private final BreedRepository breedRepository;
     @NotNull
     private final ShelterRepository shelterRepository;
@@ -56,10 +59,13 @@ public class PostServiceImpl implements PostService {
     private final BookmarkService bookmarkService;
 
     public PostServiceImpl(PostRepository postRepository,
+                           RegionRepository regionRepository,
                            BreedRepository breedRepository,
                            ShelterRepository shelterRepository,
-                           CommentRepository commentRepository, BookmarkService bookmarkService) {
+                           CommentRepository commentRepository,
+                           BookmarkService bookmarkService) {
         this.postRepository = postRepository;
+        this.regionRepository = regionRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
         this.commentRepository = commentRepository;
@@ -93,7 +99,8 @@ public class PostServiceImpl implements PostService {
                                     return image;
                                 })
                                 .collect(Collectors.toList()));
-//        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
+        post.setBreedCode(breedRepository.findByKindCode(Long.valueOf(kindCode))
+                                         .getId());
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
@@ -101,7 +108,9 @@ public class PostServiceImpl implements PostService {
         post.setAge(age);
         post.setWeight(weight);
         post.setFeature(feature);
-//        post.setRegion(regionRepository.findBySidoCodeAndGunguCode(sidoCode, gunguCode));
+        post.setSidoCode(sidoCode);
+        post.setGunguCode(gunguCode);
+        post.setShelterCode(-1L);
         return transform(postRepository.save(post));
     }
 

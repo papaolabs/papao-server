@@ -6,12 +6,15 @@ import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.dto.PostRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,38 +44,24 @@ public class V1PostController {
     /*
         Posts
     */
-    @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestParam String happenDate,
-                                              @RequestParam String happenPlace,
-                                              @RequestParam String uid,
-                                              @RequestParam String postType,
-                                              @RequestParam List<String> imageUrls,
-                                              @RequestParam(defaultValue = "417000", required = false) Long upKindCode,
-                                              @RequestParam(defaultValue = "115", required = false) Long kindCode,
-                                              @RequestParam(defaultValue = "-1", required = false) String contact,
-                                              @RequestParam(defaultValue = "U", required = false) String genderType,
-                                              @RequestParam(defaultValue = "U", required = false) String neuterType,
-                                              @RequestParam(defaultValue = "-1", required = false) Integer age,
-                                              @RequestParam(defaultValue = "-1", required = false) Float weight,
-                                              @RequestParam(defaultValue = "", required = false) String feature,
-                                              @RequestParam(defaultValue = "9999999", required = false) Long sidoCode,
-                                              @RequestParam(defaultValue = "9999999", required = false) Long gunguCode
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostRequest postRequest
     ) {
-        return new ResponseEntity<>(postService.create(happenDate,
-                                                       happenPlace,
-                                                       uid,
-                                                       postType,
-                                                       imageUrls,
-                                                       upKindCode,
-                                                       kindCode,
-                                                       contact,
-                                                       genderType,
-                                                       neuterType,
-                                                       age,
-                                                       weight,
-                                                       feature,
-                                                       sidoCode,
-                                                       gunguCode), HttpStatus.OK);
+        return new ResponseEntity<>(postService.create(postRequest.getHappenDate(),
+                                                       postRequest.getHappenPlace(),
+                                                       postRequest.getUid(),
+                                                       postRequest.getPostType(),
+                                                       postRequest.getImageUrls(),
+                                                       postRequest.getUpKindCode(),
+                                                       postRequest.getKindCode(),
+                                                       postRequest.getContact(),
+                                                       postRequest.getGenderType(),
+                                                       postRequest.getNeuterType(),
+                                                       postRequest.getAge(),
+                                                       postRequest.getWeight(),
+                                                       postRequest.getFeature(),
+                                                       postRequest.getSidoCode(),
+                                                       postRequest.getGunguCode()), HttpStatus.OK);
     }
 
     @GetMapping
