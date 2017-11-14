@@ -184,7 +184,12 @@ public class PostServiceImpl implements PostService {
             endDate = getDefaultDate(DATE_FORMAT);
         }
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
-        Page<Post> results = postRepository
+        Page<Post> results = isNotEmpty(postType) ? postRepository
+            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqualAndPostType(
+                convertStringToDate(beginDate),
+                convertStringToDate(endDate),
+                Post.PostType.getType(postType),
+                pageRequest) : postRepository
             .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
                 convertStringToDate(beginDate),
                 convertStringToDate(endDate),
@@ -192,7 +197,6 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .filter(Post::getDisplay)
-                      .filter(x -> isNotEmpty(postType) ? x.getPostType() == Post.PostType.getType(postType) : TRUE)
                       .filter(x -> {
                           Breed breed = breedRepository.findByKindCode(x.getBreedCode());
                           return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
