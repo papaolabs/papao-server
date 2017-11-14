@@ -54,6 +54,16 @@ public class VisionServiceImpl implements VisionService {
     }
 
     @Override
+    public VisionResult getVisionResult(byte[] imageData) {
+        return visionApiClient.image(visionAppKey,
+                createVisionRequestByImageData(imageData))
+                .getResponses()
+                .stream()
+                .findFirst()
+                .get();
+    }
+
+    @Override
     public VisionResult getVisionResult(String imageUrl) {
         return visionApiClient.image(visionAppKey,
                                      createVisionRequests(Arrays.asList(imageUrl)))
@@ -68,6 +78,14 @@ public class VisionServiceImpl implements VisionService {
         return visionApiClient.image(visionAppKey,
                                      createVisionRequests(imageUrls))
                               .getResponses();
+    }
+
+    private VisionApiRequest createVisionRequestByImageData(byte[] imageData) {
+        List<Request> requests = new ArrayList<>();
+        requests.add(createVisionRequest(new String(imageData)));
+        VisionApiRequest request = new VisionApiRequest();
+        request.setRequests(requests);
+        return request;
     }
 
     private VisionApiRequest createVisionRequests(List<String> imageUrls) {
@@ -96,6 +114,7 @@ public class VisionServiceImpl implements VisionService {
         request.setFeatures(features);
         return request;
     }
+
 
     private Boolean filterByLabel(String label) {
         return !filterNameList.stream()
