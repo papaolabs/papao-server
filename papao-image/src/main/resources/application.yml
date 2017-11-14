@@ -55,4 +55,4 @@ google:
     imageUrl: https://vision.googleapis.com/v1
     key: ENC(+JKVXiKjp29iLTGMJXd+259u2fATaTorka6KDwxUdc9IILDKnHJ/Bypm7oUmYuhV)
 
-hostname: localhost:9040
+hostname: 13.124.142.195:9040

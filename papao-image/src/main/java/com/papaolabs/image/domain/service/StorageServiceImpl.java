@@ -42,7 +42,7 @@ public class StorageServiceImpl implements StorageService {
     @NotNull
     private ObjectMapper mapper;
 
-    @NonNull
+    @NotNull
     private VisionService visionService;
 
     public StorageServiceImpl(AmazonS3Client amazonS3Client) {
