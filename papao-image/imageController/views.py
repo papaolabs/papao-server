@@ -7,19 +7,26 @@ import tempfile
 bucket_name = 'papao-s3-bucket'
 s3 = boto3.resource('s3')
 bucket = s3.Bucket(bucket_name)
+hostname = "localhost:8000/v1/"
+
 
 def getImage(request, key):
-    import pdb;pdb.set_trace()
     f = tempfile.TemporaryFile()
-    bucket.download_fileobj(f,
+    bucket.download_fileobj(f)
     return HttpResponse()
+
 
 @csrf_exempt
 def postImage(request):
-    import pdb;pdb.set_trace()
-    bucket.upload_fileobj(request.FILES['image_file'],request.POST['key'])
-    return JsonResponse({'status':'OK','image_url':'localhost:8000/v1/'+request.POST['key']})
+    files = request.FILES.getlist('file')
+    filenames = list(map(lambda x: uploadImage(x), files))
+    return JsonResponse({'status': 'OK', 'image_url': list(map(lambda x:hostname+x,filenames))})
+
 
 def index(request):
     return HttpResponse("Hello, world!")
 
+
+def uploadImage(file):
+    bucket.upload_fileobj(file, file.name)
+    return file.name
