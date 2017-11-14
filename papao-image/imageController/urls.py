@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^upload',views.postImage, name='upload'),
+    url(r'^upload/$',views.postImage, name='upload'),
+    url(r'^download/(?P<filename>\S+)',views.getImage, name='download')
 ]
