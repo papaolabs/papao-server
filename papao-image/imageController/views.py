@@ -24,6 +24,17 @@ def postImage(request):
     filenames = list(map(lambda x: uploadImage(x), files))
     return JsonResponse({'status': 'OK', 'image_url': list(map(lambda x:hostname+"/v1/download/"+x,filenames))})
 
+def deleteImage(request,filename):
+    response = bucket.delete_objects(
+        Delete={
+            'Objects': [
+                {
+                    'Key': filename
+                },
+            ]
+        }
+    )
+    return JsonResponse(response)
 
 def index(request):
     return HttpResponse("Hello, world!")
