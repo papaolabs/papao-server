@@ -112,6 +112,7 @@ public class PostServiceImpl implements PostService {
         post.setSidoCode(sidoCode);
         post.setGunguCode(gunguCode);
         post.setShelterCode(-1L);
+        post.setDisplay(TRUE);
         return transform(postRepository.save(post));
     }
 
