@@ -191,7 +191,7 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .filter(Post::getDisplay)
-                      .filter(x -> x.getPostType() == Post.PostType.getType(postType))
+                      .filter(x -> isNotEmpty(postType) ? x.getPostType() == Post.PostType.getType(postType) : TRUE)
                       .filter(x -> {
                           Breed breed = breedRepository.findByKindCode(x.getBreedCode());
                           return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
