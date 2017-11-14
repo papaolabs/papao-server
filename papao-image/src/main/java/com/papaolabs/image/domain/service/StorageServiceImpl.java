@@ -38,6 +38,7 @@ public class StorageServiceImpl implements StorageService {
     private AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
     @NotNull
     private ObjectMapper mapper;
 

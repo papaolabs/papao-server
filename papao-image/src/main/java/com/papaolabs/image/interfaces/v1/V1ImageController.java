@@ -8,6 +8,7 @@ import com.papaolabs.image.domain.service.StorageServiceImpl;
 import com.papaolabs.image.domain.service.VisionService;
 import com.papaolabs.image.infrastructure.dto.UploadResult;
 import com.papaolabs.image.infrastructure.feign.vision.dto.VisionApiResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class V1ImageController {
     @NotNull
     private final VisionService visionService;
 
+    @Value("${hostname}")
+    private String hostname;
+
     public V1ImageController(StorageServiceImpl storageService, VisionService visionService) {
         this.storageService = storageService;
         this.visionService = visionService;
@@ -32,9 +36,9 @@ public class V1ImageController {
 
     @PostMapping(value = "/upload")
     public List<UploadResult> upload(@RequestParam("file") MultipartFile[] multipartFiles) throws JsonProcessingException {
-        List<UploadResult> uploadReseult = storageService.upload(multipartFiles);
-        uploadReseult.stream()
-                .forEach(item -> visionService.getVisionResult(item.getImageUrl()));
+        List<UploadResult> uploadResult = storageService.upload(multipartFiles);
+        VisionApiResponse.VisionResult visionResult = visionService.getVisionResult(hostname+"/download/"+uploadResult.get(0).getImageUrl());
+        return uploadResult;
     }
 
     @GetMapping(value = "/download/{path:.*}")
