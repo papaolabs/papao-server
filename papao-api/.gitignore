@@ -312,3 +312,6 @@ logs/
 reports/
 .gauge/
 classes/
+
+# q
+/src-gen

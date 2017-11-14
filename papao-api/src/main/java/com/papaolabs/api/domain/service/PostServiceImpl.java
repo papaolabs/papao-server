@@ -4,6 +4,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.QPost;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
@@ -12,6 +13,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionReposit
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.dto.PostDTO;
 import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
+import com.querydsl.core.BooleanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,8 +102,7 @@ public class PostServiceImpl implements PostService {
                                     return image;
                                 })
                                 .collect(Collectors.toList()));
-        post.setBreedCode(breedRepository.findByKindCode(Long.valueOf(kindCode))
-                                         .getId());
+        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
@@ -140,7 +141,7 @@ public class PostServiceImpl implements PostService {
         return originalPosts
             .stream()
             .filter(Post::getDisplay)
-            .filter(x -> {
+            /*.filter(x -> {
                 Breed breed = breedRepository.findByKindCode(x.getBreedCode());
                 return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
                                                                        .toString()) : TRUE;
@@ -161,7 +162,7 @@ public class PostServiceImpl implements PostService {
                 Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
                 return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
                                                                    .toString()) : TRUE;
-            })
+            })*/
             .map(this::previewTransform)
             .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
             .collect(Collectors.toList());
@@ -184,20 +185,25 @@ public class PostServiceImpl implements PostService {
             endDate = getDefaultDate(DATE_FORMAT);
         }
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
-        Page<Post> results = isNotEmpty(postType) ? postRepository
-            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqualAndPostType(
-                convertStringToDate(beginDate),
-                convertStringToDate(endDate),
-                Post.PostType.getType(postType),
-                pageRequest) : postRepository
-            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
-                convertStringToDate(beginDate),
-                convertStringToDate(endDate),
-                pageRequest);
+        QPost post = QPost.post;
+        BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
+                                                                                  convertStringToDate(endDate))
+                                                                         .and(post.isDisplay.eq(TRUE)));
+        if (isNotEmpty(postType)) {
+            builder.and(post.postType.eq(Post.PostType.getType(postType)));
+        }
+        if (isNotEmpty(uprCode)) {
+            builder.and(post.sidoCode.eq(Long.valueOf(uprCode)));
+        }
+        if (isNotEmpty(orgCode)) {
+            builder.and(post.gunguCode.eq(Long.valueOf(orgCode)));
+        }
+        postRepository.findAll(builder, pageRequest);
+        Page<Post> results = postRepository.findAll(builder, pageRequest);
         return results.getContent()
                       .stream()
                       .filter(Post::getDisplay)
-                      .filter(x -> {
+                      /*.filter(x -> {
                           Breed breed = breedRepository.findByKindCode(x.getBreedCode());
                           return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
                                                                                  .toString()) : TRUE;
@@ -207,7 +213,7 @@ public class PostServiceImpl implements PostService {
                           return isNotEmpty(kindCode) ? kindCode.equals(breed
                                                                             .getKindCode()
                                                                             .toString()) : TRUE;
-                      })
+                      })*/
                       .filter(x -> {
                           Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
                           return isNotEmpty(uprCode) ? uprCode.equals(shelter
@@ -288,7 +294,7 @@ public class PostServiceImpl implements PostService {
         List<Comment> comments = commentRepository.findByPostId(post.getId());
         postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
         // Breed 세팅
-        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        Breed breed = post.getBreed();
         postPreviewDTO.setKindName(breed.getKindName());
         // Region/Shelter 세팅
         Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
@@ -326,7 +332,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Breed 세팅
-        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        Breed breed = post.getBreed();
         // Region/Shelter 세팅
         Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
         // Todo User 세팅
