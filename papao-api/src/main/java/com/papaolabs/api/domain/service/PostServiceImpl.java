@@ -102,8 +102,7 @@ public class PostServiceImpl implements PostService {
                                     return image;
                                 })
                                 .collect(Collectors.toList()));
-        post.setBreedCode(breedRepository.findByKindCode(Long.valueOf(kindCode))
-                                         .getKindCode());
+        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
@@ -111,9 +110,8 @@ public class PostServiceImpl implements PostService {
         post.setAge(age);
         post.setWeight(weight);
         post.setFeature(feature);
-        post.setSidoCode(sidoCode);
-        post.setGunguCode(gunguCode);
-        post.setShelterCode(-1L);
+        post.setRegion(regionRepository.findBySidoCodeAndGunguCode(sidoCode, gunguCode));
+        post.setShelter(shelterRepository.findByShelterCode(-1L));
         post.setDisplay(TRUE);
         return transform(postRepository.save(post));
     }
@@ -194,13 +192,13 @@ public class PostServiceImpl implements PostService {
             builder.and(post.postType.eq(Post.PostType.getType(postType)));
         }
         if (isNotEmpty(uprCode)) {
-            builder.and(post.sidoCode.eq(Long.valueOf(uprCode)));
+            builder.and(post.region.sidoCode.eq(Long.valueOf(uprCode)));
         }
         if (isNotEmpty(orgCode)) {
-            builder.and(post.gunguCode.eq(Long.valueOf(orgCode)));
+            builder.and(post.region.gunguCode.eq(Long.valueOf(orgCode)));
         }
         if (isNotEmpty(kindCode)) {
-            builder.and(post.breedCode.eq(Long.valueOf(kindCode)));
+            builder.and(post.breed.kindCode.eq(Long.valueOf(kindCode)));
         }
         postRepository.findAll(builder, pageRequest);
         Page<Post> results = postRepository.findAll(builder, pageRequest);
@@ -219,13 +217,13 @@ public class PostServiceImpl implements PostService {
                                                                             .toString()) : TRUE;
                       })*/
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                          Shelter shelter = x.getShelter();
                           return isNotEmpty(uprCode) ? uprCode.equals(shelter
                                                                           .getSidoCode()
                                                                           .toString()) : TRUE;
                       })
                       .filter(x -> {
-                          Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
+                          Shelter shelter = x.getShelter();
                           return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
                                                                              .toString()) : TRUE;
                       })
@@ -298,10 +296,10 @@ public class PostServiceImpl implements PostService {
         List<Comment> comments = commentRepository.findByPostId(post.getId());
         postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
         // Breed 세팅
-        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        Breed breed = post.getBreed();
         postPreviewDTO.setKindName(breed.getKindName());
         // Region/Shelter 세팅
-        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
+        Shelter shelter = post.getShelter();
         postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
         return postPreviewDTO;
     }
@@ -336,9 +334,9 @@ public class PostServiceImpl implements PostService {
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Breed 세팅
-        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
+        Breed breed = post.getBreed();
         // Region/Shelter 세팅
-        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
+        Shelter shelter = post.getShelter();
         // Todo User 세팅
         postDTO.setUpKindName(breed.getUpKindName());
         postDTO.setKindName(breed.getKindName());
