@@ -156,6 +156,8 @@ public class PostServiceImpl implements PostService {
                                        Post post = postMap.get(x.getDesertionId());
                                        if (post != null) {
                                            x.setId(post.getId());
+                                           // system batch 의 경우 image update 될 일이 전혀 없음
+                                           x.setImages(post.getImages());
                                        }
                                        return x;
                                    })
