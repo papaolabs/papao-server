@@ -190,9 +190,6 @@ public class PostServiceImpl implements PostService {
         if (isNotEmpty(orgCode)) {
             builder.and(post.region.gunguCode.eq(Long.valueOf(orgCode)));
         }
-        if (isNotEmpty(upKindCode)) {
-            builder.and(post.breed.upKindCode.eq(Long.valueOf(upKindCode)));
-        }
         if (isNotEmpty(kindCode)) {
             builder.and(post.breed.kindCode.eq(Long.valueOf(kindCode)));
         }
