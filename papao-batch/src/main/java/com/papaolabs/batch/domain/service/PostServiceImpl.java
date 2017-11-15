@@ -42,29 +42,29 @@ public class PostServiceImpl implements PostService {
     @NotNull
     private final OpenApiClient openApiClient;
     @NotNull
-    private final ImageRepository animalImageRepository;
+    private final ImageRepository imageRepository;
     @NotNull
-    private final BreedRepository animalKindRepository;
+    private final BreedRepository breedRepository;
     @NotNull
-    private final PostRepository animalPostRepository;
+    private final PostRepository postRepository;
     @NotNull
-    private final ShelterRepository animalShelterRepository;
+    private final ShelterRepository shelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
 
     public PostServiceImpl(OpenApiClient openApiClient,
-                           ImageRepository animalImageRepository,
-                           BreedRepository animalKindRepository,
-                           PostRepository animalPostRepository,
-                           ShelterRepository animalShelterRepository,
+                           ImageRepository imageRepository,
+                           BreedRepository breedRepository,
+                           PostRepository postRepository,
+                           ShelterRepository shelterRepository,
                            RegionRepository regionRepository) {
         this.openApiClient = openApiClient;
-        this.animalImageRepository = animalImageRepository;
-        this.animalKindRepository = animalKindRepository;
-        this.animalPostRepository = animalPostRepository;
-        this.animalShelterRepository = animalShelterRepository;
+        this.imageRepository = imageRepository;
+        this.breedRepository = breedRepository;
+        this.postRepository = postRepository;
+        this.shelterRepository = shelterRepository;
         this.regionRepository = regionRepository;
     }
 
@@ -73,21 +73,21 @@ public class PostServiceImpl implements PostService {
         log.info("[syncPostList] startDate : {}, endDate : {}", beginDate, endDate);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Map<String, Breed> breedMap = animalKindRepository.findAll()
-                                                          .stream()
-                                                          .collect(Collectors.toMap(Breed::getKindName, Function.identity()));
-        Map<String, Shelter> shelterMap = animalShelterRepository.findAll()
-                                                                 .stream()
-                                                                 .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
+        Map<String, Breed> breedMap = breedRepository.findAll()
+                                                     .stream()
+                                                     .collect(Collectors.toMap(Breed::getKindName, Function.identity()));
+        Map<String, Shelter> shelterMap = shelterRepository.findAll()
+                                                           .stream()
+                                                           .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
                                                                      StringUtils.join(x.getSidoName(),
                                                                                       x.getGunguName(),
                                                                                       x.getShelterName())),
                                                                                            Function.identity()));
-        Map<String, Post> postMap = animalPostRepository.findByHappenDate(
+        Map<String, Post> postMap = postRepository.findByHappenDate(
             convertStringToDate(beginDate),
             convertStringToDate(endDate))
-                                                        .stream()
-                                                        .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
+                                                  .stream()
+                                                  .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
         Map<String, Region> regionMap = regionRepository.findAll()
                                                         .stream()
                                                         .collect(Collectors.toMap(x -> StringUtils
@@ -120,7 +120,7 @@ public class PostServiceImpl implements PostService {
                                        // Breed 세팅
                                        String breedName = convertKindName(x.getBreedName());
                                        Breed breed = breedMap.get(breedName);
-                                       post.setBreedCode(breed.getKindCode());
+                                       post.setBreed(breedRepository.findByKindCode(breed.getKindCode()));
                                        if (ETC_KIND_CODE.equals(breed.getUpKindCode())) {
                                            post.setFeature(StringUtils.join(x.getBreedName(), LF, post.getFeature()));
                                        }
@@ -131,18 +131,17 @@ public class PostServiceImpl implements PostService {
                                            address[0],
                                            address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0],
                                            x.getShelterName())));
+                                       Region region = regionMap.get(StringUtils.deleteWhitespace(StringUtils.join(
+                                           address[0],
+                                           address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0])));
                                        if (shelter == null) {
-                                           Region region = regionMap.get(StringUtils.deleteWhitespace(StringUtils.join(
-                                               address[0],
-                                               address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0])));
                                            shelter = new Shelter();
                                            shelter.setSidoCode(region.getSidoCode());
                                            shelter.setSidoCode(region.getGunguCode());
                                            shelter.setShelterCode(-1L);
                                        }
-                                       post.setSidoCode(shelter.getSidoCode());
-                                       post.setGunguCode(shelter.getGunguCode());
-                                       post.setShelterCode(shelter.getShelterCode());
+                                       post.setRegion(region);
+                                       post.setShelter(shelter);
                                        // Image 세팅
                                        Image image = new Image();
                                        image.setUrl(x.getImageUrl());
@@ -157,7 +156,7 @@ public class PostServiceImpl implements PostService {
                                        return x;
                                    })
                                    .collect(Collectors.toList());
-        animalPostRepository.save(results);
+        postRepository.save(results);
         stopWatch.stop();
         log.info("[syncPostList_end} result size {} - executionTime : {} millis", results.size(), stopWatch.getLastTaskTimeMillis());
     }
@@ -185,7 +184,7 @@ public class PostServiceImpl implements PostService {
     private String convertKindName(String kindName) {
         if (kindName.contains("[개] ")) {
             String result = kindName.replace("[개] ", "");
-            Breed breed = animalKindRepository.findByKindName(result);
+            Breed breed = breedRepository.findByKindName(result);
             return breed == null ? "믹스견" : breed.getKindName();
         }
         if (kindName.contains("[고양이]")) {
@@ -224,48 +223,4 @@ public class PostServiceImpl implements PostService {
             return -1;
         }
     }
-/*
-    private Post transform(AnimalDTO animalDTO) {
-        Breed mockBreed = new Breed();
-        mockBreed.setKindCode(-1L);
-        Breed breed = Optional.ofNullable(breedRepository.findByKindName(convertKindName(animalDTO.getBreedName())))
-                              .orElse(mockBreed);
-        String[] addressArr = animalDTO.getJurisdiction()
-                                       .split(" ");
-        if (addressArr.length <= 1) {
-            addressArr = animalDTO.getShelterAddress()
-                                  .split(" ");
-        }
-        Shelter mockShelter = new Shelter();
-        mockShelter.setShelterCode(-1L);
-        Shelter shelter = Optional.ofNullable(shelterRepository
-                                                  .findBySidoNameAndGunguNameAndShelterName(
-                                                      addressArr[0],
-                                                      addressArr[1],
-                                                      animalDTO.getShelterName
-                                                          ()))
-                                  .orElse(mockShelter);
-        Post post = new Post();
-        post.setNoticeId(animalDTO.getNoticeId());
-        post.setNoticeBeginDate(convertStringToDate(animalDTO.getNoticeBeginDate()));
-        post.setNoticeEndDate(convertStringToDate(animalDTO.getNoticeEndDate()));
-        post.setDesertionId(animalDTO.getDesertionId());
-        post.setStateType(animalDTO.getStateType());
-        post.setImageUrl(animalDTO.getImageUrl());
-        post.setAnimalCode(breed.getKindCode());
-        post.setAge(convertAge(animalDTO.getAge()));
-        post.setWeight(convertWeight(animalDTO.getWeight()));
-        post.setGenderCode(animalDTO.getGenderCode());
-        post.setNeuterCode(animalDTO.getNeuterCode());
-        post.setShelterCode(shelter.getShelterCode());
-        post.setShelterContact(animalDTO.getShelterContact());
-        post.setManager(animalDTO.getUserName());
-        post.setHelperContact(animalDTO.getUserContact());
-        post.setFeature(animalDTO.getFeature());
-        post.setHappenDate(convertStringToDate(animalDTO.getHappenDate()));
-        post.setHappenPlace(animalDTO.getHappenPlace());
-        post.setIsDisplay(TRUE);
-        post.setPostType("01");
-        return post;
-    }*/
 }
