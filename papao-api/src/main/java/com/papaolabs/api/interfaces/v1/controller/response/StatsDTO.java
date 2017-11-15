@@ -9,6 +9,7 @@ public class StatsDTO {
     private Integer returnCount;
     private Integer euthanasiaCount;
     private Integer naturalDeathCount;
+    private Integer unknownCount;
 
     public String getBeginDate() {
         return beginDate;
@@ -74,6 +75,14 @@ public class StatsDTO {
         this.naturalDeathCount = naturalDeathCount;
     }
 
+    public Integer getUnknownCount() {
+        return unknownCount;
+    }
+
+    public void setUnknownCount(Integer unknownCount) {
+        this.unknownCount = unknownCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -104,7 +113,10 @@ public class StatsDTO {
         if (euthanasiaCount != null ? !euthanasiaCount.equals(statsDTO.euthanasiaCount) : statsDTO.euthanasiaCount != null) {
             return false;
         }
-        return naturalDeathCount != null ? naturalDeathCount.equals(statsDTO.naturalDeathCount) : statsDTO.naturalDeathCount == null;
+        if (naturalDeathCount != null ? !naturalDeathCount.equals(statsDTO.naturalDeathCount) : statsDTO.naturalDeathCount != null) {
+            return false;
+        }
+        return unknownCount != null ? unknownCount.equals(statsDTO.unknownCount) : statsDTO.unknownCount == null;
     }
 
     @Override
@@ -117,6 +129,7 @@ public class StatsDTO {
         result = 31 * result + (returnCount != null ? returnCount.hashCode() : 0);
         result = 31 * result + (euthanasiaCount != null ? euthanasiaCount.hashCode() : 0);
         result = 31 * result + (naturalDeathCount != null ? naturalDeathCount.hashCode() : 0);
+        result = 31 * result + (unknownCount != null ? unknownCount.hashCode() : 0);
         return result;
     }
 
@@ -131,6 +144,7 @@ public class StatsDTO {
             ", returnCount=" + returnCount +
             ", euthanasiaCount=" + euthanasiaCount +
             ", naturalDeathCount=" + naturalDeathCount +
+            ", unknownCount=" + unknownCount +
             '}';
     }
 }

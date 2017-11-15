@@ -49,6 +49,7 @@ public class StatsServiceImpl implements StatsService {
         statsDTO.setReturnCount(0);
         statsDTO.setEuthanasiaCount(0);
         statsDTO.setNaturalDeathCount(0);
+        statsDTO.setUnknownCount(0);
         for (Post p : results) {
             switch (p.getStateType()) {
                 case PROCESS:
@@ -67,6 +68,7 @@ public class StatsServiceImpl implements StatsService {
                     statsDTO.setAdoptionCount(statsDTO.getAdoptionCount() + 1);
                     break;
                 case UNKNOWN:
+                    statsDTO.setUnknownCount(statsDTO.getUnknownCount() + 1);
                     break;
             }
         }
