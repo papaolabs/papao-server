@@ -102,7 +102,8 @@ public class PostServiceImpl implements PostService {
                                     return image;
                                 })
                                 .collect(Collectors.toList()));
-        post.setBreed(breedRepository.findByKindCode(Long.valueOf(kindCode)));
+        post.setBreedCode(breedRepository.findByKindCode(Long.valueOf(kindCode))
+                                         .getKindCode());
         post.setHelperContact(contact);
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
@@ -197,6 +198,9 @@ public class PostServiceImpl implements PostService {
         }
         if (isNotEmpty(orgCode)) {
             builder.and(post.gunguCode.eq(Long.valueOf(orgCode)));
+        }
+        if (isNotEmpty(kindCode)) {
+            builder.and(post.breedCode.eq(Long.valueOf(kindCode)));
         }
         postRepository.findAll(builder, pageRequest);
         Page<Post> results = postRepository.findAll(builder, pageRequest);
@@ -294,7 +298,7 @@ public class PostServiceImpl implements PostService {
         List<Comment> comments = commentRepository.findByPostId(post.getId());
         postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
         // Breed 세팅
-        Breed breed = post.getBreed();
+        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
         postPreviewDTO.setKindName(breed.getKindName());
         // Region/Shelter 세팅
         Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
@@ -332,7 +336,7 @@ public class PostServiceImpl implements PostService {
         postDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Breed 세팅
-        Breed breed = post.getBreed();
+        Breed breed = breedRepository.findByKindCode(post.getBreedCode());
         // Region/Shelter 세팅
         Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
         // Todo User 세팅
