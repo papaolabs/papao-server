@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.google.common.collect.Lists;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.QPost;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -37,8 +39,9 @@ public class StatsServiceImpl implements StatsService {
         QPost post = QPost.post;
         BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
                                                                                   convertStringToDate(endDate)));
-        Iterable<Post> results = postRepository.findAll(builder);
+        List<Post> results = Lists.newArrayList(postRepository.findAll(builder));
         StatsDTO statsDTO = new StatsDTO();
+        statsDTO.setTotalCount(results.size());
         statsDTO.setBeginDate(beginDate);
         statsDTO.setEndDate(endDate);
         statsDTO.setSaveCount(0);

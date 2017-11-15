@@ -3,6 +3,7 @@ package com.papaolabs.api.interfaces.v1.controller.response;
 public class StatsDTO {
     private String beginDate;
     private String endDate;
+    private Integer totalCount;
     private Integer saveCount;
     private Integer adoptionCount;
     private Integer returnCount;
@@ -23,6 +24,14 @@ public class StatsDTO {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public Integer getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(Integer totalCount) {
+        this.totalCount = totalCount;
     }
 
     public Integer getSaveCount() {
@@ -80,6 +89,9 @@ public class StatsDTO {
         if (endDate != null ? !endDate.equals(statsDTO.endDate) : statsDTO.endDate != null) {
             return false;
         }
+        if (totalCount != null ? !totalCount.equals(statsDTO.totalCount) : statsDTO.totalCount != null) {
+            return false;
+        }
         if (saveCount != null ? !saveCount.equals(statsDTO.saveCount) : statsDTO.saveCount != null) {
             return false;
         }
@@ -99,6 +111,7 @@ public class StatsDTO {
     public int hashCode() {
         int result = beginDate != null ? beginDate.hashCode() : 0;
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (totalCount != null ? totalCount.hashCode() : 0);
         result = 31 * result + (saveCount != null ? saveCount.hashCode() : 0);
         result = 31 * result + (adoptionCount != null ? adoptionCount.hashCode() : 0);
         result = 31 * result + (returnCount != null ? returnCount.hashCode() : 0);
@@ -112,6 +125,7 @@ public class StatsDTO {
         return "StatsDTO{" +
             "beginDate='" + beginDate + '\'' +
             ", endDate='" + endDate + '\'' +
+            ", totalCount=" + totalCount +
             ", saveCount=" + saveCount +
             ", adoptionCount=" + adoptionCount +
             ", returnCount=" + returnCount +
