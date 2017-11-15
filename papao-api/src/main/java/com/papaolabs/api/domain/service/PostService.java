@@ -25,12 +25,13 @@ public interface PostService {
                    Long gunguCode
     );
 
-    List<PostPreviewDTO> readPosts(String beginDate,
-                            String endDate,
-                            String upKindCode,
-                            String kindCode,
-                            String uprCode,
-                            String orgCode);
+    List<PostPreviewDTO> readPosts(String postType,
+                                   String beginDate,
+                                   String endDate,
+                                   String upKindCode,
+                                   String kindCode,
+                                   String uprCode,
+                                   String orgCode);
 
     List<PostPreviewDTO> readPostsByPage(String postType,
                                          String beginDate,

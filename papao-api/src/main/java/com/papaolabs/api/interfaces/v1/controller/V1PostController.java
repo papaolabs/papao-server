@@ -66,14 +66,15 @@ public class V1PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) String beginDate,
+    public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) String postType,
+                                                   @RequestParam(required = false) String beginDate,
                                                    @RequestParam(required = false) String endDate,
                                                    @RequestParam(required = false) String upKindCode,
                                                    @RequestParam(required = false) String kindCode,
                                                    @RequestParam(required = false) String sidoCode,
                                                    @RequestParam(required = false) String gunguCode
     ) {
-        return new ResponseEntity(postService.readPosts(beginDate, endDate, upKindCode
+        return new ResponseEntity(postService.readPosts(postType, beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode), HttpStatus.OK);
     }
 

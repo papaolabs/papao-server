@@ -1,7 +1,6 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.QPost;
@@ -33,6 +32,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -117,7 +117,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPreviewDTO> readPosts(String beginDate,
+    public List<PostPreviewDTO> readPosts(String postType,
+                                          String beginDate,
                                           String endDate,
                                           String upKindCode,
                                           String kindCode,
@@ -131,40 +132,32 @@ public class PostServiceImpl implements PostService {
         }
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        List<Post> originalPosts = postRepository
-            .findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(
-                convertStringToDate(beginDate),
-                convertStringToDate(endDate));
+        QPost post = QPost.post;
+        BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
+                                                                                  convertStringToDate(endDate))
+                                                                         .and(post.isDisplay.eq(TRUE)));
+        if (isNotEmpty(postType)) {
+            builder.and(post.postType.eq(Post.PostType.getType(postType)));
+        }
+        if (isNotEmpty(uprCode)) {
+            builder.and(post.region.sidoCode.eq(Long.valueOf(uprCode)));
+        }
+        if (isNotEmpty(orgCode)) {
+            builder.and(post.region.gunguCode.eq(Long.valueOf(orgCode)));
+        }
+        if (isNotEmpty(upKindCode)) {
+            builder.and(post.breed.upKindCode.eq(Long.valueOf(upKindCode)));
+        }
+        if (isNotEmpty(kindCode)) {
+            builder.and(post.breed.kindCode.eq(Long.valueOf(kindCode)));
+        }
+        Iterable<Post> results = postRepository.findAll(builder);
         stopWatch.stop();
         log.debug("originalPosts get time :: {} ", stopWatch.getLastTaskTimeMillis());
-        return originalPosts
-            .stream()
-            .filter(Post::getDisplay)
-            /*.filter(x -> {
-                Breed breed = breedRepository.findByKindCode(x.getBreedCode());
-                return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
-                                                                       .toString()) : TRUE;
-            })
-            .filter(x -> {
-                Breed breed = breedRepository.findByKindCode(x.getBreedCode());
-                return isNotEmpty(kindCode) ? kindCode.equals(breed
-                                                                  .getKindCode()
-                                                                  .toString()) : TRUE;
-            })
-            .filter(x -> {
-                Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
-                return isNotEmpty(uprCode) ? uprCode.equals(shelter
-                                                                .getSidoCode()
-                                                                .toString()) : TRUE;
-            })
-            .filter(x -> {
-                Shelter shelter = shelterRepository.findByShelterCode(x.getShelterCode());
-                return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
-                                                                   .toString()) : TRUE;
-            })*/
-            .map(this::previewTransform)
-            .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
-            .collect(Collectors.toList());
+        return StreamSupport.stream(results.spliterator(), false)
+                            .map(this::previewTransform)
+                            .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
+                            .collect(Collectors.toList());
     }
 
     @Override
@@ -203,33 +196,9 @@ public class PostServiceImpl implements PostService {
         if (isNotEmpty(kindCode)) {
             builder.and(post.breed.kindCode.eq(Long.valueOf(kindCode)));
         }
-        postRepository.findAll(builder, pageRequest);
         Page<Post> results = postRepository.findAll(builder, pageRequest);
         return results.getContent()
                       .stream()
-                      .filter(Post::getDisplay)
-                      /*.filter(x -> {
-                          Breed breed = breedRepository.findByKindCode(x.getBreedCode());
-                          return isNotEmpty(upKindCode) ? upKindCode.equals(breed.getUpKindCode()
-                                                                                 .toString()) : TRUE;
-                      })
-                      .filter(x -> {
-                          Breed breed = breedRepository.findByKindCode(x.getBreedCode());
-                          return isNotEmpty(kindCode) ? kindCode.equals(breed
-                                                                            .getKindCode()
-                                                                            .toString()) : TRUE;
-                      })*/
-                      .filter(x -> {
-                          Shelter shelter = x.getShelter();
-                          return isNotEmpty(uprCode) ? uprCode.equals(shelter
-                                                                          .getSidoCode()
-                                                                          .toString()) : TRUE;
-                      })
-                      .filter(x -> {
-                          Shelter shelter = x.getShelter();
-                          return isNotEmpty(orgCode) ? orgCode.equals(shelter.getGunguCode()
-                                                                             .toString()) : TRUE;
-                      })
                       .map((this::previewTransform))
                       .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
                       .collect(Collectors.toList());
@@ -296,8 +265,8 @@ public class PostServiceImpl implements PostService {
         postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                           .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Comment 세팅
-        List<Comment> comments = commentRepository.findByPostId(post.getId());
-        postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
+        postPreviewDTO.setCommentCount(Long.valueOf(post.getComments()
+                                                        .size()));
         // Breed 세팅
         Breed breed = post.getBreed();
         postPreviewDTO.setKindName(breed.getKindName());

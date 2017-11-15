@@ -79,10 +79,10 @@ public class PostServiceImpl implements PostService {
         Map<String, Shelter> shelterMap = shelterRepository.findAll()
                                                            .stream()
                                                            .collect(Collectors.toMap(x -> StringUtils.deleteWhitespace(
-                                                                     StringUtils.join(x.getSidoName(),
-                                                                                      x.getGunguName(),
-                                                                                      x.getShelterName())),
-                                                                                           Function.identity()));
+                                                               StringUtils.join(x.getSidoName(),
+                                                                                x.getGunguName(),
+                                                                                x.getShelterName())),
+                                                                                     Function.identity()));
         Map<String, Post> postMap = postRepository.findByHappenDate(
             convertStringToDate(beginDate),
             convertStringToDate(endDate))
