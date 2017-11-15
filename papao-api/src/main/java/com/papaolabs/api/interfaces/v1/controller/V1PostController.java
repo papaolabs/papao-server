@@ -132,12 +132,12 @@ public class V1PostController {
         Bookmark
      */
     @PostMapping("/{postId}/bookmarks")
-    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.registerBookmark(postId, userId), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/bookmarks/cancel")
-    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestParam("userId") String userId) {
+    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
     }
 
