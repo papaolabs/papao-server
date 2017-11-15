@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "image_tb")
-public class Image {
+public class Image extends BaseEntity{
     @Id
     @GeneratedValue
     private Long id;
