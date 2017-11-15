@@ -3,7 +3,7 @@ package com.papaolabs.api.domain.service;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
-import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,8 +1,8 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 
 import java.util.List;
 
@@ -11,6 +11,7 @@ public interface PostService {
                    String happenPlace,
                    String uid,
                    String postType,
+                   String stateType,
                    List<String> imageUrls,
                    Long kindUpCode,
                    Long kindCode,
@@ -24,14 +25,16 @@ public interface PostService {
                    Long gunguCode
     );
 
-    List<PostPreviewDTO> readPosts(String beginDate,
-                            String endDate,
-                            String upKindCode,
-                            String kindCode,
-                            String uprCode,
-                            String orgCode);
+    List<PostPreviewDTO> readPosts(String postType,
+                                   String beginDate,
+                                   String endDate,
+                                   String upKindCode,
+                                   String kindCode,
+                                   String uprCode,
+                                   String orgCode);
 
-    List<PostPreviewDTO> readPostsByPage(String beginDate,
+    List<PostPreviewDTO> readPostsByPage(String postType,
+                                         String beginDate,
                                          String endDate,
                                          String upKindCode,
                                          String kindCode,
@@ -42,7 +45,7 @@ public interface PostService {
 
     PostDTO readPost(String postId);
 
-    PostDTO delete(String id);
+    PostDTO delete(String postId, String userId);
 
     PostDTO setState(String postId, Post.StateType state);
 

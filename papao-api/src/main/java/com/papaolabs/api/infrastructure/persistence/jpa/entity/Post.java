@@ -34,6 +34,8 @@ public class Post extends BaseEntity {
     private Date noticeBeginDate;
     private Date noticeEndDate;
     private Date happenDate;
+    private Long happenSidoCode;
+    private Long happenGunguCode;
     private String happenPlace;
     private String feature;
     private String helperName;
@@ -41,10 +43,11 @@ public class Post extends BaseEntity {
     private Integer age;
     private Float weight;
     private Long hitCount;
-    private Long breedCode;
-    private Long sidoCode;
-    private Long gunguCode;
+    private Long upKindCode;
+    private Long kindCode;
+    private String kindName;
     private Long shelterCode;
+    private String shelterName;
     private String shelterContact;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
@@ -203,6 +206,22 @@ public class Post extends BaseEntity {
         this.happenDate = happenDate;
     }
 
+    public Long getHappenSidoCode() {
+        return happenSidoCode;
+    }
+
+    public void setHappenSidoCode(Long happenSidoCode) {
+        this.happenSidoCode = happenSidoCode;
+    }
+
+    public Long getHappenGunguCode() {
+        return happenGunguCode;
+    }
+
+    public void setHappenGunguCode(Long happenGunguCode) {
+        this.happenGunguCode = happenGunguCode;
+    }
+
     public String getHappenPlace() {
         return happenPlace;
     }
@@ -259,28 +278,28 @@ public class Post extends BaseEntity {
         this.hitCount = hitCount;
     }
 
-    public Long getBreedCode() {
-        return breedCode;
+    public Long getUpKindCode() {
+        return upKindCode;
     }
 
-    public void setBreedCode(Long breedCode) {
-        this.breedCode = breedCode;
+    public void setUpKindCode(Long upKindCode) {
+        this.upKindCode = upKindCode;
     }
 
-    public Long getSidoCode() {
-        return sidoCode;
+    public Long getKindCode() {
+        return kindCode;
     }
 
-    public void setSidoCode(Long sidoCode) {
-        this.sidoCode = sidoCode;
+    public void setKindCode(Long kindCode) {
+        this.kindCode = kindCode;
     }
 
-    public Long getGunguCode() {
-        return gunguCode;
+    public String getKindName() {
+        return kindName;
     }
 
-    public void setGunguCode(Long gunguCode) {
-        this.gunguCode = gunguCode;
+    public void setKindName(String kindName) {
+        this.kindName = kindName;
     }
 
     public Long getShelterCode() {
@@ -289,6 +308,14 @@ public class Post extends BaseEntity {
 
     public void setShelterCode(Long shelterCode) {
         this.shelterCode = shelterCode;
+    }
+
+    public String getShelterName() {
+        return shelterName;
+    }
+
+    public void setShelterName(String shelterName) {
+        this.shelterName = shelterName;
     }
 
     public String getShelterContact() {

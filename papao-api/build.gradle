@@ -17,6 +17,10 @@ apply plugin: 'org.springframework.boot'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+springBoot {
+    mainClass = "com.papaolabs.api.interfaces.PapaoApiApplication"
+}
+
 repositories {
     mavenCentral()
 }
@@ -36,6 +40,10 @@ dependencies {
 
     compile 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
 
+    compile ("com.querydsl:querydsl-core:4.1.4")
+    compile ("com.querydsl:querydsl-apt:4.1.4")
+    compile ("com.querydsl:querydsl-jpa:4.1.4")
+
     compile 'org.projectlombok:lombok',
             'org.apache.commons:commons-lang3:3.6'
 
@@ -49,4 +57,41 @@ dependencies {
     runtime 'com.h2database:h2'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+def queryDslOutput = file("src-gen/main/java")
+
+sourceSets {
+    main {
+        java {
+            srcDir "src-gen/main/java"
+        }
+    }
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build') {
+    doFirst {
+        if (!queryDslOutput.exists()) {
+            logger.info("Creating `$queryDslOutput` directory")
+
+            if (!queryDslOutput.mkdirs()) {
+                throw new InvalidUserDataException("Unable to create `$queryDslOutput` directory")
+            }
+        }
+    }
+
+    source = sourceSets.main.java
+    classpath = configurations.compile
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor",
+            "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+    ]
+    destinationDir = queryDslOutput
+}
+
+compileTestJava.dependsOn(generateQueryDSL)
+
+clean {
+    delete queryDslOutput
 }
