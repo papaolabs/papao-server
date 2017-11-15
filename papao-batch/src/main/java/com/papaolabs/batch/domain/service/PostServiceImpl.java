@@ -135,10 +135,7 @@ public class PostServiceImpl implements PostService {
                                            address[0],
                                            address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0])));
                                        if (shelter == null) {
-                                           shelter = new Shelter();
-                                           shelter.setSidoCode(region.getSidoCode());
-                                           shelter.setSidoCode(region.getGunguCode());
-                                           shelter.setShelterCode(-1L);
+                                           shelter = shelterRepository.findByShelterCode(-1L);
                                        }
                                        post.setRegion(region);
                                        post.setShelter(shelter);
