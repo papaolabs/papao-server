@@ -1,11 +1,11 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.interfaces.v1.dto.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PushUserRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
-import com.papaolabs.api.interfaces.v1.dto.JoinDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

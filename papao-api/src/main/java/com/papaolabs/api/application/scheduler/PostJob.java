@@ -3,7 +3,7 @@ package com.papaolabs.api.application.scheduler;
 
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.domain.service.VisionService;
-import com.papaolabs.api.interfaces.v1.dto.PostDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

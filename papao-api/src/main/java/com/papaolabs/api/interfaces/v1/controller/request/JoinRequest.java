@@ -1,4 +1,4 @@
-package com.papaolabs.api.interfaces.v1.dto;
+package com.papaolabs.api.interfaces.v1.controller.request;
 
 public class JoinRequest {
     private String userId;

@@ -1,8 +1,8 @@
-package com.papaolabs.api.interfaces.v1.dto;
+package com.papaolabs.api.interfaces.v1.controller.request;
 
-public class PushRequest {
+public class CommentRequest {
     private String userId;
-    private String deviceId;
+    private String text;
 
     public String getUserId() {
         return userId;
@@ -12,12 +12,12 @@ public class PushRequest {
         this.userId = userId;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getText() {
+        return text;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
@@ -28,25 +28,25 @@ public class PushRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PushRequest that = (PushRequest) o;
+        CommentRequest that = (CommentRequest) o;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
             return false;
         }
-        return deviceId != null ? deviceId.equals(that.deviceId) : that.deviceId == null;
+        return text != null ? text.equals(that.text) : that.text == null;
     }
 
     @Override
     public int hashCode() {
         int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (deviceId != null ? deviceId.hashCode() : 0);
+        result = 31 * result + (text != null ? text.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "PushRequest{" +
+        return "CommentRequest{" +
             "userId='" + userId + '\'' +
-            ", deviceId='" + deviceId + '\'' +
+            ", text='" + text + '\'' +
             '}';
     }
 }

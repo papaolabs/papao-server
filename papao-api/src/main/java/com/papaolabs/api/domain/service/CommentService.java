@@ -1,6 +1,6 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 
 public interface CommentService {
     CommentDTO create(String postId, String userId, String text);

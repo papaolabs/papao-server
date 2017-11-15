@@ -1,8 +1,7 @@
-package com.papaolabs.api.interfaces.v1.dto;
+package com.papaolabs.api.interfaces.v1.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import lombok.Data;
 
 import java.util.List;
 

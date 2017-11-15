@@ -4,9 +4,10 @@ import com.papaolabs.api.domain.service.BookmarkService;
 import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import com.papaolabs.api.interfaces.v1.dto.CommentDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostRequest;
+import com.papaolabs.api.interfaces.v1.controller.request.CommentRequest;
+import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
+import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -104,18 +105,16 @@ public class V1PostController {
     }
 
     @PostMapping("/{postId}")
-    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") String postId) {
-        return new ResponseEntity<>(postService.delete(postId), HttpStatus.OK);
+    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") String postId, @RequestBody String userId) {
+        return new ResponseEntity<>(postService.delete(postId, userId), HttpStatus.OK);
     }
 
     /*
         Comments
      */
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId,
-                                                    @RequestParam("userId") String userId,
-                                                    @RequestParam("text") String text) {
-        return new ResponseEntity<>(commentService.create(postId, userId, text), HttpStatus.OK);
+    public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
+        return new ResponseEntity<>(commentService.create(postId, commentRequest.getUserId(), commentRequest.getText()), HttpStatus.OK);
     }
 
     @PostMapping("/comments/{commentId}")

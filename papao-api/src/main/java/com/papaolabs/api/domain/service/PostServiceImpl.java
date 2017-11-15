@@ -12,8 +12,8 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
-import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.querydsl.core.BooleanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -231,7 +231,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO delete(String postId) {
+    public PostDTO delete(String postId, String userId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
             log.debug("[NotFound] delete - id : {id}", postId);

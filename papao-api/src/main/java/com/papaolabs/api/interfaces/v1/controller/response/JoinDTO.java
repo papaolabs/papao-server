@@ -1,4 +1,4 @@
-package com.papaolabs.api.interfaces.v1.dto;
+package com.papaolabs.api.interfaces.v1.controller.response;
 
 public class JoinDTO {
     private String id;

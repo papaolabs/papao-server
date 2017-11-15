@@ -1,10 +1,10 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.UserService;
-import com.papaolabs.api.interfaces.v1.dto.JoinDTO;
-import com.papaolabs.api.interfaces.v1.dto.JoinRequest;
-import com.papaolabs.api.interfaces.v1.dto.PushDTO;
-import com.papaolabs.api.interfaces.v1.dto.PushRequest;
+import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
+import com.papaolabs.api.interfaces.v1.controller.request.JoinRequest;
+import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.request.PushRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

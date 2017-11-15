@@ -1,8 +1,8 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import com.papaolabs.api.interfaces.v1.dto.PostDTO;
-import com.papaolabs.api.interfaces.v1.dto.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public interface PostService {
 
     PostDTO readPost(String postId);
 
-    PostDTO delete(String id);
+    PostDTO delete(String postId, String userId);
 
     PostDTO setState(String postId, Post.StateType state);
 
