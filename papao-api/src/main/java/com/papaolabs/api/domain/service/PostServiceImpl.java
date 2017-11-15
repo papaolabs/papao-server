@@ -265,8 +265,8 @@ public class PostServiceImpl implements PostService {
         postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                           .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         // Comment 세팅
-        postPreviewDTO.setCommentCount(Long.valueOf(post.getComments()
-                                                        .size()));
+        Long commentCount = Long.valueOf(commentRepository.findByPostId(post.getId()).size());
+        postPreviewDTO.setCommentCount(commentCount);
         // Breed 세팅
         Breed breed = post.getBreed();
         postPreviewDTO.setKindName(breed.getKindName());
