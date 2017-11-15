@@ -120,7 +120,9 @@ public class PostServiceImpl implements PostService {
                                        // Breed 세팅
                                        String breedName = convertKindName(x.getBreedName());
                                        Breed breed = breedMap.get(breedName);
-                                       post.setBreed(breedRepository.findByKindCode(breed.getKindCode()));
+                                       post.setUpKindCode(breed.getUpKindCode());
+                                       post.setKindCode(breed.getKindCode());
+                                       post.setKindName(breed.getKindName());
                                        if (ETC_KIND_CODE.equals(breed.getUpKindCode())) {
                                            post.setFeature(StringUtils.join(x.getBreedName(), LF, post.getFeature()));
                                        }
@@ -134,11 +136,16 @@ public class PostServiceImpl implements PostService {
                                        Region region = regionMap.get(StringUtils.deleteWhitespace(StringUtils.join(
                                            address[0],
                                            address.length > 1 ? (isNotEmpty(address[1]) ? address[1] : address[0]) : address[0])));
+                                       if (region == null) {
+                                           region = regionRepository.findBySidoCodeAndGunguCode(-1L, -1L);
+                                       }
                                        if (shelter == null) {
                                            shelter = shelterRepository.findByShelterCode(-1L);
                                        }
-                                       post.setRegion(region);
-                                       post.setShelter(shelter);
+                                       post.setHappenSidoCode(region.getSidoCode());
+                                       post.setHappenGunguCode(region.getGunguCode());
+                                       post.setShelterCode(shelter.getShelterCode());
+                                       post.setShelterName(shelter.getShelterName());
                                        // Image 세팅
                                        Image image = new Image();
                                        image.setUrl(x.getImageUrl());
