@@ -24,7 +24,7 @@ import java.io.IOException;
             InfrastructureConfig.class
         })
 public class PapaoPushApplication {
-    @Value("file:/root/app/papao-server/papao-push/apns_prod_for_java.p12")
+    @Value("file:${apns.cert.path}")
     private Resource cert;
     @Value("${apns.client.password}")
     private String password;
