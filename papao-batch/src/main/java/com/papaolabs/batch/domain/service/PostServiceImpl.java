@@ -148,7 +148,7 @@ public class PostServiceImpl implements PostService {
                                        return post;
                                    })
                                    .map(x -> {
-                                       Post post = postRepository.findByDesertionId(Long.valueOf(x.getDesertionId()));
+                                       Post post = postRepository.findByDesertionId(x.getDesertionId());
                                        if (post != null) {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음
