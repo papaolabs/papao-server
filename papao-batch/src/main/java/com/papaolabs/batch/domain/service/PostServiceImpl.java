@@ -83,11 +83,6 @@ public class PostServiceImpl implements PostService {
                                                                                 x.getGunguName(),
                                                                                 x.getShelterName())),
                                                                                      Function.identity()));
-        Map<String, Post> postMap = postRepository.findByHappenDate(
-            convertStringToDate(beginDate),
-            convertStringToDate(endDate))
-                                                  .stream()
-                                                  .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
         Map<String, Region> regionMap = regionRepository.findAll()
                                                         .stream()
                                                         .collect(Collectors.toMap(x -> StringUtils
@@ -153,7 +148,7 @@ public class PostServiceImpl implements PostService {
                                        return post;
                                    })
                                    .map(x -> {
-                                       Post post = postMap.get(x.getDesertionId());
+                                       Post post = postRepository.findByDesertionId(Long.valueOf(x.getDesertionId()));
                                        if (post != null) {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음
