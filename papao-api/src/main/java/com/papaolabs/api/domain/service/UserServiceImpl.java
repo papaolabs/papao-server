@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUid(userId);
         user.setPhone(phone);
-        String nickName = adjectives[n] + StringUtils.EMPTY + list.get(random.nextInt(list.size()));
+        String nickName = StringUtils.join(adjectives[n], StringUtils.SPACE, StringUtils.deleteWhitespace(list.get(random.nextInt(list.size()))));
         user.setNickName(nickName);
         user.setEmail(StringUtils.EMPTY);
         User result = userRepository.save(user);
