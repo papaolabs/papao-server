@@ -7,4 +7,6 @@ public interface UserService {
     JoinDTO join(String userId, String userToken, String phone);
 
     PushDTO setPush(String uid, String deviceToken);
+
+    String generateNickname();
 }

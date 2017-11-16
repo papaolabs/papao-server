@@ -1,14 +1,15 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.UserService;
-import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.request.JoinRequest;
-import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.request.PushRequest;
+import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +38,10 @@ public class V1UserController {
     @PostMapping(value = "/push", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PushDTO> setPush(@RequestBody PushRequest pushRequest) {
         return new ResponseEntity(userService.setPush(pushRequest.getUserId(), pushRequest.getDeviceId()), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/nickname")
+    public ResponseEntity<String> generateNickname() {
+        return new ResponseEntity(userService.generateNickname(), HttpStatus.OK);
     }
 }

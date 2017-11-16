@@ -43,30 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JoinDTO join(String userId, String userToken, String phone) {
-        StringBuilder textBuilder = new StringBuilder();
-        try {
-            try (Reader reader = new BufferedReader(new InputStreamReader
-                                                        (resource.getInputStream(), Charset.forName(StandardCharsets.UTF_8.name())))) {
-                int c = 0;
-                while ((c = reader.read()) != -1) {
-                    textBuilder.append((char) c);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String[] adjectives = StringUtils.split(textBuilder.toString(), ",");
-        Random random = new Random();
-        int n = random.nextInt(adjectives.length);
-        List<String> list = breedRepository.findAll()
-                                           .stream()
-                                           .map(Breed::getKindName)
-                                           .collect(Collectors.toList());
         User user = new User();
         user.setUid(userId);
         user.setPhone(phone);
-        String nickName = StringUtils.join(adjectives[n], StringUtils.SPACE, StringUtils.deleteWhitespace(list.get(random.nextInt(list.size()))));
-        user.setNickName(nickName);
+        user.setNickName(generateNickname());
         user.setEmail(StringUtils.EMPTY);
         User result = userRepository.save(user);
         JoinDTO joinDTO = new JoinDTO();
@@ -90,5 +70,29 @@ public class UserServiceImpl implements UserService {
                                                .map(PushUser::getDeviceId)
                                                .collect(Collectors.toList()));
         return pushDTO;
+    }
+
+    @Override
+    public String generateNickname() {
+        StringBuilder textBuilder = new StringBuilder();
+        try {
+            try (Reader reader = new BufferedReader(new InputStreamReader
+                                                        (resource.getInputStream(), Charset.forName(StandardCharsets.UTF_8.name())))) {
+                int c = 0;
+                while ((c = reader.read()) != -1) {
+                    textBuilder.append((char) c);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] adjectives = StringUtils.split(textBuilder.toString(), ",");
+        Random random = new Random();
+        int n = random.nextInt(adjectives.length);
+        List<String> list = breedRepository.findAll()
+                                           .stream()
+                                           .map(Breed::getKindName)
+                                           .collect(Collectors.toList());
+        return StringUtils.join(adjectives[n], StringUtils.SPACE, StringUtils.deleteWhitespace(list.get(random.nextInt(list.size()))));
     }
 }
