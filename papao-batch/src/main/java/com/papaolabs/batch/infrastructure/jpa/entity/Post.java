@@ -3,6 +3,7 @@ package com.papaolabs.batch.infrastructure.jpa.entity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +30,7 @@ public class Post extends BaseEntity {
     private NeuterType neuterType;
     @Enumerated(EnumType.STRING)
     private StateType stateType;
+    @Column(unique = true)
     private String desertionId;
     private String noticeId;
     private Date noticeBeginDate;
