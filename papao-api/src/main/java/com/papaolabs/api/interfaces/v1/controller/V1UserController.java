@@ -32,7 +32,7 @@ public class V1UserController {
     public ResponseEntity<JoinDTO> join(@RequestBody JoinRequest joinRequest) {
         return new ResponseEntity(userService.join(joinRequest.getUserId(),
                                                    joinRequest.getUserToken(),
-                                                   joinRequest.getUserToken()), HttpStatus.OK);
+                                                   joinRequest.getPhone()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/push", produces = MediaType.APPLICATION_JSON_VALUE)
