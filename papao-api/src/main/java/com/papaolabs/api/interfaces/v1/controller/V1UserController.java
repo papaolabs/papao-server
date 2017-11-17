@@ -43,7 +43,7 @@ public class V1UserController {
                                   HttpStatus.OK);
     }
 
-    @PostMapping(value = "profile")
+    @PostMapping(value = "/profile")
     public ResponseEntity<UserDTO> profile(@RequestParam String userId) {
         return new ResponseEntity(userService.profile(userId), HttpStatus.OK);
     }
