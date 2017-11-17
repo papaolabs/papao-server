@@ -37,7 +37,7 @@ public class V1UserController {
 
     @PostMapping(value = "/push", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PushDTO> setPush(@RequestBody PushRequest pushRequest) {
-        return new ResponseEntity(userService.setPush(pushRequest.getUserId(), pushRequest.getDeviceId()), HttpStatus.OK);
+        return new ResponseEntity(userService.setPush(pushRequest.getType(), pushRequest.getUserId(), pushRequest.getDeviceId()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/nickname")

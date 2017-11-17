@@ -6,7 +6,7 @@ import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 public interface UserService {
     JoinDTO join(String userId, String userToken, String phone);
 
-    PushDTO setPush(String uid, String deviceToken);
+    PushDTO setPush(String type, String uid, String deviceToken);
 
     String generateNickname();
 }

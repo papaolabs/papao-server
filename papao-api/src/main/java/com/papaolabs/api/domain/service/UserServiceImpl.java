@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JoinDTO join(String userId, String userToken, String phone) {
         User userByUid = userRepository.findByUid(userId);
-        if(userByUid != null) {
+        if (userByUid != null) {
             JoinDTO joinDTO = new JoinDTO();
             joinDTO.setId("-1");
             return joinDTO;
@@ -64,13 +64,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PushDTO setPush(String userId, String deviceId) {
-        PushUser pushUser = new PushUser();
-        pushUser.setUserId(Long.valueOf(userId));
+    public PushDTO setPush(String type, String userId, String deviceId) {
+        PushUser pushUser = pushUserRepository.findByDeviceId(deviceId);
+        if (pushUser != null) {
+            PushDTO pushDTO = new PushDTO();
+            pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
+            pushDTO.setDeviceIds(pushUserRepository.findByUserId(Long.valueOf(userId))
+                                                   .stream()
+                                                   .map(PushUser::getDeviceId)
+                                                   .collect(Collectors.toList()));
+            pushDTO.setType(pushUser.getType()
+                                    .name());
+            return pushDTO;
+        }
+        PushUser.UserType userType = PushUser.UserType.getType(type);
+        pushUser = new PushUser();
+        pushUser.setType(userType);
+        pushUser.setUserId(PushUser.UserType.GUEST == userType ? -1L : Long.valueOf(userId));
         pushUser.setDeviceId(deviceId);
         pushUserRepository.save(pushUser);
         PushDTO pushDTO = new PushDTO();
-        pushDTO.setUserId(userId);
+        pushDTO.setType(pushUser.getType()
+                                .name());
+        pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
         pushDTO.setDeviceIds(pushUserRepository.findByUserId(Long.valueOf(userId))
                                                .stream()
                                                .map(PushUser::getDeviceId)
