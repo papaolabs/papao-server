@@ -43,6 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JoinDTO join(String userId, String userToken, String phone) {
+        User userByUid = userRepository.findByUid(userId);
+        if(userByUid != null) {
+            JoinDTO joinDTO = new JoinDTO();
+            joinDTO.setId("-1");
+            return joinDTO;
+        }
         User user = new User();
         user.setUid(userId);
         user.setPhone(phone);
