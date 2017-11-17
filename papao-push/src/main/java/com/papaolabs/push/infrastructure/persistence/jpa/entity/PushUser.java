@@ -3,6 +3,8 @@ package com.papaolabs.push.infrastructure.persistence.jpa.entity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,6 +15,7 @@ public class PushUser extends BaseEntity{
     @Id
     @GeneratedValue
     private Long id;
+    @Enumerated(EnumType.STRING)
     private UserType type;
     private Long userId;
     private String deviceId;
