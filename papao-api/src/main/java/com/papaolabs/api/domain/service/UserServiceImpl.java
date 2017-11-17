@@ -102,6 +102,7 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setUserId("-1");
+            return userDTO;
         }
         List<PushUser> pushUsers = pushUserRepository.findByUserId(Long.valueOf(uid));
         if(pushUsers == null || pushUsers.size() <= 0) {
