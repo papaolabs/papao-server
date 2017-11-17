@@ -8,6 +8,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.PushUserRepos
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -92,6 +94,29 @@ public class UserServiceImpl implements UserService {
                                                .map(PushUser::getDeviceId)
                                                .collect(Collectors.toList()));
         return pushDTO;
+    }
+
+    @Override
+    public UserDTO profile(String uid) {
+        User user = userRepository.findByUid(uid);
+        if(user == null) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUserId("-1");
+        }
+        List<PushUser> pushUsers = pushUserRepository.findByUserId(Long.valueOf(uid));
+        if(pushUsers == null || pushUsers.size() <= 0) {
+            pushUsers = new ArrayList<>();
+        }
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUid());
+        userDTO.setNickname(user.getNickName());
+        userDTO.setPhone(user.getPhone());
+        userDTO.setDevicesToken(pushUserRepository.findByUserId(Long.valueOf(user.getUid()))
+                                                  .stream()
+                                                  .map(PushUser::getDeviceId)
+                                                  .collect(Collectors.toList()));
+
+        return userDTO;
     }
 
     @Override
