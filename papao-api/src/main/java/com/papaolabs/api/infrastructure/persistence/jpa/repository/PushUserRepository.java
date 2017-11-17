@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface PushUserRepository extends JpaRepository<PushUser, Long> {
-    List<PushUser> findByUserId(Long userId);
+    List<PushUser> findByUserId(String userId);
 
     PushUser findByDeviceId(String deviceId);
 }

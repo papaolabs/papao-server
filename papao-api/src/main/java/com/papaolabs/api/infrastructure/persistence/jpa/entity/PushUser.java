@@ -17,7 +17,7 @@ public class PushUser extends BaseEntity {
     private Long id;
     @Enumerated(EnumType.STRING)
     private UserType type;
-    private Long userId;
+    private String userId;
     private String deviceId;
 
     public enum UserType {
@@ -53,11 +53,11 @@ public class PushUser extends BaseEntity {
         this.type = type;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -104,7 +104,7 @@ public class PushUser extends BaseEntity {
         return "PushUser{" +
             "id=" + id +
             ", type=" + type +
-            ", userId=" + userId +
+            ", userId='" + userId + '\'' +
             ", deviceId='" + deviceId + '\'' +
             '}';
     }

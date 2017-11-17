@@ -5,7 +5,6 @@ import java.util.List;
 public class UserDTO {
     private String userId;
     private String nickname;
-    private String type;
     private String phone;
     private List<String> devicesToken;
 
@@ -23,14 +22,6 @@ public class UserDTO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getPhone() {
@@ -64,9 +55,6 @@ public class UserDTO {
         if (nickname != null ? !nickname.equals(userDTO.nickname) : userDTO.nickname != null) {
             return false;
         }
-        if (type != null ? !type.equals(userDTO.type) : userDTO.type != null) {
-            return false;
-        }
         if (phone != null ? !phone.equals(userDTO.phone) : userDTO.phone != null) {
             return false;
         }
@@ -77,7 +65,6 @@ public class UserDTO {
     public int hashCode() {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (devicesToken != null ? devicesToken.hashCode() : 0);
         return result;
@@ -88,7 +75,6 @@ public class UserDTO {
         return "UserDTO{" +
             "userId='" + userId + '\'' +
             ", nickname='" + nickname + '\'' +
-            ", type='" + type + '\'' +
             ", phone='" + phone + '\'' +
             ", devicesToken=" + devicesToken +
             '}';

@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         if (pushUser != null) {
             PushDTO pushDTO = new PushDTO();
             pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
-            pushDTO.setDeviceIds(pushUserRepository.findByUserId(Long.valueOf(userId))
+            pushDTO.setDeviceIds(pushUserRepository.findByUserId(userId)
                                                    .stream()
                                                    .map(PushUser::getDeviceId)
                                                    .collect(Collectors.toList()));
@@ -82,14 +82,14 @@ public class UserServiceImpl implements UserService {
         PushUser.UserType userType = PushUser.UserType.getType(type);
         pushUser = new PushUser();
         pushUser.setType(userType);
-        pushUser.setUserId(PushUser.UserType.GUEST == userType ? -1L : Long.valueOf(userId));
+        pushUser.setUserId(PushUser.UserType.GUEST == userType ? "-1" : userId);
         pushUser.setDeviceId(deviceId);
         pushUserRepository.save(pushUser);
         PushDTO pushDTO = new PushDTO();
         pushDTO.setType(pushUser.getType()
                                 .name());
         pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
-        pushDTO.setDeviceIds(pushUserRepository.findByUserId(Long.valueOf(userId))
+        pushDTO.setDeviceIds(pushUserRepository.findByUserId(userId)
                                                .stream()
                                                .map(PushUser::getDeviceId)
                                                .collect(Collectors.toList()));
@@ -99,24 +99,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO profile(String uid) {
         User user = userRepository.findByUid(uid);
-        if(user == null) {
+        if ("-1".equals(uid) || user == null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setUserId("-1");
             return userDTO;
         }
-        List<PushUser> pushUsers = pushUserRepository.findByUserId(Long.valueOf(uid));
-        if(pushUsers == null || pushUsers.size() <= 0) {
+        List<PushUser> pushUsers = pushUserRepository.findByUserId(uid);
+        if (pushUsers == null || pushUsers.size() <= 0) {
             pushUsers = new ArrayList<>();
         }
+        List<PushUser> pushUserList = pushUserRepository.findByUserId(user.getUid());
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUid());
         userDTO.setNickname(user.getNickName());
         userDTO.setPhone(user.getPhone());
-        userDTO.setDevicesToken(pushUserRepository.findByUserId(Long.valueOf(user.getUid()))
-                                                  .stream()
-                                                  .map(PushUser::getDeviceId)
-                                                  .collect(Collectors.toList()));
-
+        userDTO.setDevicesToken(pushUserList
+                                    .stream()
+                                    .map(PushUser::getDeviceId)
+                                    .collect(Collectors.toList()));
         return userDTO;
     }
 
