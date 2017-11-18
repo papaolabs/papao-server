@@ -210,8 +210,11 @@ public class PostServiceImpl implements PostService {
                                                                                   convertStringToDate(endDate))
                                                                          .and(post.isDisplay.eq(TRUE)));
         if (postType != null) {
-            for (String s : postType) {
-                builder.or(post.postType.eq(Post.PostType.getType(s)));
+            builder.and(post.postType.eq(Post.PostType.getType(postType.get(0))));
+            if (postType.size() > 1) {
+                for (int i = 1; i < postType.size(); i++) {
+                    builder.or(post.postType.eq(Post.PostType.getType(postType.get(i))));
+                }
             }
         }
         if (isNotEmpty(uprCode)) {
