@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,14 +36,17 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public void sendPush(PushRequest request, String postId) {
-        PushUser pushUser = pushUserRepository.findByUserId(request.getUserId());
-        String deviceId = pushUser.getDeviceId();
-        PushLog pushLog = new PushLog();
-        pushLog.setUserId(pushUser.getUserId());
-        pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
-        pushLog.setMessage(request.getMessage());
-        pushClient.send(deviceId, request.getMessage());
-        pushLogRepository.save(pushLog);
+        List<PushUser> pushUsers = pushUserRepository.findByUserId(request.getUserId());
+        List<PushLog> pushLogs = new ArrayList<>();
+        for(PushUser pushUser : pushUsers) {
+            PushLog pushLog = new PushLog();
+            pushLog.setUserId(pushUser.getUserId());
+            pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
+            pushLog.setMessage(request.getMessage());
+            pushClient.send(pushUser.getDeviceId(), request.getMessage());
+            pushLogs.add(pushLog);
+        }
+        pushLogRepository.save(pushLogs);
     }
 
     @Override
