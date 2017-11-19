@@ -1,7 +1,7 @@
 package com.papaolabs.batch.infrastructure.feign.openapi;
 
-import com.papaolabs.api.infrastructure.feign.LoggingFallbackFactory;
-import com.papaolabs.api.infrastructure.feign.openapi.dto.PushDTO;
+import com.papaolabs.batch.infrastructure.feign.LoggingFallbackFactory;
+import com.papaolabs.batch.infrastructure.feign.openapi.dto.PushDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;

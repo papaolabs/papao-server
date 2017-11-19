@@ -22,17 +22,17 @@ import static feign.FeignException.errorStatus;
 @EnableCircuitBreaker
 @ComponentScan
 public class PushApiConfig {
-    @Value("${openapi.url}")
-    private String openApiUrl;
+    @Value("${pushapi.url}")
+    private String pushApiUrl;
 
     @Bean
-    public PushApiClient openApiClient() {
+    public PushApiClient pushApiClient() {
         return Feign.builder()
                     .client(new OkHttpClient())
                     .encoder(new GsonEncoder())
                     .decoder(new GsonDecoder())
                     .logLevel(Logger.Level.BASIC)
-                    .target(PushApiClient.class, openApiUrl);
+                    .target(PushApiClient.class, pushApiUrl);
     }
 
     @Bean

@@ -127,6 +127,10 @@ public class Post extends BaseEntity {
             }
             return UNKNOWN;
         }
+
+        public String getCode() {
+            return code;
+        }
     }
 
     public Long getId() {

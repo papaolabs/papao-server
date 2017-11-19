@@ -22,7 +22,7 @@ import static feign.FeignException.errorStatus;
 @EnableCircuitBreaker
 @ComponentScan
 public class OpenApiConfig {
-    @Value("${pushapi.url}")
+    @Value("${openapi.url}")
     private String openApiUrl;
 
     @Bean
