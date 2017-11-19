@@ -51,6 +51,7 @@ public class PostServiceImpl implements PostService {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
+    public final static Long BATCH_USER_ID = 9999L;
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
 
@@ -94,6 +95,7 @@ public class PostServiceImpl implements PostService {
         List<Post> results = animal.stream()
                                    .map(x -> {
                                        Post post = new Post();
+                                       post.setUid(BATCH_USER_ID);
                                        post.setPostType(Post.PostType.SYSTEM);
                                        post.setGenderType(Post.GenderType.getType(x.getGenderCode()));
                                        post.setNeuterType(Post.NeuterType.getType(x.getNeuterCode()));
