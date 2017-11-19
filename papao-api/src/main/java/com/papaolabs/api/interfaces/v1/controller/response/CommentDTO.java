@@ -31,6 +31,22 @@ public class CommentDTO {
             this.userId = userId;
         }
 
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setNickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        public String getProfileUrl() {
+            return profileUrl;
+        }
+
+        public void setProfileUrl(String profileUrl) {
+            this.profileUrl = profileUrl;
+        }
+
         public String getText() {
             return text;
         }
@@ -53,6 +69,61 @@ public class CommentDTO {
 
         public void setLastModifiedDate(String lastModifiedDate) {
             this.lastModifiedDate = lastModifiedDate;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Content content = (Content) o;
+            if (id != null ? !id.equals(content.id) : content.id != null) {
+                return false;
+            }
+            if (userId != null ? !userId.equals(content.userId) : content.userId != null) {
+                return false;
+            }
+            if (nickname != null ? !nickname.equals(content.nickname) : content.nickname != null) {
+                return false;
+            }
+            if (profileUrl != null ? !profileUrl.equals(content.profileUrl) : content.profileUrl != null) {
+                return false;
+            }
+            if (text != null ? !text.equals(content.text) : content.text != null) {
+                return false;
+            }
+            if (createdDate != null ? !createdDate.equals(content.createdDate) : content.createdDate != null) {
+                return false;
+            }
+            return lastModifiedDate != null ? lastModifiedDate.equals(content.lastModifiedDate) : content.lastModifiedDate == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (userId != null ? userId.hashCode() : 0);
+            result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
+            result = 31 * result + (profileUrl != null ? profileUrl.hashCode() : 0);
+            result = 31 * result + (text != null ? text.hashCode() : 0);
+            result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+            result = 31 * result + (lastModifiedDate != null ? lastModifiedDate.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Content{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", profileUrl='" + profileUrl + '\'' +
+                ", text='" + text + '\'' +
+                ", createdDate='" + createdDate + '\'' +
+                ", lastModifiedDate='" + lastModifiedDate + '\'' +
+                '}';
         }
     }
 

@@ -1,8 +1,10 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,15 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     @NotNull
     private final BreedRepository breedRepository;
+    @NotNull
+    private final UserRepository userRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, BreedRepository breedRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              BreedRepository breedRepository,
+                              UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.breedRepository = breedRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -90,9 +97,12 @@ public class CommentServiceImpl implements CommentService {
     }*/
 
     private CommentDTO.Content transform(Comment comment) {
+        User user = userRepository.findByUid(comment.getUserId());
         CommentDTO.Content content = new CommentDTO.Content();
         content.setId(comment.getId());
         content.setUserId(comment.getUserId());
+        content.setNickname(user.getNickName());
+        content.setProfileUrl(user.getProfileUrl());
         content.setText(comment.getText());
         content.setCreatedDate(comment.getCreatedDateTime()
                                       .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
