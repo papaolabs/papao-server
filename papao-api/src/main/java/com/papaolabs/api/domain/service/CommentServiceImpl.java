@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
         String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), "...");
         try {
-            pushApiClient.sendPush(String.valueOf(post.getUid()), message, postId);
+            pushApiClient.sendPush("ALARM", String.valueOf(post.getUid()), message, postId);
         } catch (FeignException fe) {
         }
         return commentDTO;

@@ -32,7 +32,6 @@ public class PushServiceImpl implements PushService {
     private final PushLogRepository pushLogRepository;
     @NotNull
     private final PushUserRepository pushUserRepository;
-
     private Pattern p = Pattern.compile("[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+");
 
     public PushServiceImpl(PushClient pushClient,
@@ -46,18 +45,20 @@ public class PushServiceImpl implements PushService {
     @Override
     public void sendPush(PushRequest request, String postId) {
         List<PushUser> pushUsers = new ArrayList<>();
-        if(request.getUserId() == -9999L){
+        if (request.getUserId() == -9999L) {
             pushUsers = pushUserRepository.findAll();
-        }
-        else {
+        } else {
             pushUsers = pushUserRepository.findByUserId(request.getUserId());
         }
         List<PushLog> pushLogs = new ArrayList<>();
         for (PushUser pushUser : pushUsers) {
             PushLog pushLog = new PushLog();
+            pushLog.setType(PushLog.PushType.getType(request.getType()
+                                                            .name()));
             pushLog.setUserId(pushUser.getUserId());
             pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
-            pushLog.setMessage(p.matcher(request.getMessage()).replaceAll(" "));
+            pushLog.setMessage(p.matcher(request.getMessage())
+                                .replaceAll(" "));
             pushClient.send(pushUser.getDeviceId(), request.getMessage());
             pushLogs.add(pushLog);
         }
@@ -83,6 +84,8 @@ public class PushServiceImpl implements PushService {
                                                  .map(x -> {
                                                      PushHistory.PushLog pushLog = new PushHistory.PushLog();
                                                      pushLog.setId(x.getId());
+                                                     pushLog.setType(PushHistory.PushLog.PushType.getType(x.getType()
+                                                                                                           .name()));
                                                      pushLog.setPostId(x.getPostId());
                                                      pushLog.setMessage(x.getMessage());
                                                      pushLog.setCreatedDate(x.getCreatedDateTime()

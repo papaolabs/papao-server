@@ -1,5 +1,7 @@
 package com.papaolabs.api.interfaces.v1.controller.response;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 public class PushHistoryDTO {
@@ -12,6 +14,24 @@ public class PushHistoryDTO {
         private String message;
         private String createdDate;
         private String updatedDate;
+        private PushType type;
+
+        public enum PushType {
+            SEARCH, ALARM, BOOKMARK;
+
+            public static PushType getType(String name) {
+                if (StringUtils.isEmpty(name)) {
+                    return null;
+                }
+                for (PushType type : PushType.values()) {
+                    if (type.name()
+                            .equals(name)) {
+                        return type;
+                    }
+                }
+                return ALARM;
+            }
+        }
 
         public Long getId() {
             return id;
@@ -53,6 +73,14 @@ public class PushHistoryDTO {
             this.updatedDate = updatedDate;
         }
 
+        public PushType getType() {
+            return type;
+        }
+
+        public void setType(PushType type) {
+            this.type = type;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -74,7 +102,10 @@ public class PushHistoryDTO {
             if (createdDate != null ? !createdDate.equals(pushLog.createdDate) : pushLog.createdDate != null) {
                 return false;
             }
-            return updatedDate != null ? updatedDate.equals(pushLog.updatedDate) : pushLog.updatedDate == null;
+            if (updatedDate != null ? !updatedDate.equals(pushLog.updatedDate) : pushLog.updatedDate != null) {
+                return false;
+            }
+            return type == pushLog.type;
         }
 
         @Override
@@ -84,6 +115,7 @@ public class PushHistoryDTO {
             result = 31 * result + (message != null ? message.hashCode() : 0);
             result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
             result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+            result = 31 * result + (type != null ? type.hashCode() : 0);
             return result;
         }
 
@@ -95,6 +127,7 @@ public class PushHistoryDTO {
                 ", message='" + message + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", updatedDate='" + updatedDate + '\'' +
+                ", type=" + type +
                 '}';
         }
     }

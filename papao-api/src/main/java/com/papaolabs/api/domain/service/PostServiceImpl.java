@@ -139,15 +139,15 @@ public class PostServiceImpl implements PostService {
         PostDTO postDTO = transform(postRepository.save(post));
         if (Post.PostType.getType(postType) == Post.PostType.ROADREPORT) {
             KorStringUtils korStringUtils = new KorStringUtils();
-            String message = korStringUtils.append("[길거리 제보]")
+            String message = korStringUtils.append("[길거리제보] ")
                                            .append(post.getKindName())
-                                           .appendJosa("가 ")
-                                           .append(StringUtils.join(postDTO.getSidoName(),
+                                           .appendJosa("가")
+                                           .append(StringUtils.join(StringUtils.SPACE, postDTO.getSidoName(),
                                                                     StringUtils.SPACE,
                                                                     postDTO.getGunguName(), "에서"))
                                            .append(" 발견되었습니다\\ud83d\\udc3e")
                                            .toString();
-            pushApiClient.sendPush("-9999", message, String.valueOf(postDTO.getId()));
+            pushApiClient.sendPush("ALARM", "-9999", message, String.valueOf(postDTO.getId()));
         }
         return postDTO;
     }
@@ -375,7 +375,7 @@ public class PostServiceImpl implements PostService {
                                            .toString();
             List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(postId));
             for (Bookmark bookmark : bookmarks) {
-                pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message, postId);
+                pushApiClient.sendPush("ALARM", String.valueOf(bookmark.getUserId()), message, postId);
             }
         }
         postRepository.save(post);

@@ -14,8 +14,9 @@ import java.util.List;
 public interface PushApiClient {
     @RequestLine("POST /api/v1/push/send?postId={postId}")
     @Headers("Content-Type: application/json")
-    @Body("%7B\"userId\": \"{userId}\", \"message\": \"{message}\"%7D")
-    List<PushDTO> sendPush(@Param(value = "userId") String userId,
+    @Body("%7B\"type\": \"{type}\", \"userId\": \"{userId}\", \"message\": \"{message}\"%7D")
+    List<PushDTO> sendPush(@Param(value = "type") String type,
+                           @Param(value = "userId") String userId,
                            @Param(value = "message") String message,
                            @Param(value = "postId") String postId);
 

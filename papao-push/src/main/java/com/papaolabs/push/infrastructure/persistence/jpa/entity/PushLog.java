@@ -1,6 +1,10 @@
 package com.papaolabs.push.infrastructure.persistence.jpa.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,6 +18,25 @@ public class PushLog extends BaseEntity {
     private Long postId;
     private Long userId;
     private String message;
+    @Enumerated(EnumType.STRING)
+    private PushType type;
+
+    public enum PushType {
+        SEARCH, ALARM, BOOKMARK;
+
+        public static PushType getType(String name) {
+            if (StringUtils.isEmpty(name)) {
+                return null;
+            }
+            for (PushType type : PushType.values()) {
+                if (type.name()
+                        .equals(name)) {
+                    return type;
+                }
+            }
+            return ALARM;
+        }
+    }
 
     public Long getId() {
         return id;
@@ -47,6 +70,14 @@ public class PushLog extends BaseEntity {
         this.message = message;
     }
 
+    public PushType getType() {
+        return type;
+    }
+
+    public void setType(PushType type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -65,7 +96,10 @@ public class PushLog extends BaseEntity {
         if (userId != null ? !userId.equals(pushLog.userId) : pushLog.userId != null) {
             return false;
         }
-        return message != null ? message.equals(pushLog.message) : pushLog.message == null;
+        if (message != null ? !message.equals(pushLog.message) : pushLog.message != null) {
+            return false;
+        }
+        return type == pushLog.type;
     }
 
     @Override
@@ -74,6 +108,7 @@ public class PushLog extends BaseEntity {
         result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
 
@@ -84,6 +119,7 @@ public class PushLog extends BaseEntity {
             ", postId=" + postId +
             ", userId=" + userId +
             ", message='" + message + '\'' +
+            ", type=" + type +
             '}';
     }
 }
