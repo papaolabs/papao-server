@@ -123,7 +123,7 @@ public class CommentServiceImpl implements CommentService {
         if (user == null) {
             user = new User();
             user.setNickName("탈퇴회원");
-            user.setProfileUrl("https://photos.app.goo.gl/JG1eawv9DMcyDcnh2");
+            user.setProfileUrl("http://220.230.121.76:8000/v1/download/86d5b5dca78b4d908f7032df35d53c9e.png");
         }
         CommentDTO.Content content = new CommentDTO.Content();
         content.setId(comment.getId());

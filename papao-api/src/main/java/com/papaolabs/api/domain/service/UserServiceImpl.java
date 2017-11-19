@@ -36,9 +36,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PushUserRepository pushUserRepository;
     private final BreedRepository breedRepository;
-    private final static String[] imageList = {"https://photos.app.goo.gl/JG1eawv9DMcyDcnh2",
-                                               "https://photos.app.goo.gl/mj6DHEEsbQYFfCfK2",
-                                               "https://photos.app.goo.gl/chc59jr6ooVyZTWh1"};
+    private final static String[] imageList = {"http://220.230.121.76:8000/v1/download/86d5b5dca78b4d908f7032df35d53c9e.png",
+                                               "http://220.230.121.76:8000/v1/download/f7cdf7a82056462383f4a4e96651f9dd.png",
+                                               "http://220.230.121.76:8000/v1/download/2d0e043d0fae488da5cec48c68ce71c0.png"};
     private final PushApiClient pushApiClient;
 
     public UserServiceImpl(UserRepository userRepository,

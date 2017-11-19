@@ -45,7 +45,13 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public void sendPush(PushRequest request, String postId) {
-        List<PushUser> pushUsers = pushUserRepository.findByUserId(request.getUserId());
+        List<PushUser> pushUsers = new ArrayList<>();
+        if(request.getUserId() == -9999L){
+            pushUsers = pushUserRepository.findAll();
+        }
+        else {
+            pushUsers = pushUserRepository.findByUserId(request.getUserId());
+        }
         List<PushLog> pushLogs = new ArrayList<>();
         for (PushUser pushUser : pushUsers) {
             PushLog pushLog = new PushLog();

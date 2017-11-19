@@ -136,7 +136,20 @@ public class PostServiceImpl implements PostService {
         post.setShelterName(shelter.getShelterName());
         post.setShelterContact(contact);
         post.setDisplay(TRUE);
-        return transform(postRepository.save(post));
+        PostDTO postDTO = transform(postRepository.save(post));
+        if (Post.PostType.getType(postType) == Post.PostType.ROADREPORT) {
+            KorStringUtils korStringUtils = new KorStringUtils();
+            String message = korStringUtils.append("[길거리 제보]")
+                                           .append(post.getKindName())
+                                           .appendJosa("가 ")
+                                           .append(StringUtils.join(postDTO.getSidoName(),
+                                                                    StringUtils.SPACE,
+                                                                    postDTO.getGunguName(), "에서"))
+                                           .append(" 발견되었습니다\\ud83d\\udc3e")
+                                           .toString();
+            pushApiClient.sendPush("-9999", message, String.valueOf(postDTO.getId()));
+        }
+        return postDTO;
     }
 
     /*@Override
