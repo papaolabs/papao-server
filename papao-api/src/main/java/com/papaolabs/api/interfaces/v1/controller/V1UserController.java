@@ -5,6 +5,7 @@ import com.papaolabs.api.interfaces.v1.controller.request.JoinRequest;
 import com.papaolabs.api.interfaces.v1.controller.request.PushRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,5 +51,10 @@ public class V1UserController {
     @GetMapping(value = "/nickname")
     public ResponseEntity<String> generateNickname() {
         return new ResponseEntity(userService.generateNickname(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/push/history", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PushHistoryDTO> getPushHistory(@RequestBody String userId) {
+        return new ResponseEntity<PushHistoryDTO>(userService.getPushHistory(userId), HttpStatus.OK);
     }
 }

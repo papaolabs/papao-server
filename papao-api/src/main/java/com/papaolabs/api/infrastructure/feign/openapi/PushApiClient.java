@@ -1,6 +1,7 @@
 package com.papaolabs.api.infrastructure.feign.openapi;
 
 import com.papaolabs.api.infrastructure.feign.openapi.dto.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
 import feign.Body;
 import feign.Headers;
 import feign.Param;
@@ -17,4 +18,7 @@ public interface PushApiClient {
     List<PushDTO> sendPush(@Param(value = "userId") String userId,
                            @Param(value = "message") String message,
                            @Param(value = "postId") String postId);
+
+    @RequestLine("GET /api/v1/push?userId={userId}")
+    PushHistoryDTO ownPushList(@Param(value = "userId") String userId);
 }

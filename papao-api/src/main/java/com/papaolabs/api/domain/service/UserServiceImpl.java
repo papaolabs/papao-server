@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
@@ -8,6 +9,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.PushUserRepos
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +39,15 @@ public class UserServiceImpl implements UserService {
     private final static String[] imageList = {"https://photos.app.goo.gl/JG1eawv9DMcyDcnh2",
                                                "https://photos.app.goo.gl/mj6DHEEsbQYFfCfK2",
                                                "https://photos.app.goo.gl/chc59jr6ooVyZTWh1"};
+    private final PushApiClient pushApiClient;
 
     public UserServiceImpl(UserRepository userRepository,
                            PushUserRepository pushUserRepository,
-                           BreedRepository breedRepository) {
+                           BreedRepository breedRepository, PushApiClient pushApiClient) {
         this.userRepository = userRepository;
         this.pushUserRepository = pushUserRepository;
         this.breedRepository = breedRepository;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
@@ -148,5 +152,10 @@ public class UserServiceImpl implements UserService {
                                            .map(Breed::getKindName)
                                            .collect(Collectors.toList());
         return StringUtils.join(adjectives[n], StringUtils.SPACE, StringUtils.deleteWhitespace(list.get(random.nextInt(list.size()))));
+    }
+
+    @Override
+    public PushHistoryDTO getPushHistory(String userId) {
+        return pushApiClient.ownPushList(userId);
     }
 }
