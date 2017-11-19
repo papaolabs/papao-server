@@ -1,11 +1,17 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 
+@Slf4j
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
@@ -28,13 +35,21 @@ public class CommentServiceImpl implements CommentService {
     private final BreedRepository breedRepository;
     @NotNull
     private final UserRepository userRepository;
+    @NotNull
+    private final PostRepository postRepository;
+    @NotNull
+    private final PushApiClient pushApiClient;
 
     public CommentServiceImpl(CommentRepository commentRepository,
                               BreedRepository breedRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              PostRepository postRepository,
+                              PushApiClient pushApiClient) {
         this.commentRepository = commentRepository;
         this.breedRepository = breedRepository;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
@@ -46,6 +61,14 @@ public class CommentServiceImpl implements CommentService {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPostId(Long.valueOf(postId));
         commentDTO.setContents(Arrays.asList(transform(commentRepository.save(comment))));
+        Post post = postRepository.findOne(Long.valueOf(postId));
+        User user = userRepository.findByUid(String.valueOf(post.getUid()));
+        String message = StringUtils.join("내가 쓴 포스트에 ", user.getNickName(), "님의 댓글이 달렸습니다 \uF389");
+        try {
+            pushApiClient.sendPush(String.valueOf(post.getUid()), message, postId);
+        } catch (FeignException fe) {
+            log.debug(fe.toString());
+        }
         return commentDTO;
     }
 
@@ -98,7 +121,7 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentDTO.Content transform(Comment comment) {
         User user = userRepository.findByUid(comment.getUserId());
-        if(user == null) {
+        if (user == null) {
             user = new User();
             user.setNickName("탈퇴회원");
             user.setProfileUrl("https://photos.app.goo.gl/JG1eawv9DMcyDcnh2");

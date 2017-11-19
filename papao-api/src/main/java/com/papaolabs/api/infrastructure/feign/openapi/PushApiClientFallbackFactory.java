@@ -25,7 +25,7 @@ public class PushApiClientFallbackFactory implements LoggingFallbackFactory<Push
 
     public static class OpenApiFallback implements PushApiClient {
         @Override
-        public List<PushDTO> sample() {
+        public List<PushDTO> sendPush(String userId, String message, String postId) {
             return null;
         }
     }

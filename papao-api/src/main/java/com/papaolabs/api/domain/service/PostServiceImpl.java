@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
@@ -61,19 +62,22 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     @NotNull
     private final BookmarkService bookmarkService;
+    @NotNull
+    private final PushApiClient pushApiClient;
 
     public PostServiceImpl(PostRepository postRepository,
                            RegionRepository regionRepository,
                            BreedRepository breedRepository,
                            ShelterRepository shelterRepository,
                            CommentRepository commentRepository,
-                           BookmarkService bookmarkService) {
+                           BookmarkService bookmarkService, PushApiClient pushApiClient) {
         this.postRepository = postRepository;
         this.regionRepository = regionRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
         this.commentRepository = commentRepository;
         this.bookmarkService = bookmarkService;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
