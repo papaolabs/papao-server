@@ -49,7 +49,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
         Post post = postRepository.findOne(Long.valueOf(postId));
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
-        String message = StringUtils.join("내가 쓴 포스트를 ", user.getNickName(), "님이 북마크 했습니다");
+        String message = StringUtils.join(user.getNickName(), "님이 내 포스트를 북마크 했습니다\\ud83d\\udc36");
         pushApiClient.sendPush(String.valueOf(post.getUid()), message, postId);
         return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
     }
