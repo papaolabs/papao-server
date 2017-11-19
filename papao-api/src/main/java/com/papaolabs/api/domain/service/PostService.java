@@ -51,7 +51,7 @@ public interface PostService {
 
     PostDTO delete(String postId, String userId);
 
-    PostDTO setState(String postId, Post.StateType state);
+    PostDTO setState(String postId, String userId, Post.StateType state);
 
 /*    void syncPosts(String beginDate, String endDate);*/
 }

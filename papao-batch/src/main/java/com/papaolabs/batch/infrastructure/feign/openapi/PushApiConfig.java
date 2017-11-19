@@ -21,24 +21,24 @@ import static feign.FeignException.errorStatus;
 @EnableAutoConfiguration
 @EnableCircuitBreaker
 @ComponentScan
-public class OpenApiConfig {
-    @Value("${openapi.url}")
-    private String openApiUrl;
+public class PushApiConfig {
+    @Value("${pushapi.url}")
+    private String pushApiUrl;
 
     @Bean
-    public OpenApiClient openApiClient() {
+    public PushApiClient pushApiClient() {
         return Feign.builder()
                     .client(new OkHttpClient())
                     .encoder(new GsonEncoder())
                     .decoder(new GsonDecoder())
                     .logLevel(Logger.Level.BASIC)
-                    .target(OpenApiClient.class, openApiUrl);
+                    .target(PushApiClient.class, pushApiUrl);
     }
 
     @Bean
     public ErrorDecoder errorDecoder() {
         return new ErrorDecoder() {
-            private ErrorDecoder defaultDecoder = new ErrorDecoder.Default();
+            private ErrorDecoder defaultDecoder = new Default();
 
             @Override
             public Exception decode(String methodKey, Response response) {

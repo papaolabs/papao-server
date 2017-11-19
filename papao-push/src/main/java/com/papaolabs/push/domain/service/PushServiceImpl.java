@@ -12,9 +12,17 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.lang.Boolean.TRUE;
 
 @Service
 public class PushServiceImpl implements PushService {
@@ -24,6 +32,8 @@ public class PushServiceImpl implements PushService {
     private final PushLogRepository pushLogRepository;
     @NotNull
     private final PushUserRepository pushUserRepository;
+
+    private Pattern p = Pattern.compile("[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+");
 
     public PushServiceImpl(PushClient pushClient,
                            PushLogRepository pushLogRepository,
@@ -35,14 +45,20 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public void sendPush(PushRequest request, String postId) {
-        PushUser pushUser = pushUserRepository.findByUserId(request.getUserId());
-        String deviceId = pushUser.getDeviceId();
-        PushLog pushLog = new PushLog();
-        pushLog.setUserId(pushUser.getUserId());
-        pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
-        pushLog.setMessage(request.getMessage());
-        pushClient.send(deviceId, request.getMessage());
-        pushLogRepository.save(pushLog);
+        List<PushUser> pushUsers = pushUserRepository.findByUserId(request.getUserId());
+        List<PushLog> pushLogs = new ArrayList<>();
+        for (PushUser pushUser : pushUsers) {
+            PushLog pushLog = new PushLog();
+            pushLog.setUserId(pushUser.getUserId());
+            pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
+            pushLog.setMessage(p.matcher(request.getMessage()).replaceAll(" "));
+            pushClient.send(pushUser.getDeviceId(), request.getMessage());
+            pushLogs.add(pushLog);
+        }
+        pushLogRepository.save(pushLogs.stream()
+                                       .filter(distinctByKey(PushLog::getUserId))
+                                       .distinct()
+                                       .collect(Collectors.toList()));
     }
 
     @Override
@@ -77,5 +93,10 @@ public class PushServiceImpl implements PushService {
     @Override
     public void deletePushLog(String pushId) {
         pushLogRepository.delete(Long.valueOf(pushId));
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), TRUE) == null;
     }
 }

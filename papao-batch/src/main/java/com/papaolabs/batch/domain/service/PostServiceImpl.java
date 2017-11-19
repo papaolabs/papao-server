@@ -1,17 +1,21 @@
 package com.papaolabs.batch.domain.service;
 
+import com.papaolabs.batch.domain.service.util.KorStringUtils;
 import com.papaolabs.batch.infrastructure.feign.openapi.OpenApiClient;
+import com.papaolabs.batch.infrastructure.feign.openapi.PushApiClient;
 import com.papaolabs.batch.infrastructure.feign.openapi.dto.AnimalDTO;
-import com.papaolabs.batch.infrastructure.jpa.entity.Image;
+import com.papaolabs.batch.infrastructure.jpa.entity.Bookmark;
 import com.papaolabs.batch.infrastructure.jpa.entity.Breed;
+import com.papaolabs.batch.infrastructure.jpa.entity.Image;
 import com.papaolabs.batch.infrastructure.jpa.entity.Post;
-import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
 import com.papaolabs.batch.infrastructure.jpa.entity.Region;
-import com.papaolabs.batch.infrastructure.jpa.repository.ImageRepository;
+import com.papaolabs.batch.infrastructure.jpa.entity.Shelter;
+import com.papaolabs.batch.infrastructure.jpa.repository.BookmarkRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.BreedRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.ImageRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.PostRepository;
-import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import com.papaolabs.batch.infrastructure.jpa.repository.RegionRepository;
+import com.papaolabs.batch.infrastructure.jpa.repository.ShelterRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -51,6 +55,10 @@ public class PostServiceImpl implements PostService {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
+    @NotNull
+    private final BookmarkRepository bookmarkRepository;
+    @NotNull
+    private final PushApiClient pushApiClient;
     public final static Long BATCH_USER_ID = 9999L;
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
@@ -60,13 +68,17 @@ public class PostServiceImpl implements PostService {
                            BreedRepository breedRepository,
                            PostRepository postRepository,
                            ShelterRepository shelterRepository,
-                           RegionRepository regionRepository) {
+                           RegionRepository regionRepository,
+                           BookmarkRepository bookmarkRepository,
+                           PushApiClient pushApiClient) {
         this.openApiClient = openApiClient;
         this.imageRepository = imageRepository;
         this.breedRepository = breedRepository;
         this.postRepository = postRepository;
         this.shelterRepository = shelterRepository;
         this.regionRepository = regionRepository;
+        this.bookmarkRepository = bookmarkRepository;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
@@ -155,6 +167,39 @@ public class PostServiceImpl implements PostService {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음
                                            x.setImages(imageRepository.findByPostId(x.getId()));
+                                           if (x.getStateType() != post.getStateType() && x.getStateType() != Post.StateType.PROCESS) {
+                                               KorStringUtils korStringUtils = new KorStringUtils();
+                                               String stateCode = x.getStateType()
+                                                                   .getCode();
+                                               stateCode = stateCode.replace("(", "");
+                                               stateCode = stateCode.replace(")", "");
+                                               stateCode = stateCode.replace("종료", "");
+                                               String emoji = "";
+                                               if (x.getStateType() == Post.StateType.ADOPTION) {
+                                                   emoji = "\\ud83c\\udf89";
+                                               } else if (x.getStateType() == Post.StateType.EUTHANASIA) {
+                                                   emoji = "▶◀";
+                                               } else if (x.getStateType() == Post.StateType.NATURALDEATH) {
+                                                   emoji = "▶◀";
+                                               } else if (x.getStateType() == Post.StateType.RETURN) {
+                                                   emoji = "\\ud83d\\udc36";
+                                               }
+                                               String message = korStringUtils.append("북마크한 ")
+                                                                              .append(post.getKindName())
+                                                                              .appendJosa("이")
+                                                                              .append(" ")
+                                                                              .append(stateCode)
+                                                                              .append("되었습니다")
+                                                                              .append(emoji)
+                                                                              .toString();
+                                               List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
+                                               pushApiClient.sendPush("9999", message,
+                                                                      String.valueOf(x.getId()));
+                                               /*for (Bookmark bookmark : bookmarks) {
+                                                   pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message,
+                                                                          String.valueOf(x.getId()));
+                                               }*/
+                                           }
                                        }
                                        return x;
                                    })

@@ -1,11 +1,15 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.domain.service.util.KorStringUtils;
+import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
+import com.papaolabs.api.infrastructure.persistence.jpa.entity.Bookmark;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.QPost;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Region;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Shelter;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.BookmarkRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.BreedRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
@@ -61,19 +65,27 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     @NotNull
     private final BookmarkService bookmarkService;
+    @NotNull
+    private final BookmarkRepository bookmarkRepository;
+    @NotNull
+    private final PushApiClient pushApiClient;
 
     public PostServiceImpl(PostRepository postRepository,
                            RegionRepository regionRepository,
                            BreedRepository breedRepository,
                            ShelterRepository shelterRepository,
                            CommentRepository commentRepository,
-                           BookmarkService bookmarkService) {
+                           BookmarkService bookmarkService,
+                           BookmarkRepository bookmarkRepository,
+                           PushApiClient pushApiClient) {
         this.postRepository = postRepository;
         this.regionRepository = regionRepository;
         this.breedRepository = breedRepository;
         this.shelterRepository = shelterRepository;
         this.commentRepository = commentRepository;
         this.bookmarkService = bookmarkService;
+        this.bookmarkRepository = bookmarkRepository;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
@@ -94,6 +106,7 @@ public class PostServiceImpl implements PostService {
                           Long sidoCode,
                           Long gunguCode) {
         Post post = new Post();
+        post.setUid(Long.valueOf(uid));
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(happenPlace);
         post.setPostType(Post.PostType.getType(postType));
@@ -319,9 +332,40 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO setState(String postId, Post.StateType state) {
+    public PostDTO setState(String postId, String userId, Post.StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
-/*        post.setState(state.helperName());*/
+        post.setStateType(state);
+        KorStringUtils korStringUtils = new KorStringUtils();
+        if (state != Post.StateType.PROCESS) {
+            String stateCode = post.getStateType()
+                                   .getCode();
+            stateCode = stateCode.replace("(", "");
+            stateCode = stateCode.replace(")", "");
+            stateCode = stateCode.replace("종료", "");
+            String emoji = "";
+            if (state == Post.StateType.ADOPTION) {
+                emoji = "\\ud83c\\udf89";
+            } else if (state == Post.StateType.EUTHANASIA) {
+                emoji = "▶◀";
+            } else if (state == Post.StateType.NATURALDEATH) {
+                emoji = "▶◀";
+            } else if (state == Post.StateType.RETURN) {
+                emoji = "\\ud83d\\udc36";
+            }
+            String message = korStringUtils.append("북마크한 ")
+                                           .append(post.getKindName())
+                                           .appendJosa("이")
+                                           .append(" ")
+                                           .append(stateCode)
+                                           .append("되었습니다")
+                                           .append(emoji)
+                                           .toString();
+            List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(postId));
+            for (Bookmark bookmark : bookmarks) {
+                pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message, postId);
+            }
+        }
+        postRepository.save(post);
         return transform(post);
     }
 

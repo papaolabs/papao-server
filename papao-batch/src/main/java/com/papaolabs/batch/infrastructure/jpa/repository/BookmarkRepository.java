@@ -1,6 +1,6 @@
-package com.papaolabs.api.infrastructure.persistence.jpa.repository;
+package com.papaolabs.batch.infrastructure.jpa.repository;
 
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Bookmark;
+import com.papaolabs.batch.infrastructure.jpa.entity.Bookmark;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
