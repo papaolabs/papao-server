@@ -15,7 +15,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static java.lang.Boolean.TRUE;
 
 @Service
 public class PushServiceImpl implements PushService {
@@ -38,7 +44,7 @@ public class PushServiceImpl implements PushService {
     public void sendPush(PushRequest request, String postId) {
         List<PushUser> pushUsers = pushUserRepository.findByUserId(request.getUserId());
         List<PushLog> pushLogs = new ArrayList<>();
-        for(PushUser pushUser : pushUsers) {
+        for (PushUser pushUser : pushUsers) {
             PushLog pushLog = new PushLog();
             pushLog.setUserId(pushUser.getUserId());
             pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
@@ -46,7 +52,10 @@ public class PushServiceImpl implements PushService {
             pushClient.send(pushUser.getDeviceId(), request.getMessage());
             pushLogs.add(pushLog);
         }
-        pushLogRepository.save(pushLogs);
+        pushLogRepository.save(pushLogs.stream()
+                                       .filter(distinctByKey(PushLog::getUserId))
+                                       .distinct()
+                                       .collect(Collectors.toList()));
     }
 
     @Override
@@ -81,5 +90,10 @@ public class PushServiceImpl implements PushService {
     @Override
     public void deletePushLog(String pushId) {
         pushLogRepository.delete(Long.valueOf(pushId));
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), TRUE) == null;
     }
 }
