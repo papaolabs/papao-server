@@ -105,8 +105,8 @@ public class V1PostController {
     }
 
     @PostMapping(value = "/{postId}/state", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestParam Post.StateType state) {
-        return new ResponseEntity<>(postService.setState(postId, state), HttpStatus.OK);
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestBody String userId, @RequestParam Post.StateType stateType) {
+        return new ResponseEntity<>(postService.setState(postId, userId, stateType), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
