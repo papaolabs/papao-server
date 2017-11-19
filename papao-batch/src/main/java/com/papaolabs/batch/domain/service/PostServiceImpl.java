@@ -167,37 +167,35 @@ public class PostServiceImpl implements PostService {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음
                                            x.setImages(imageRepository.findByPostId(x.getId()));
-                                           if (x.getStateType() != post.getStateType()) {
+                                           if (x.getStateType() != post.getStateType() && x.getStateType() != Post.StateType.PROCESS) {
                                                KorStringUtils korStringUtils = new KorStringUtils();
-                                               if (x.getStateType() != Post.StateType.PROCESS) {
-                                                   String stateCode = x.getStateType()
-                                                                       .getCode();
-                                                   stateCode = stateCode.replace("(", "");
-                                                   stateCode = stateCode.replace(")", "");
-                                                   stateCode = stateCode.replace("종료", "");
-                                                   String emoji = "";
-                                                   if (x.getStateType() == Post.StateType.ADOPTION) {
-                                                       emoji = "\\ud83c\\udf89";
-                                                   } else if (x.getStateType() == Post.StateType.EUTHANASIA) {
-                                                       emoji = "▶◀";
-                                                   } else if (x.getStateType() == Post.StateType.NATURALDEATH) {
-                                                       emoji = "▶◀";
-                                                   } else if (x.getStateType() == Post.StateType.RETURN) {
-                                                       emoji = "\\ud83d\\udc36";
-                                                   }
-                                                   String message = korStringUtils.append("북마크한 ")
-                                                                                  .append(post.getKindName())
-                                                                                  .appendJosa("이")
-                                                                                  .append(" ")
-                                                                                  .append(stateCode)
-                                                                                  .append("되었습니다")
-                                                                                  .append(emoji)
-                                                                                  .toString();
-                                                   List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
-                                                   for (Bookmark bookmark : bookmarks) {
-                                                       pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message,
-                                                                              String.valueOf(x.getId()));
-                                                   }
+                                               String stateCode = x.getStateType()
+                                                                   .getCode();
+                                               stateCode = stateCode.replace("(", "");
+                                               stateCode = stateCode.replace(")", "");
+                                               stateCode = stateCode.replace("종료", "");
+                                               String emoji = "";
+                                               if (x.getStateType() == Post.StateType.ADOPTION) {
+                                                   emoji = "\\ud83c\\udf89";
+                                               } else if (x.getStateType() == Post.StateType.EUTHANASIA) {
+                                                   emoji = "▶◀";
+                                               } else if (x.getStateType() == Post.StateType.NATURALDEATH) {
+                                                   emoji = "▶◀";
+                                               } else if (x.getStateType() == Post.StateType.RETURN) {
+                                                   emoji = "\\ud83d\\udc36";
+                                               }
+                                               String message = korStringUtils.append("북마크한 ")
+                                                                              .append(post.getKindName())
+                                                                              .appendJosa("이")
+                                                                              .append(" ")
+                                                                              .append(stateCode)
+                                                                              .append("되었습니다")
+                                                                              .append(emoji)
+                                                                              .toString();
+                                               List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
+                                               for (Bookmark bookmark : bookmarks) {
+                                                   pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message,
+                                                                          String.valueOf(x.getId()));
                                                }
                                            }
                                        }
