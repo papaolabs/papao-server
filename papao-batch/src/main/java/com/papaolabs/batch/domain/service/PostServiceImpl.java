@@ -193,10 +193,12 @@ public class PostServiceImpl implements PostService {
                                                                               .append(emoji)
                                                                               .toString();
                                                List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
-                                               for (Bookmark bookmark : bookmarks) {
+                                               pushApiClient.sendPush("9999", message,
+                                                                      String.valueOf(x.getId()));
+                                               /*for (Bookmark bookmark : bookmarks) {
                                                    pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message,
                                                                           String.valueOf(x.getId()));
-                                               }
+                                               }*/
                                            }
                                        }
                                        return x;
