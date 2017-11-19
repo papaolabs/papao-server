@@ -44,7 +44,7 @@ spring:
     properties.hibernate.use_sql_comments: true
 
 spring.datasource:
-  url: jdbc:mysql://220.230.114.180:3306/papao
+  url: jdbc:mysql://localhost:3306/papao
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: org.mariadb.jdbc.Driver

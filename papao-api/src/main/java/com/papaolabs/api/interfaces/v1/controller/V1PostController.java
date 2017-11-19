@@ -8,6 +8,7 @@ import com.papaolabs.api.interfaces.v1.controller.request.CommentRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
+import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +67,7 @@ public class V1PostController {
                                                        postRequest.getGunguCode()), HttpStatus.OK);
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PostDTO>> readPosts(@RequestParam(required = false) List<String> postType,
                                                    @RequestParam(required = false) String beginDate,
                                                    @RequestParam(required = false) String endDate,
@@ -79,20 +80,20 @@ public class V1PostController {
     ) {
         return new ResponseEntity(postService.readPosts(postType, beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, genderType, neuterType), HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/pages")
-    public ResponseEntity<List<PostDTO>> readPostsByPage(@RequestParam(required = false) List<String> postType,
-                                                         @RequestParam(required = false) String beginDate,
-                                                         @RequestParam(required = false) String endDate,
-                                                         @RequestParam(required = false) String upKindCode,
-                                                         @RequestParam(required = false) String kindCode,
-                                                         @RequestParam(required = false) String sidoCode,
-                                                         @RequestParam(required = false) String gunguCode,
-                                                         @RequestParam(required = false) String genderType,
-                                                         @RequestParam(required = false) String neuterType,
-                                                         @RequestParam(defaultValue = "0", required = false) String index,
-                                                         @RequestParam(defaultValue = "100", required = false) String size
+    public ResponseEntity<PostPreviewDTO> readPostsByPage(@RequestParam(required = false) List<String> postType,
+                                                          @RequestParam(required = false) String beginDate,
+                                                          @RequestParam(required = false) String endDate,
+                                                          @RequestParam(required = false) String upKindCode,
+                                                          @RequestParam(required = false) String kindCode,
+                                                          @RequestParam(required = false) String sidoCode,
+                                                          @RequestParam(required = false) String gunguCode,
+                                                          @RequestParam(required = false) String genderType,
+                                                          @RequestParam(required = false) String neuterType,
+                                                          @RequestParam(defaultValue = "0", required = false) String index,
+                                                          @RequestParam(defaultValue = "100", required = false) String size
     ) {
         return new ResponseEntity(postService.readPostsByPage(postType, beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, genderType, neuterType, index, size), HttpStatus.OK);

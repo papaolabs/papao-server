@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "post_tb")
@@ -54,7 +54,10 @@ public class Post extends BaseEntity {
     private String shelterContact;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
-    private Collection<Image> images;
+    private List<Comment> comments;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "postId")
+    private List<Image> images;
     private Boolean isDisplay;
 
     public enum PostType {
@@ -337,11 +340,19 @@ public class Post extends BaseEntity {
         this.shelterContact = shelterContact;
     }
 
-    public Collection<Image> getImages() {
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(Collection<Image> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
@@ -440,6 +451,9 @@ public class Post extends BaseEntity {
         if (shelterContact != null ? !shelterContact.equals(post.shelterContact) : post.shelterContact != null) {
             return false;
         }
+        if (comments != null ? !comments.equals(post.comments) : post.comments != null) {
+            return false;
+        }
         if (images != null ? !images.equals(post.images) : post.images != null) {
             return false;
         }
@@ -474,6 +488,7 @@ public class Post extends BaseEntity {
         result = 31 * result + (shelterCode != null ? shelterCode.hashCode() : 0);
         result = 31 * result + (shelterName != null ? shelterName.hashCode() : 0);
         result = 31 * result + (shelterContact != null ? shelterContact.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (images != null ? images.hashCode() : 0);
         result = 31 * result + (isDisplay != null ? isDisplay.hashCode() : 0);
         return result;
@@ -508,6 +523,7 @@ public class Post extends BaseEntity {
             ", shelterCode=" + shelterCode +
             ", shelterName='" + shelterName + '\'' +
             ", shelterContact='" + shelterContact + '\'' +
+            ", comments=" + comments +
             ", images=" + images +
             ", isDisplay=" + isDisplay +
             '}';

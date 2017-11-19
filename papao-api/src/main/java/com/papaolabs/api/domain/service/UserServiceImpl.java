@@ -34,6 +34,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PushUserRepository pushUserRepository;
     private final BreedRepository breedRepository;
+    private final static String[] imageList = {"https://photos.app.goo.gl/JG1eawv9DMcyDcnh2",
+                                               "https://photos.app.goo.gl/mj6DHEEsbQYFfCfK2",
+                                               "https://photos.app.goo.gl/chc59jr6ooVyZTWh1"};
 
     public UserServiceImpl(UserRepository userRepository,
                            PushUserRepository pushUserRepository,
@@ -54,6 +57,9 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUid(userId);
         user.setPhone(phone);
+        Random random = new Random();
+        int n = random.nextInt(imageList.length);
+        user.setProfileUrl(imageList[n]);
         user.setNickName(generateNickname());
         user.setEmail(StringUtils.EMPTY);
         User result = userRepository.save(user);
