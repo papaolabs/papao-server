@@ -25,6 +25,14 @@ logging.level:
   org.hibernate: ERROR
   org.hibernate.SQL: ERROR
   org.hibernate.type.BasicTypeRegistry: WARN
+
+openapi:
+  url: http://localhost:9040
+  ribbon:
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 5000
+    ConnectTimeout: 500
 ---
 spring.profiles: dev
 

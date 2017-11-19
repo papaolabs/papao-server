@@ -1,7 +1,6 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
-import com.papaolabs.api.infrastructure.persistence.jpa.entity.Comment;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Image;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.QPost;
@@ -33,6 +32,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -142,8 +143,6 @@ public class PostServiceImpl implements PostService {
         if (isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
         Iterable<Post> results = postRepository.findAll(generateQuery(postType,
                                                                       beginDate,
                                                                       endDate,
@@ -151,8 +150,6 @@ public class PostServiceImpl implements PostService {
                                                                       kindCode,
                                                                       uprCode,
                                                                       orgCode, genderType, neuterType));
-        stopWatch.stop();
-        log.debug("originalPosts get time :: {} ", stopWatch.getLastTaskTimeMillis());
         return StreamSupport.stream(results.spliterator(), false)
                             .filter(Post::getDisplay)
                             .map(this::previewTransform)
@@ -178,7 +175,16 @@ public class PostServiceImpl implements PostService {
         if (isEmpty(endDate)) {
             endDate = getDefaultDate(DATE_FORMAT);
         }
+        Map<Long, Shelter> shelterMap = shelterRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getShelterCode(),
+                                                                                   Function.identity()));
+        Map<Long, Breed> breedMap = breedRepository.findAll()
+                                                   .stream()
+                                                   .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
                                                                   beginDate,
                                                                   endDate,
@@ -189,9 +195,43 @@ public class PostServiceImpl implements PostService {
                                                                   genderType,
                                                                   neuterType),
                                                     pageRequest);
+        stopWatch.stop();
+        log.debug("query get time :: {} ", stopWatch.getLastTaskTimeMillis());
         return results.getContent()
                       .stream()
-                      .map((this::previewTransform))
+                      .map(post -> {
+                          stopWatch.start();
+                          PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
+                          postPreviewDTO.setId(post.getId());
+                          postPreviewDTO.setPostType(post.getPostType());
+                          postPreviewDTO.setStateType(post.getStateType());
+                          Image image = post.getImages()
+                                            .stream()
+                                            .findFirst()
+                                            .get();
+                          PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
+                          imageUrl.setKey(image.getId());
+                          imageUrl.setUrl(image.getUrl());
+                          postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
+                          postPreviewDTO.setGenderType(post.getGenderType());
+                          postPreviewDTO.setHappenDate(convertDateToString(post.getHappenDate()));
+                          postPreviewDTO.setHitCount(post.getHitCount());
+                          postPreviewDTO.setCreatedDate(post.getCreatedDateTime()
+                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                          postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
+                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                          // Comment 세팅
+                          postPreviewDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
+                          // Breed 세팅
+                          Breed breed = breedMap.get(post.getKindCode());
+                          postPreviewDTO.setKindName(breed.getKindName());
+                          // Region/Shelter 세팅
+                          Shelter shelter = shelterMap.get(post.getShelterCode());
+                          postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
+                          stopWatch.stop();
+                          log.debug("transform time :: {} ", stopWatch.getLastTaskTimeMillis());
+                          return postPreviewDTO;
+                      })
                       .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
                       .collect(Collectors.toList());
     }
@@ -282,35 +322,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostPreviewDTO previewTransform(Post post) {
-        PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
-        postPreviewDTO.setId(post.getId());
-        postPreviewDTO.setPostType(post.getPostType());
-        postPreviewDTO.setStateType(post.getStateType());
-        Image image = post.getImages()
-                          .stream()
-                          .findFirst()
-                          .get();
-        PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
-        imageUrl.setKey(image.getId());
-        imageUrl.setUrl(image.getUrl());
-        postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
-        postPreviewDTO.setGenderType(post.getGenderType());
-        postPreviewDTO.setHappenDate(convertDateToString(post.getHappenDate()));
-        postPreviewDTO.setHitCount(post.getHitCount());
-        postPreviewDTO.setCreatedDate(post.getCreatedDateTime()
-                                          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
-                                          .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        // Comment 세팅
-        List<Comment> comments = commentRepository.findByPostId(post.getId());
-        postPreviewDTO.setCommentCount(Long.valueOf(comments.size()));
-        // Breed 세팅
-        Breed breed = breedRepository.findByKindCode(post.getKindCode());
-        postPreviewDTO.setKindName(breed.getKindName());
-        // Region/Shelter 세팅
-        Shelter shelter = shelterRepository.findByShelterCode(post.getShelterCode());
-        postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
-        return postPreviewDTO;
+        return null;
     }
 
     private PostDTO transform(Post post) {
