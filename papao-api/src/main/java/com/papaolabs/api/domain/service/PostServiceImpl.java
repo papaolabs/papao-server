@@ -127,13 +127,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPreviewDTO> readPosts(String postType,
+    public List<PostPreviewDTO> readPosts(List<String> postType,
                                           String beginDate,
                                           String endDate,
                                           String upKindCode,
                                           String kindCode,
                                           String uprCode,
-                                          String orgCode) {
+                                          String orgCode,
+                                          String genderType,
+                                          String neuterType) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
@@ -142,26 +144,13 @@ public class PostServiceImpl implements PostService {
         }
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        QPost post = QPost.post;
-        BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
-                                                                                  convertStringToDate(endDate))
-                                                                         .and(post.isDisplay.eq(TRUE)));
-        if (isNotEmpty(postType)) {
-            builder.and(post.postType.eq(Post.PostType.getType(postType)));
-        }
-        if (isNotEmpty(uprCode)) {
-            builder.and(post.happenSidoCode.eq(Long.valueOf(uprCode)));
-        }
-        if (isNotEmpty(orgCode)) {
-            builder.and(post.happenGunguCode.eq(Long.valueOf(orgCode)));
-        }
-        if (isNotEmpty(upKindCode)) {
-            builder.and(post.upKindCode.eq(Long.valueOf(upKindCode)));
-        }
-        if (isNotEmpty(kindCode)) {
-            builder.and(post.kindCode.eq(Long.valueOf(kindCode)));
-        }
-        Iterable<Post> results = postRepository.findAll(builder);
+        Iterable<Post> results = postRepository.findAll(generateQuery(postType,
+                                                                      beginDate,
+                                                                      endDate,
+                                                                      upKindCode,
+                                                                      kindCode,
+                                                                      uprCode,
+                                                                      orgCode, genderType, neuterType));
         stopWatch.stop();
         log.debug("originalPosts get time :: {} ", stopWatch.getLastTaskTimeMillis());
         return StreamSupport.stream(results.spliterator(), false)
@@ -172,13 +161,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostPreviewDTO> readPostsByPage(String postType,
+    public List<PostPreviewDTO> readPostsByPage(List<String> postType,
                                                 String beginDate,
                                                 String endDate,
                                                 String upKindCode,
                                                 String kindCode,
                                                 String uprCode,
                                                 String orgCode,
+                                                String genderType,
+                                                String neuterType,
                                                 String page,
                                                 String size) {
         if (isEmpty(beginDate)) {
@@ -188,12 +179,45 @@ public class PostServiceImpl implements PostService {
             endDate = getDefaultDate(DATE_FORMAT);
         }
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
+        Page<Post> results = postRepository.findAll(generateQuery(postType,
+                                                                  beginDate,
+                                                                  endDate,
+                                                                  upKindCode,
+                                                                  kindCode,
+                                                                  uprCode,
+                                                                  orgCode,
+                                                                  genderType,
+                                                                  neuterType),
+                                                    pageRequest);
+        return results.getContent()
+                      .stream()
+                      .map((this::previewTransform))
+                      .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
+                      .collect(Collectors.toList());
+    }
+
+    private BooleanBuilder generateQuery(List<String> postType,
+                                         String beginDate,
+                                         String endDate,
+                                         String upKindCode,
+                                         String kindCode,
+                                         String uprCode,
+                                         String orgCode,
+                                         String genderType,
+                                         String neuterType) {
         QPost post = QPost.post;
         BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
                                                                                   convertStringToDate(endDate))
                                                                          .and(post.isDisplay.eq(TRUE)));
-        if (isNotEmpty(postType)) {
-            builder.and(post.postType.eq(Post.PostType.getType(postType)));
+        if (postType != null) {
+            if (postType.size() > 0) {
+                builder.and(post.postType.eq(Post.PostType.getType(postType.get(0))));
+                if (postType.size() > 1) {
+                    for (int i = 1; i < postType.size(); i++) {
+                        builder.or(post.postType.eq(Post.PostType.getType(postType.get(i))));
+                    }
+                }
+            }
         }
         if (isNotEmpty(uprCode)) {
             builder.and(post.happenSidoCode.eq(Long.valueOf(uprCode)));
@@ -207,12 +231,13 @@ public class PostServiceImpl implements PostService {
         if (isNotEmpty(kindCode)) {
             builder.and(post.kindCode.eq(Long.valueOf(kindCode)));
         }
-        Page<Post> results = postRepository.findAll(builder, pageRequest);
-        return results.getContent()
-                      .stream()
-                      .map((this::previewTransform))
-                      .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
-                      .collect(Collectors.toList());
+        if (isNotEmpty(genderType)) {
+            builder.and(post.genderType.eq(Post.GenderType.getType(genderType)));
+        }
+        if (isNotEmpty(neuterType)) {
+            builder.and(post.neuterType.eq(Post.NeuterType.getType(neuterType)));
+        }
+        return builder;
     }
 
     @Override
@@ -259,6 +284,7 @@ public class PostServiceImpl implements PostService {
     private PostPreviewDTO previewTransform(Post post) {
         PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
         postPreviewDTO.setId(post.getId());
+        postPreviewDTO.setPostType(post.getPostType());
         postPreviewDTO.setStateType(post.getStateType());
         Image image = post.getImages()
                           .stream()

@@ -13,4 +13,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "select p from Post p where ?1 >= p.happenDate and ?2 <= p.happenDate")
     List<Post> findByHappenDate(Date beginDate, Date endDate);
     List<Post> findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(Date beginDate, Date endDate);
+    Post findByDesertionId(String desertionId);
 }

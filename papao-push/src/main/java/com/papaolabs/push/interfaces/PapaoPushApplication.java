@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.io.IOException;
+
 @SpringBootApplication
 @EnableEncryptableProperties
 @EnableSwagger2
@@ -22,7 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
             InfrastructureConfig.class
         })
 public class PapaoPushApplication {
-    @Value("classpath:apns_prod_for_java.p12")
+    @Value("file:${apns.cert.path}")
     private Resource cert;
     @Value("${apns.client.password}")
     private String password;
@@ -34,7 +36,8 @@ public class PapaoPushApplication {
     }
 
     @Bean
-    public PushClient pushClient() {
+    public PushClient pushClient() throws IOException {
+        System.out.println(cert.getURL());
         return new PushClient(cert, password, topic);
     }
 }

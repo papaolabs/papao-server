@@ -1,10 +1,14 @@
 package com.papaolabs.api.domain.service;
 
-import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 
 public interface UserService {
     JoinDTO join(String userId, String userToken, String phone);
 
-    PushDTO setPush(String uid, String deviceToken);
+    PushDTO setPush(String type, String uid, String deviceToken);
+
+    UserDTO profile(String uid);
+    String generateNickname();
 }

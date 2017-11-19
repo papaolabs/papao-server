@@ -51,6 +51,7 @@ public class PostServiceImpl implements PostService {
     private final ShelterRepository shelterRepository;
     @NotNull
     private final RegionRepository regionRepository;
+    public final static Long BATCH_USER_ID = 9999L;
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
 
@@ -83,11 +84,6 @@ public class PostServiceImpl implements PostService {
                                                                                 x.getGunguName(),
                                                                                 x.getShelterName())),
                                                                                      Function.identity()));
-        Map<String, Post> postMap = postRepository.findByHappenDate(
-            convertStringToDate(beginDate),
-            convertStringToDate(endDate))
-                                                  .stream()
-                                                  .collect(Collectors.toMap(Post::getDesertionId, Function.identity()));
         Map<String, Region> regionMap = regionRepository.findAll()
                                                         .stream()
                                                         .collect(Collectors.toMap(x -> StringUtils
@@ -99,6 +95,7 @@ public class PostServiceImpl implements PostService {
         List<Post> results = animal.stream()
                                    .map(x -> {
                                        Post post = new Post();
+                                       post.setUid(BATCH_USER_ID);
                                        post.setPostType(Post.PostType.SYSTEM);
                                        post.setGenderType(Post.GenderType.getType(x.getGenderCode()));
                                        post.setNeuterType(Post.NeuterType.getType(x.getNeuterCode()));
@@ -153,7 +150,7 @@ public class PostServiceImpl implements PostService {
                                        return post;
                                    })
                                    .map(x -> {
-                                       Post post = postMap.get(x.getDesertionId());
+                                       Post post = postRepository.findByDesertionId(x.getDesertionId());
                                        if (post != null) {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음

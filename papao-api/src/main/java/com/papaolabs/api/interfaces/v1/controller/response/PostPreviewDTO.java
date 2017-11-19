@@ -11,6 +11,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class PostPreviewDTO {
     private Long id;
+    private Post.PostType postType;
     private Post.StateType stateType;
     private Post.GenderType genderType;
     private List<ImageUrl> imageUrls;
@@ -34,6 +35,14 @@ public class PostPreviewDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Post.PostType getPostType() {
+        return postType;
+    }
+
+    public void setPostType(Post.PostType postType) {
+        this.postType = postType;
     }
 
     public Post.StateType getStateType() {
@@ -128,6 +137,9 @@ public class PostPreviewDTO {
         if (id != null ? !id.equals(that.id) : that.id != null) {
             return false;
         }
+        if (postType != that.postType) {
+            return false;
+        }
         if (stateType != that.stateType) {
             return false;
         }
@@ -161,6 +173,7 @@ public class PostPreviewDTO {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (postType != null ? postType.hashCode() : 0);
         result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
         result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
         result = 31 * result + (imageUrls != null ? imageUrls.hashCode() : 0);
@@ -178,6 +191,7 @@ public class PostPreviewDTO {
     public String toString() {
         return "PostPreviewDTO{" +
             "id=" + id +
+            ", postType=" + postType +
             ", stateType=" + stateType +
             ", genderType=" + genderType +
             ", imageUrls=" + imageUrls +

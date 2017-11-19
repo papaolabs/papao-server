@@ -3,6 +3,7 @@ package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,6 +22,7 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
+    private Long uid;
     @Enumerated(EnumType.STRING)
     private PostType postType;
     @Enumerated(EnumType.STRING)
@@ -29,6 +31,7 @@ public class Post extends BaseEntity {
     private NeuterType neuterType;
     @Enumerated(EnumType.STRING)
     private StateType stateType;
+    @Column(unique = true)
     private String desertionId;
     private String noticeId;
     private Date noticeBeginDate;
@@ -55,7 +58,7 @@ public class Post extends BaseEntity {
     private Boolean isDisplay;
 
     public enum PostType {
-        SYSTEM, PROTECTING, ROADREPORT, MISSING;
+        SYSTEM, PROTECTING, ROADREPORT, MISSING, UNKNOWN;
 
         public static PostType getType(String name) {
             if (StringUtils.isEmpty(name)) {
@@ -67,7 +70,7 @@ public class Post extends BaseEntity {
                     return type;
                 }
             }
-            return SYSTEM;
+            return UNKNOWN;
         }
     }
 
@@ -132,6 +135,14 @@ public class Post extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 
     public PostType getPostType() {
@@ -340,5 +351,165 @@ public class Post extends BaseEntity {
 
     public void setDisplay(Boolean display) {
         isDisplay = display;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Post post = (Post) o;
+        if (id != null ? !id.equals(post.id) : post.id != null) {
+            return false;
+        }
+        if (uid != null ? !uid.equals(post.uid) : post.uid != null) {
+            return false;
+        }
+        if (postType != post.postType) {
+            return false;
+        }
+        if (genderType != post.genderType) {
+            return false;
+        }
+        if (neuterType != post.neuterType) {
+            return false;
+        }
+        if (stateType != post.stateType) {
+            return false;
+        }
+        if (desertionId != null ? !desertionId.equals(post.desertionId) : post.desertionId != null) {
+            return false;
+        }
+        if (noticeId != null ? !noticeId.equals(post.noticeId) : post.noticeId != null) {
+            return false;
+        }
+        if (noticeBeginDate != null ? !noticeBeginDate.equals(post.noticeBeginDate) : post.noticeBeginDate != null) {
+            return false;
+        }
+        if (noticeEndDate != null ? !noticeEndDate.equals(post.noticeEndDate) : post.noticeEndDate != null) {
+            return false;
+        }
+        if (happenDate != null ? !happenDate.equals(post.happenDate) : post.happenDate != null) {
+            return false;
+        }
+        if (happenSidoCode != null ? !happenSidoCode.equals(post.happenSidoCode) : post.happenSidoCode != null) {
+            return false;
+        }
+        if (happenGunguCode != null ? !happenGunguCode.equals(post.happenGunguCode) : post.happenGunguCode != null) {
+            return false;
+        }
+        if (happenPlace != null ? !happenPlace.equals(post.happenPlace) : post.happenPlace != null) {
+            return false;
+        }
+        if (feature != null ? !feature.equals(post.feature) : post.feature != null) {
+            return false;
+        }
+        if (helperName != null ? !helperName.equals(post.helperName) : post.helperName != null) {
+            return false;
+        }
+        if (helperContact != null ? !helperContact.equals(post.helperContact) : post.helperContact != null) {
+            return false;
+        }
+        if (age != null ? !age.equals(post.age) : post.age != null) {
+            return false;
+        }
+        if (weight != null ? !weight.equals(post.weight) : post.weight != null) {
+            return false;
+        }
+        if (hitCount != null ? !hitCount.equals(post.hitCount) : post.hitCount != null) {
+            return false;
+        }
+        if (upKindCode != null ? !upKindCode.equals(post.upKindCode) : post.upKindCode != null) {
+            return false;
+        }
+        if (kindCode != null ? !kindCode.equals(post.kindCode) : post.kindCode != null) {
+            return false;
+        }
+        if (kindName != null ? !kindName.equals(post.kindName) : post.kindName != null) {
+            return false;
+        }
+        if (shelterCode != null ? !shelterCode.equals(post.shelterCode) : post.shelterCode != null) {
+            return false;
+        }
+        if (shelterName != null ? !shelterName.equals(post.shelterName) : post.shelterName != null) {
+            return false;
+        }
+        if (shelterContact != null ? !shelterContact.equals(post.shelterContact) : post.shelterContact != null) {
+            return false;
+        }
+        if (images != null ? !images.equals(post.images) : post.images != null) {
+            return false;
+        }
+        return isDisplay != null ? isDisplay.equals(post.isDisplay) : post.isDisplay == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (postType != null ? postType.hashCode() : 0);
+        result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
+        result = 31 * result + (neuterType != null ? neuterType.hashCode() : 0);
+        result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
+        result = 31 * result + (desertionId != null ? desertionId.hashCode() : 0);
+        result = 31 * result + (noticeId != null ? noticeId.hashCode() : 0);
+        result = 31 * result + (noticeBeginDate != null ? noticeBeginDate.hashCode() : 0);
+        result = 31 * result + (noticeEndDate != null ? noticeEndDate.hashCode() : 0);
+        result = 31 * result + (happenDate != null ? happenDate.hashCode() : 0);
+        result = 31 * result + (happenSidoCode != null ? happenSidoCode.hashCode() : 0);
+        result = 31 * result + (happenGunguCode != null ? happenGunguCode.hashCode() : 0);
+        result = 31 * result + (happenPlace != null ? happenPlace.hashCode() : 0);
+        result = 31 * result + (feature != null ? feature.hashCode() : 0);
+        result = 31 * result + (helperName != null ? helperName.hashCode() : 0);
+        result = 31 * result + (helperContact != null ? helperContact.hashCode() : 0);
+        result = 31 * result + (age != null ? age.hashCode() : 0);
+        result = 31 * result + (weight != null ? weight.hashCode() : 0);
+        result = 31 * result + (hitCount != null ? hitCount.hashCode() : 0);
+        result = 31 * result + (upKindCode != null ? upKindCode.hashCode() : 0);
+        result = 31 * result + (kindCode != null ? kindCode.hashCode() : 0);
+        result = 31 * result + (kindName != null ? kindName.hashCode() : 0);
+        result = 31 * result + (shelterCode != null ? shelterCode.hashCode() : 0);
+        result = 31 * result + (shelterName != null ? shelterName.hashCode() : 0);
+        result = 31 * result + (shelterContact != null ? shelterContact.hashCode() : 0);
+        result = 31 * result + (images != null ? images.hashCode() : 0);
+        result = 31 * result + (isDisplay != null ? isDisplay.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+            "id=" + id +
+            ", uid=" + uid +
+            ", postType=" + postType +
+            ", genderType=" + genderType +
+            ", neuterType=" + neuterType +
+            ", stateType=" + stateType +
+            ", desertionId='" + desertionId + '\'' +
+            ", noticeId='" + noticeId + '\'' +
+            ", noticeBeginDate=" + noticeBeginDate +
+            ", noticeEndDate=" + noticeEndDate +
+            ", happenDate=" + happenDate +
+            ", happenSidoCode=" + happenSidoCode +
+            ", happenGunguCode=" + happenGunguCode +
+            ", happenPlace='" + happenPlace + '\'' +
+            ", feature='" + feature + '\'' +
+            ", helperName='" + helperName + '\'' +
+            ", helperContact='" + helperContact + '\'' +
+            ", age=" + age +
+            ", weight=" + weight +
+            ", hitCount=" + hitCount +
+            ", upKindCode=" + upKindCode +
+            ", kindCode=" + kindCode +
+            ", kindName='" + kindName + '\'' +
+            ", shelterCode=" + shelterCode +
+            ", shelterName='" + shelterName + '\'' +
+            ", shelterContact='" + shelterContact + '\'' +
+            ", images=" + images +
+            ", isDisplay=" + isDisplay +
+            '}';
     }
 }
