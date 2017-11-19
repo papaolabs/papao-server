@@ -19,7 +19,7 @@ public class PostPreviewDTO {
     private String happenPlace;
     private String kindName;
     private Long hitCount;
-    private Long commentCount;
+    private Integer commentCount;
     private String createdDate;
     private String updatedDate;
 
@@ -101,11 +101,11 @@ public class PostPreviewDTO {
         this.hitCount = hitCount;
     }
 
-    public Long getCommentCount() {
+    public Integer getCommentCount() {
         return commentCount;
     }
 
-    public void setCommentCount(Long commentCount) {
+    public void setCommentCount(Integer commentCount) {
         this.commentCount = commentCount;
     }
 

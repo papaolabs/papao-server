@@ -200,19 +200,10 @@ public class PostServiceImpl implements PostService {
         return results.getContent()
                       .stream()
                       .map(post -> {
-                          stopWatch.start();
                           PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
                           postPreviewDTO.setId(post.getId());
                           postPreviewDTO.setPostType(post.getPostType());
                           postPreviewDTO.setStateType(post.getStateType());
-                          Image image = post.getImages()
-                                            .stream()
-                                            .findFirst()
-                                            .get();
-                          PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
-                          imageUrl.setKey(image.getId());
-                          imageUrl.setUrl(image.getUrl());
-                          postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
                           postPreviewDTO.setGenderType(post.getGenderType());
                           postPreviewDTO.setHappenDate(convertDateToString(post.getHappenDate()));
                           postPreviewDTO.setHitCount(post.getHitCount());
@@ -220,16 +211,23 @@ public class PostServiceImpl implements PostService {
                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                           postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                          stopWatch.start();
+                          Image image = post.getImages().get(0);
+                          PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
+                          imageUrl.setKey(image.getId());
+                          imageUrl.setUrl(image.getUrl());
+                          postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
+                          stopWatch.stop();
+                          log.debug("transform time :: {} ", stopWatch.getLastTaskTimeMillis());
                           // Comment 세팅
-                          postPreviewDTO.setCommentCount(commentRepository.countByPostId(post.getId()));
+                          postPreviewDTO.setCommentCount(post.getComments()
+                                                             .size());
                           // Breed 세팅
                           Breed breed = breedMap.get(post.getKindCode());
                           postPreviewDTO.setKindName(breed.getKindName());
                           // Region/Shelter 세팅
                           Shelter shelter = shelterMap.get(post.getShelterCode());
                           postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
-                          stopWatch.stop();
-                          log.debug("transform time :: {} ", stopWatch.getLastTaskTimeMillis());
                           return postPreviewDTO;
                       })
                       .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))

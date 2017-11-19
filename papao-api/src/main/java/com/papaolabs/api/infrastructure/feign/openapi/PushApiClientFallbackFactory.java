@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -26,9 +25,8 @@ public class PushApiClientFallbackFactory implements LoggingFallbackFactory<Push
 
     public static class OpenApiFallback implements PushApiClient {
         @Override
-        public List<PushDTO> animal(String beginDate, String endDate) {
-            log.debug("OpenApiClientFallbackFactory.animal() : beginDate {}, endDate : {}", beginDate, endDate);
-            return Arrays.asList();
+        public List<PushDTO> sample() {
+            return null;
         }
     }
 }
