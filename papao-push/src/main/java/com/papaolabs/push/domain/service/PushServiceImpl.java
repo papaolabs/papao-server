@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
@@ -31,6 +32,8 @@ public class PushServiceImpl implements PushService {
     private final PushLogRepository pushLogRepository;
     @NotNull
     private final PushUserRepository pushUserRepository;
+
+    private Pattern p = Pattern.compile("[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]+");
 
     public PushServiceImpl(PushClient pushClient,
                            PushLogRepository pushLogRepository,
@@ -48,7 +51,7 @@ public class PushServiceImpl implements PushService {
             PushLog pushLog = new PushLog();
             pushLog.setUserId(pushUser.getUserId());
             pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
-            pushLog.setMessage(request.getMessage());
+            pushLog.setMessage(p.matcher(request.getMessage()).replaceAll(" "));
             pushClient.send(pushUser.getDeviceId(), request.getMessage());
             pushLogs.add(pushLog);
         }
