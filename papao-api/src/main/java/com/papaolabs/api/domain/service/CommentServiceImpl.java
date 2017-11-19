@@ -99,6 +99,7 @@ public class CommentServiceImpl implements CommentService {
     private CommentDTO.Content transform(Comment comment) {
         User user = userRepository.findByUid(comment.getUserId());
         if(user == null) {
+            user = new User();
             user.setNickName("탈퇴회원");
             user.setProfileUrl("https://photos.app.goo.gl/JG1eawv9DMcyDcnh2");
         }
