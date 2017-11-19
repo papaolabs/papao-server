@@ -9,6 +9,8 @@ public class CommentDTO {
     public static class Content {
         private Long id;
         private String userId;
+        private String nickname;
+        private String profileUrl;
         private String text;
         private String createdDate;
         private String lastModifiedDate;

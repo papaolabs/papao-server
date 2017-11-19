@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -127,7 +126,7 @@ public class PostServiceImpl implements PostService {
         return transform(postRepository.save(post));
     }
 
-    @Override
+    /*@Override
     public List<PostPreviewDTO> readPosts(List<String> postType,
                                           String beginDate,
                                           String endDate,
@@ -155,20 +154,20 @@ public class PostServiceImpl implements PostService {
                             .map(this::previewTransform)
                             .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
                             .collect(Collectors.toList());
-    }
+    }*/
 
     @Override
-    public List<PostPreviewDTO> readPostsByPage(List<String> postType,
-                                                String beginDate,
-                                                String endDate,
-                                                String upKindCode,
-                                                String kindCode,
-                                                String uprCode,
-                                                String orgCode,
-                                                String genderType,
-                                                String neuterType,
-                                                String page,
-                                                String size) {
+    public PostPreviewDTO readPostsByPage(List<String> postType,
+                                          String beginDate,
+                                          String endDate,
+                                          String upKindCode,
+                                          String kindCode,
+                                          String uprCode,
+                                          String orgCode,
+                                          String genderType,
+                                          String neuterType,
+                                          String page,
+                                          String size) {
         if (isEmpty(beginDate)) {
             beginDate = getDefaultDate(DATE_FORMAT);
         }
@@ -197,41 +196,48 @@ public class PostServiceImpl implements PostService {
                                                     pageRequest);
         stopWatch.stop();
         log.debug("query get time :: {} ", stopWatch.getLastTaskTimeMillis());
-        return results.getContent()
-                      .stream()
-                      .map(post -> {
-                          PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
-                          postPreviewDTO.setId(post.getId());
-                          postPreviewDTO.setPostType(post.getPostType());
-                          postPreviewDTO.setStateType(post.getStateType());
-                          postPreviewDTO.setGenderType(post.getGenderType());
-                          postPreviewDTO.setHappenDate(convertDateToString(post.getHappenDate()));
-                          postPreviewDTO.setHitCount(post.getHitCount());
-                          postPreviewDTO.setCreatedDate(post.getCreatedDateTime()
-                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                          postPreviewDTO.setUpdatedDate(post.getLastModifiedDateTime()
-                                                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                          stopWatch.start();
-                          Image image = post.getImages().get(0);
-                          PostPreviewDTO.ImageUrl imageUrl = new PostPreviewDTO.ImageUrl();
-                          imageUrl.setKey(image.getId());
-                          imageUrl.setUrl(image.getUrl());
-                          postPreviewDTO.setImageUrls(Arrays.asList(imageUrl));
-                          stopWatch.stop();
-                          log.debug("transform time :: {} ", stopWatch.getLastTaskTimeMillis());
-                          // Comment 세팅
-                          postPreviewDTO.setCommentCount(post.getComments()
-                                                             .size());
-                          // Breed 세팅
-                          Breed breed = breedMap.get(post.getKindCode());
-                          postPreviewDTO.setKindName(breed.getKindName());
-                          // Region/Shelter 세팅
-                          Shelter shelter = shelterMap.get(post.getShelterCode());
-                          postPreviewDTO.setHappenPlace(StringUtils.join(shelter.getSidoName(), SPACE, shelter.getGunguName()));
-                          return postPreviewDTO;
-                      })
-                      .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
-                      .collect(Collectors.toList());
+        PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
+        postPreviewDTO.setTotalElements(results.getTotalElements());
+        postPreviewDTO.setTotalPages(results.getTotalPages());
+        postPreviewDTO.setElements(results.getContent()
+                                          .stream()
+                                          .map(post -> {
+                                              PostPreviewDTO.Element element = new PostPreviewDTO.Element();
+                                              element.setId(post.getId());
+                                              element.setPostType(post.getPostType());
+                                              element.setStateType(post.getStateType());
+                                              element.setGenderType(post.getGenderType());
+                                              element.setHappenDate(convertDateToString(post.getHappenDate()));
+                                              element.setHitCount(post.getHitCount());
+                                              element.setCreatedDate(post.getCreatedDateTime()
+                                                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                              element.setUpdatedDate(post.getLastModifiedDateTime()
+                                                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                              stopWatch.start();
+                                              Image image = post.getImages()
+                                                                .get(0);
+                                              PostPreviewDTO.Element.ImageUrl imageUrl = new PostPreviewDTO.Element.ImageUrl();
+                                              imageUrl.setKey(image.getId());
+                                              imageUrl.setUrl(image.getUrl());
+                                              element.setImageUrls(Arrays.asList(imageUrl));
+                                              stopWatch.stop();
+                                              log.debug("transform time :: {} ", stopWatch.getLastTaskTimeMillis());
+                                              // Comment 세팅
+                                              element.setCommentCount(post.getComments()
+                                                                          .size());
+                                              // Breed 세팅
+                                              Breed breed = breedMap.get(post.getKindCode());
+                                              element.setKindName(breed.getKindName());
+                                              // Region/Shelter 세팅
+                                              Shelter shelter = shelterMap.get(post.getShelterCode());
+                                              element.setHappenPlace(StringUtils.join(shelter.getSidoName(),
+                                                                                      SPACE,
+                                                                                      shelter.getGunguName()));
+                                              return element;
+                                          })
+                                          .sorted(Comparator.comparing(PostPreviewDTO.Element::getHappenDate))
+                                          .collect(Collectors.toList()));
+        return postPreviewDTO;
     }
 
     private BooleanBuilder generateQuery(List<String> postType,
