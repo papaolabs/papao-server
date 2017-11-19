@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setContents(Arrays.asList(transform(commentRepository.save(comment))));
         Post post = postRepository.findOne(Long.valueOf(postId));
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
-        String message = StringUtils.join("내가 쓴 포스트에 ", user.getNickName(), "님의 댓글이 달렸습니다 \uF389");
+        String message = StringUtils.join("내가 쓴 포스트에 ", user.getNickName(), "님의 댓글이 달렸습니다 \\ud83d\\udc36");
         try {
             pushApiClient.sendPush(String.valueOf(post.getUid()), message, postId);
         } catch (FeignException fe) {
