@@ -1,6 +1,5 @@
 package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +11,6 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique = true)
     private String uid;
     private String profileUrl;
     private String nickName;
