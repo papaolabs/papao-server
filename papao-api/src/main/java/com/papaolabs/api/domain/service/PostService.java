@@ -3,6 +3,7 @@ package com.papaolabs.api.domain.service;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
 
 import java.util.List;
 
@@ -52,6 +53,8 @@ public interface PostService {
     PostDTO delete(String postId, String userId);
 
     PostDTO setState(String postId, String userId, Post.StateType state);
+
+    PostRankingDTO readPostRanking(String beginDate, String endDate);
 
 /*    void syncPosts(String beginDate, String endDate);*/
 }

@@ -58,6 +58,9 @@ public class Post extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "postId")
     private List<Image> images;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "postId")
+    private List<Bookmark> bookmarks;
     private Boolean isDisplay;
 
     public enum PostType {
@@ -360,6 +363,14 @@ public class Post extends BaseEntity {
         this.images = images;
     }
 
+    public List<Bookmark> getBookmarks() {
+        return bookmarks;
+    }
+
+    public void setBookmarks(List<Bookmark> bookmarks) {
+        this.bookmarks = bookmarks;
+    }
+
     public Boolean getDisplay() {
         return isDisplay;
     }
@@ -461,6 +472,9 @@ public class Post extends BaseEntity {
         if (images != null ? !images.equals(post.images) : post.images != null) {
             return false;
         }
+        if (bookmarks != null ? !bookmarks.equals(post.bookmarks) : post.bookmarks != null) {
+            return false;
+        }
         return isDisplay != null ? isDisplay.equals(post.isDisplay) : post.isDisplay == null;
     }
 
@@ -494,6 +508,7 @@ public class Post extends BaseEntity {
         result = 31 * result + (shelterContact != null ? shelterContact.hashCode() : 0);
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (images != null ? images.hashCode() : 0);
+        result = 31 * result + (bookmarks != null ? bookmarks.hashCode() : 0);
         result = 31 * result + (isDisplay != null ? isDisplay.hashCode() : 0);
         return result;
     }
@@ -529,6 +544,7 @@ public class Post extends BaseEntity {
             ", shelterContact='" + shelterContact + '\'' +
             ", comments=" + comments +
             ", images=" + images +
+            ", bookmarks=" + bookmarks +
             ", isDisplay=" + isDisplay +
             '}';
     }

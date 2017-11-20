@@ -17,6 +17,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionReposit
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
 import com.querydsl.core.BooleanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,13 +33,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -382,8 +386,99 @@ public class PostServiceImpl implements PostService {
         return transform(post);
     }
 
-    private PostPreviewDTO previewTransform(Post post) {
-        return null;
+    @Override
+    public PostRankingDTO readPostRanking(String beginDate, String endDate) {
+        if (isEmpty(beginDate)) {
+            beginDate = getDefaultDate(DATE_FORMAT);
+        }
+        if (isEmpty(endDate)) {
+            endDate = getDefaultDate(DATE_FORMAT);
+        }
+        Map<Long, Shelter> shelterMap = shelterRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getShelterCode(),
+                                                                                   Function.identity()));
+        Map<Long, Breed> breedMap = breedRepository.findAll()
+                                                   .stream()
+                                                   .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
+        BooleanBuilder booleanBuilder = this.generateQuery(null, beginDate, endDate, null, null, null, null, null, null);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Iterable<Post> results = postRepository.findAll(booleanBuilder);
+        stopWatch.stop();
+        log.debug("readPostRanking time :: {} ", stopWatch.getLastTaskTimeMillis());
+        PostRankingDTO postRankingDTO = new PostRankingDTO();
+        postRankingDTO.setBeginDate(beginDate);
+        postRankingDTO.setEndDate(endDate);
+        List<PostRankingDTO.Element> systemList = new ArrayList<>();
+        List<PostRankingDTO.Element> protectingList = new ArrayList<>();
+        List<PostRankingDTO.Element> roadReportList = new ArrayList<>();
+        List<PostRankingDTO.Element> missingList = new ArrayList<>();
+        Map<Post.PostType, List<PostRankingDTO.Element>> elementsMap = new HashMap<>();
+        List<PostRankingDTO.Element> elements = StreamSupport.stream(results.spliterator(), false)
+                                                             .map(post -> {
+                                                                 PostRankingDTO.Element element = new PostRankingDTO.Element();
+                                                                 element.setId(post.getId());
+                                                                 element.setPostType(post.getPostType());
+                                                                 element.setStateType(post.getStateType());
+                                                                 element.setGenderType(post.getGenderType());
+                                                                 element.setHappenDate(convertDateToString(post.getHappenDate()));
+                                                                 element.setHitCount(post.getHitCount());
+                                                                 element.setCreatedDate(post.getCreatedDateTime()
+                                                                                            .format(DateTimeFormatter.ofPattern(
+                                                                                                "yyyy-MM-dd HH:mm:ss")));
+                                                                 element.setUpdatedDate(post.getLastModifiedDateTime()
+                                                                                            .format(DateTimeFormatter.ofPattern(
+                                                                                                "yyyy-MM-dd HH:mm:ss")));
+                                                                 Image image = post.getImages()
+                                                                                   .get(0);
+                                                                 PostPreviewDTO.Element.ImageUrl imageUrl = new PostPreviewDTO.Element
+                                                                     .ImageUrl();
+                                                                 imageUrl.setKey(image.getId());
+                                                                 imageUrl.setUrl(image.getUrl());
+                                                                 element.setImageUrls(Arrays.asList(imageUrl));
+                                                                 stopWatch.start();
+                                                                 element.setBookmarkCount(post.getBookmarks()
+                                                                                              .size());
+                                                                 // Comment 세팅
+                                                                 stopWatch.stop();
+                                                                 log.debug("readPostRanking ...1 :: {} ", stopWatch.getLastTaskTimeMillis());
+                                                                 stopWatch.start();
+                                                                 element.setCommentCount(post.getComments()
+                                                                                             .size());
+                                                                 stopWatch.stop();
+                                                                 log.debug("readPostRanking ...2 :: {} ", stopWatch.getLastTaskTimeMillis());
+
+                                                                 // Breed 세팅
+                                                                 Breed breed = breedMap.get(post.getKindCode());
+                                                                 element.setKindName(breed.getKindName());
+                                                                 // Region/Shelter 세팅
+                                                                 Shelter shelter = shelterMap.get(post.getShelterCode());
+                                                                 element.setHappenPlace(StringUtils.join(shelter.getSidoName(),
+                                                                                                         SPACE,
+                                                                                                         shelter.getGunguName()));
+                                                                 Integer score = Math.toIntExact(element.getHitCount() + (element
+                                                                     .getCommentCount() *
+                                                                     10) + element.getBookmarkCount());
+                                                                 element.setScore(score);
+                                                                 return element;
+                                                             })
+                                                             .sorted(Comparator.comparing(PostRankingDTO.Element::getScore))
+                                                             .map(x -> {
+                                                                 if (x.getPostType() == Post.PostType.SYSTEM) {
+                                                                     systemList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.PROTECTING) {
+                                                                     protectingList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.ROADREPORT) {
+                                                                     roadReportList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.MISSING) {
+                                                                     missingList.add(x);
+                                                                 }
+                                                                 return x;
+                                                             })
+                                                             .collect(Collectors.toList());
+        postRankingDTO.setElementsMap(elementsMap);
+        return postRankingDTO;
     }
 
     private PostDTO transform(Post post) {
