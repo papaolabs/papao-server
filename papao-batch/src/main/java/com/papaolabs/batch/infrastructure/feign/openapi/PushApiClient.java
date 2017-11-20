@@ -1,6 +1,7 @@
 package com.papaolabs.batch.infrastructure.feign.openapi;
 
 import com.papaolabs.batch.infrastructure.feign.openapi.dto.PushDTO;
+import com.papaolabs.batch.infrastructure.feign.openapi.dto.PushHistoryDTO;
 import feign.Body;
 import feign.Headers;
 import feign.Param;
