@@ -30,12 +30,12 @@ public class AnimalJob {
         }
     }
 
-    @Scheduled(cron = "0 0 0/10 1/1 * ?") // 60분마다 한달치 실행
+    @Scheduled(cron = "0 0/10 * 1/1 * ?") // 10분마다 한달치 실행
     public void month() {
         batch(BatchType.MONTH, 0);
     }
 
-    @Scheduled(cron = "0 0/5 * 1/1 * ?") // 10분마다 당일치 실행
+    @Scheduled(cron = "0 0/1 * 1/1 * ?") // 5분마다 당일치 실행
     @Scheduled(fixedDelay = 10000000000000L)
     public void day() {
         batch(BatchType.DAY, 0);
