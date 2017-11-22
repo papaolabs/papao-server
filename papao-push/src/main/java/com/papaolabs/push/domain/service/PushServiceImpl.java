@@ -80,7 +80,7 @@ public class PushServiceImpl implements PushService {
     @Override
     public PushHistory getOwnPushLogs(String userId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
-        Page<PushLog> pushLogs = pushLogRepository.findByUserId(Long.valueOf(userId), pageRequest);
+        Page<PushLog> pushLogs = pushLogRepository.findByUserIdOrderByCreatedDateAsc(Long.valueOf(userId), pageRequest);
         PushHistory pushHistory = new PushHistory();
         pushHistory.setUserId(Long.valueOf(userId));
         pushHistory.setTotalElements(pushLogs.getTotalElements());
