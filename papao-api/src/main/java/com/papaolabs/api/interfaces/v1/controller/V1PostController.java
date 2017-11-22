@@ -158,7 +158,7 @@ public class V1PostController {
     }
 
     @GetMapping("/users/{userId}/bookmarks")
-    public ResponseEntity<PostPreviewDTO> readBookmarkByUserId(@RequestParam String userId,
+    public ResponseEntity<PostPreviewDTO> readBookmarkByUserId(@PathVariable String userId,
                                                                @RequestParam(defaultValue = "0", required = false) String index,
                                                                @RequestParam(defaultValue = "100", required = false) String size
     ) {
