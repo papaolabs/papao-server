@@ -157,7 +157,7 @@ public class V1PostController {
         return new ResponseEntity(bookmarkService.readBookmarkByPostId(postId, index, size), HttpStatus.OK);
     }
 
-    @GetMapping("/users/bookmarks/{userId}")
+    @GetMapping("/users/{userId}/bookmarks")
     public ResponseEntity<PostPreviewDTO> readBookmarkByUserId(@RequestParam String userId,
                                                                @RequestParam(defaultValue = "0", required = false) String index,
                                                                @RequestParam(defaultValue = "100", required = false) String size
