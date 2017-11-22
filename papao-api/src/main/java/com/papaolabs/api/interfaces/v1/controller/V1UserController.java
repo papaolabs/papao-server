@@ -1,6 +1,7 @@
 package com.papaolabs.api.interfaces.v1.controller;
 
 import com.papaolabs.api.domain.service.UserService;
+import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.interfaces.v1.controller.request.JoinRequest;
 import com.papaolabs.api.interfaces.v1.controller.request.PushRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
@@ -59,5 +60,14 @@ public class V1UserController {
                                                          @RequestParam(defaultValue = "0", required = false) String index,
                                                          @RequestParam(defaultValue = "100", required = false) String size) {
         return new ResponseEntity<PushHistoryDTO>(userService.getPushHistory(userId, index, size), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/push/setting", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PushTypeDTO> getPushHistory(@RequestBody PushTypeDTO pushTypeDTO) {
+        return new ResponseEntity<PushTypeDTO>(userService.setPushType(pushTypeDTO.getUserId(),
+                                                                       pushTypeDTO.getDeviceId(),
+                                                                       pushTypeDTO.getAlarmYn(),
+                                                                       pushTypeDTO.getRescueAlarmYn(),
+                                                                       pushTypeDTO.getPostAlarmYn()), HttpStatus.OK);
     }
 }

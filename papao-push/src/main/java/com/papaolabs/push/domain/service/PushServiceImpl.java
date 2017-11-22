@@ -7,6 +7,7 @@ import com.papaolabs.push.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushLogRepository;
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushUserRepository;
 import com.papaolabs.push.interfaces.dto.PushHistory;
+import com.papaolabs.push.interfaces.dto.PushTypeDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,12 +58,24 @@ public class PushServiceImpl implements PushService {
             PushLog pushLog = new PushLog();
             pushLog.setType(PushLog.PushType.getType(request.getType()
                                                             .name()));
-            pushLog.setUserId(pushUser.getUserId());
+            pushLog.setUserId(Long.valueOf(pushUser.getUserId()));
             pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
             pushLog.setMessage(p.matcher(request.getMessage())
                                 .replaceAll(" "));
-            pushClient.send(pushUser.getDeviceId(), request.getMessage());
-            pushLogs.add(pushLog);
+            if (pushUser.getAlarmYn() != PushUser.YesNoType.N) {
+                pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                pushLogs.add(pushLog);
+            } else if (request.getType() == PushRequest.PushType.ALARM || request.getType() == PushRequest.PushType.SEARCH) {
+                if (pushUser.getRescueAlarmYn() != PushUser.YesNoType.N) {
+                    pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                    pushLogs.add(pushLog);
+                }
+            } else if (request.getType() == PushRequest.PushType.POST) {
+                if (pushUser.getPostAlarmYn() != PushUser.YesNoType.N) {
+                    pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                    pushLogs.add(pushLog);
+                }
+            }
         }
         pushLogRepository.save(pushLogs.stream()
                                        .filter(distinctByKey(PushLog::getUserId))
@@ -108,6 +121,25 @@ public class PushServiceImpl implements PushService {
     @Override
     public void deletePushLog(String pushId) {
         pushLogRepository.delete(Long.valueOf(pushId));
+    }
+
+    @Override
+    public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
+        PushUser pushUsers = pushUserRepository.findByDeviceId(Long.valueOf(deviceId));
+        pushUsers.setAlarmYn(PushUser.YesNoType.valueOf(alarmYn));
+        pushUsers.setRescueAlarmYn(PushUser.YesNoType.valueOf(rescueAlarmYn));
+        pushUsers.setPostAlarmYn(PushUser.YesNoType.valueOf(postAlarmYn));
+        pushUserRepository.save(pushUsers);
+        PushTypeDTO pushTypeDTO = new PushTypeDTO();
+        pushTypeDTO.setUserId(pushUsers.getUserId());
+        pushTypeDTO.setDeviceId(pushUsers.getDeviceId());
+        pushTypeDTO.setAlarmYn(pushUsers.getAlarmYn()
+                                        .name());
+        pushTypeDTO.setRescueAlarmYn(pushUsers.getRescueAlarmYn()
+                                              .name());
+        pushTypeDTO.setPostAlarmYn(pushUsers.getPostAlarmYn()
+                                            .name());
+        return pushTypeDTO;
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

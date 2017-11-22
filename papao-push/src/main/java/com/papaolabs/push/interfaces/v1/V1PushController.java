@@ -1,6 +1,7 @@
 package com.papaolabs.push.interfaces.v1;
 
 import com.papaolabs.push.domain.model.PushRequest;
+import com.papaolabs.push.interfaces.dto.PushTypeDTO;
 import com.papaolabs.push.domain.service.PushService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,15 @@ public class V1PushController {
     public ResponseEntity sendPush(@RequestBody List<PushRequest> pushRequests, @RequestParam(required = false) String postId) {
         this.pushService.sendPush(pushRequests, postId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/setting")
+    public ResponseEntity setPushType(@RequestBody PushTypeDTO pushTypeRequest) {
+        return new ResponseEntity(this.pushService.setPushType(pushTypeRequest.getUserId(),
+                                                               pushTypeRequest.getDeviceId(),
+                                                               pushTypeRequest.getAlarmYn(),
+                                                               pushTypeRequest.getRescueAlarmYn(),
+                                                               pushTypeRequest.getPostAlarmYn()), HttpStatus.OK);
     }
 
     @GetMapping

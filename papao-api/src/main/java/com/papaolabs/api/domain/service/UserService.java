@@ -1,5 +1,6 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
@@ -15,4 +16,6 @@ public interface UserService {
     String generateNickname();
 
     PushHistoryDTO getPushHistory(String userId, String index, String size);
+
+    PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn);
 }

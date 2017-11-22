@@ -8,7 +8,7 @@ public class PushRequest {
     private PushType type;
 
     public enum PushType {
-        SEARCH, ALARM, BOOKMARK;
+        SEARCH, ALARM, POST;
 
         public static PushType getType(String name) {
             if (StringUtils.isEmpty(name)) {

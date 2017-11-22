@@ -19,6 +19,29 @@ public class PushUser extends BaseEntity {
     private UserType type;
     private String userId;
     private String deviceId;
+    @Enumerated(EnumType.STRING)
+    private YesNoType alarmYn;
+    @Enumerated(EnumType.STRING)
+    private YesNoType rescueAlarmYn;
+    @Enumerated(EnumType.STRING)
+    private YesNoType postAlarmYn;
+
+    public enum YesNoType {
+        Y, N, U;
+
+        public static YesNoType getType(String name) {
+            if (StringUtils.isEmpty(name)) {
+                return null;
+            }
+            for (YesNoType type : YesNoType.values()) {
+                if (type.name()
+                        .equals(name)) {
+                    return type;
+                }
+            }
+            return U;
+        }
+    }
 
     public enum UserType {
         USER, GUEST;
@@ -69,34 +92,28 @@ public class PushUser extends BaseEntity {
         this.deviceId = deviceId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        PushUser pushUser = (PushUser) o;
-        if (id != null ? !id.equals(pushUser.id) : pushUser.id != null) {
-            return false;
-        }
-        if (type != pushUser.type) {
-            return false;
-        }
-        if (userId != null ? !userId.equals(pushUser.userId) : pushUser.userId != null) {
-            return false;
-        }
-        return deviceId != null ? deviceId.equals(pushUser.deviceId) : pushUser.deviceId == null;
+    public YesNoType getAlarmYn() {
+        return alarmYn;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (deviceId != null ? deviceId.hashCode() : 0);
-        return result;
+    public void setAlarmYn(YesNoType alarmYn) {
+        this.alarmYn = alarmYn;
+    }
+
+    public YesNoType getRescueAlarmYn() {
+        return rescueAlarmYn;
+    }
+
+    public void setRescueAlarmYn(YesNoType rescueAlarmYn) {
+        this.rescueAlarmYn = rescueAlarmYn;
+    }
+
+    public YesNoType getPostAlarmYn() {
+        return postAlarmYn;
+    }
+
+    public void setPostAlarmYn(YesNoType postAlarmYn) {
+        this.postAlarmYn = postAlarmYn;
     }
 
     @Override
@@ -106,6 +123,9 @@ public class PushUser extends BaseEntity {
             ", type=" + type +
             ", userId='" + userId + '\'' +
             ", deviceId='" + deviceId + '\'' +
+            ", alarmYn=" + alarmYn +
+            ", rescueAlarmYn=" + rescueAlarmYn +
+            ", postAlarmYn=" + postAlarmYn +
             '}';
     }
 }

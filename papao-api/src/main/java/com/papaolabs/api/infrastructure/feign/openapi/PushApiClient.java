@@ -1,6 +1,7 @@
 package com.papaolabs.api.infrastructure.feign.openapi;
 
 import com.papaolabs.api.infrastructure.feign.openapi.dto.PushDTO;
+import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
 import feign.Body;
 import feign.Headers;
@@ -24,4 +25,15 @@ public interface PushApiClient {
     PushHistoryDTO ownPushList(@Param(value = "userId") String userId,
                                @Param(value = "index") String index,
                                @Param(value = "size") String size);
+
+    @RequestLine("POST /api/v1/push/setting")
+    @Headers("Content-Type: application/json")
+    @Body(
+        "%7B\"userId\": \"{userId}\", \"deviceId\": \"{deviceId}\", \"alarmYn\": \"{alarmYn}\", \"rescueAlarmYn\": \"{rescueAlarmYn}\", " +
+            "\"postAlarmYn\": \"{postAlarmYn}\"%7D")
+    PushTypeDTO setPushType(@Param(value = "userId") String userId,
+                            @Param(value = "deviceId") String deviceId,
+                            @Param(value = "alarmYn") String alarmYn,
+                            @Param(value = "rescueAlarmYn") String rescueAlarmYn,
+                            @Param(value = "postAlarmYn") String postAlarmYn);
 }

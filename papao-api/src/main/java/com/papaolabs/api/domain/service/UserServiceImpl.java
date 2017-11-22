@@ -1,6 +1,7 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
+import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
@@ -157,5 +158,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public PushHistoryDTO getPushHistory(String userId, String index, String size) {
         return pushApiClient.ownPushList(userId, index, size);
+    }
+
+    @Override
+    public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
+        return pushApiClient.setPushType(userId, deviceId, alarmYn, rescueAlarmYn, postAlarmYn);
     }
 }
