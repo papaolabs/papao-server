@@ -177,7 +177,7 @@ public class PushHistoryDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PushHistory that = (PushHistory) o;
+        PushHistoryDTO that = (PushHistoryDTO) o;
         return new EqualsBuilder()
             .append(userId, that.userId)
             .append(totalElements, that.totalElements)
