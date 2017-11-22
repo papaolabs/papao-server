@@ -31,7 +31,7 @@ public class PushApiClientFallbackFactory implements LoggingFallbackFactory<Push
         }
 
         @Override
-        public PushHistoryDTO ownPushList(String userId) {
+        public PushHistoryDTO ownPushList(String userId, String index, String size) {
             return null;
         }
     }
