@@ -106,7 +106,9 @@ public class V1PostController {
     }
 
     @PostMapping(value = "/{postId}/state", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestBody String userId, @RequestParam Post.StateType stateType) {
+    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId,
+                                             @RequestBody String userId,
+                                             @RequestParam Post.StateType stateType) {
         return new ResponseEntity<>(postService.setState(postId, userId, stateType), HttpStatus.OK);
     }
 
@@ -145,6 +147,22 @@ public class V1PostController {
     @PostMapping(value = "/{postId}/bookmarks/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/bookmarks")
+    public ResponseEntity<PostPreviewDTO> readBookmarkByPostId(@PathVariable String postId,
+                                                               @RequestParam(defaultValue = "0", required = false) String index,
+                                                               @RequestParam(defaultValue = "100", required = false) String size
+    ) {
+        return new ResponseEntity(bookmarkService.readBookmarkByPostId(postId, index, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/bookmarks/{userId}")
+    public ResponseEntity<PostPreviewDTO> readBookmarkByUserId(@RequestParam String userId,
+                                                               @RequestParam(defaultValue = "0", required = false) String index,
+                                                               @RequestParam(defaultValue = "100", required = false) String size
+    ) {
+        return new ResponseEntity(bookmarkService.readBookmarkByUserId(userId, index, size), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/bookmarks/count")
