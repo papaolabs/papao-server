@@ -84,6 +84,7 @@ public class V1PostController {
 
     @GetMapping("/pages")
     public ResponseEntity<PostPreviewDTO> readPostsByPage(@RequestParam(required = false) List<String> postType,
+                                                          @RequestParam(required = false) String userId,
                                                           @RequestParam(required = false) String beginDate,
                                                           @RequestParam(required = false) String endDate,
                                                           @RequestParam(required = false) String upKindCode,
@@ -95,7 +96,7 @@ public class V1PostController {
                                                           @RequestParam(defaultValue = "0", required = false) String index,
                                                           @RequestParam(defaultValue = "100", required = false) String size
     ) {
-        return new ResponseEntity(postService.readPostsByPage(postType, beginDate, endDate, upKindCode
+        return new ResponseEntity(postService.readPostsByPage(postType, userId, beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, genderType, neuterType, index, size), HttpStatus.OK);
     }
 

@@ -37,6 +37,7 @@ public interface PostService {
                                    String neuterType);*/
 
     PostPreviewDTO readPostsByPage(List<String> postType,
+                                   String userId,
                                    String beginDate,
                                    String endDate,
                                    String upKindCode,

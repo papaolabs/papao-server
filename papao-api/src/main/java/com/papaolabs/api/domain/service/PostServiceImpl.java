@@ -188,6 +188,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostPreviewDTO readPostsByPage(List<String> postType,
+                                          String userId,
                                           String beginDate,
                                           String endDate,
                                           String upKindCode,
@@ -215,6 +216,7 @@ public class PostServiceImpl implements PostService {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
+                                                                  userId,
                                                                   beginDate,
                                                                   endDate,
                                                                   upKindCode,
@@ -271,6 +273,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private BooleanBuilder generateQuery(List<String> postType,
+                                         String userId,
                                          String beginDate,
                                          String endDate,
                                          String upKindCode,
@@ -292,6 +295,9 @@ public class PostServiceImpl implements PostService {
                     }
                 }
             }
+        }
+        if (isNotEmpty(userId)) {
+            builder.and(post.uid.eq(Long.valueOf(userId)));
         }
         if (isNotEmpty(uprCode)) {
             builder.and(post.happenSidoCode.eq(Long.valueOf(uprCode)));
@@ -401,7 +407,7 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        BooleanBuilder booleanBuilder = this.generateQuery(null, beginDate, endDate, null, null, null, null, null, null);
+        BooleanBuilder booleanBuilder = this.generateQuery(null, null, beginDate, endDate, null, null, null, null, null, null);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Iterable<Post> results = postRepository.findAll(booleanBuilder);
