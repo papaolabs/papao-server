@@ -28,8 +28,7 @@ public interface PushApiClient {
 
     @RequestLine("POST /api/v1/push/setting")
     @Headers("Content-Type: application/json")
-    @Body(
-        "%7B\"userId\": \"{userId}\", \"deviceId\": \"{deviceId}\", \"alarmYn\": \"{alarmYn}\", \"rescueAlarmYn\": \"{rescueAlarmYn}\", " +
+    @Body("%7B\"userId\": \"{userId}\", \"deviceId\": \"{deviceId}\", \"alarmYn\": \"{alarmYn}\", \"rescueAlarmYn\": \"{rescueAlarmYn}\", " +
             "\"postAlarmYn\": \"{postAlarmYn}\"%7D")
     PushTypeDTO setPushType(@Param(value = "userId") String userId,
                             @Param(value = "deviceId") String deviceId,

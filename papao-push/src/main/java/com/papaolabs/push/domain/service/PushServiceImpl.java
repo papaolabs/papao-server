@@ -48,10 +48,10 @@ public class PushServiceImpl implements PushService {
     @Override
     public void sendPush(PushRequest request, String postId) {
         List<PushUser> pushUsers = new ArrayList<>();
-        if (request.getUserId() == -9999L) {
+        if (request.getUserId() == "-9999") {
             pushUsers = pushUserRepository.findAll();
         } else {
-            pushUsers = pushUserRepository.findByUserId(request.getUserId());
+            pushUsers = pushUserRepository.findByUserId(String.valueOf(request.getUserId()));
         }
         List<PushLog> pushLogs = new ArrayList<>();
         for (PushUser pushUser : pushUsers) {
@@ -125,7 +125,7 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
-        PushUser pushUsers = pushUserRepository.findByDeviceId(Long.valueOf(deviceId));
+        PushUser pushUsers = pushUserRepository.findByDeviceId(deviceId);
         pushUsers.setAlarmYn(PushUser.YesNoType.valueOf(alarmYn));
         pushUsers.setRescueAlarmYn(PushUser.YesNoType.valueOf(rescueAlarmYn));
         pushUsers.setPostAlarmYn(PushUser.YesNoType.valueOf(postAlarmYn));

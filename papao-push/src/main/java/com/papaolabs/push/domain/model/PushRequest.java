@@ -3,7 +3,7 @@ package com.papaolabs.push.domain.model;
 import org.apache.commons.lang3.StringUtils;
 
 public class PushRequest {
-    private Long userId;
+    private String userId;
     private String message;
     private PushType type;
 
@@ -24,11 +24,11 @@ public class PushRequest {
         }
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -77,7 +77,7 @@ public class PushRequest {
     @Override
     public String toString() {
         return "PushRequest{" +
-            "userId=" + userId +
+            "userId='" + userId + '\'' +
             ", message='" + message + '\'' +
             ", type=" + type +
             '}';
