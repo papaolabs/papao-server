@@ -124,6 +124,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setUserId(user.getUid());
         userDTO.setNickname(user.getNickName());
         userDTO.setPhone(user.getPhone());
+        userDTO.setProfileUrl(user.getProfileUrl());
         userDTO.setDevicesToken(pushUserList
                                     .stream()
                                     .map(PushUser::getDeviceId)

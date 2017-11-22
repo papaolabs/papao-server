@@ -6,6 +6,7 @@ public class UserDTO {
     private String userId;
     private String nickname;
     private String phone;
+    private String profileUrl;
     private List<String> devicesToken;
 
     public String getUserId() {
@@ -30,6 +31,14 @@ public class UserDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
     }
 
     public List<String> getDevicesToken() {
@@ -58,6 +67,9 @@ public class UserDTO {
         if (phone != null ? !phone.equals(userDTO.phone) : userDTO.phone != null) {
             return false;
         }
+        if (profileUrl != null ? !profileUrl.equals(userDTO.profileUrl) : userDTO.profileUrl != null) {
+            return false;
+        }
         return devicesToken != null ? devicesToken.equals(userDTO.devicesToken) : userDTO.devicesToken == null;
     }
 
@@ -66,6 +78,7 @@ public class UserDTO {
         int result = userId != null ? userId.hashCode() : 0;
         result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (profileUrl != null ? profileUrl.hashCode() : 0);
         result = 31 * result + (devicesToken != null ? devicesToken.hashCode() : 0);
         return result;
     }
@@ -76,6 +89,7 @@ public class UserDTO {
             "userId='" + userId + '\'' +
             ", nickname='" + nickname + '\'' +
             ", phone='" + phone + '\'' +
+            ", profileUrl='" + profileUrl + '\'' +
             ", devicesToken=" + devicesToken +
             '}';
     }
