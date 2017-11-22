@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PushHistoryDTO getPushHistory(String userId) {
-        return pushApiClient.ownPushList(userId);
+    public PushHistoryDTO getPushHistory(String userId, String index, String size) {
+        return pushApiClient.ownPushList(userId, index, size);
     }
 }

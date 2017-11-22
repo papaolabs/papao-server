@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
@@ -54,7 +55,9 @@ public class V1UserController {
     }
 
     @PostMapping(value = "/push/history", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PushHistoryDTO> getPushHistory(@RequestBody String userId) {
-        return new ResponseEntity<PushHistoryDTO>(userService.getPushHistory(userId), HttpStatus.OK);
+    public ResponseEntity<PushHistoryDTO> getPushHistory(@RequestBody String userId,
+                                                         @RequestParam(defaultValue = "0", required = false) String index,
+                                                         @RequestParam(defaultValue = "100", required = false) String size) {
+        return new ResponseEntity<PushHistoryDTO>(userService.getPushHistory(userId, index, size), HttpStatus.OK);
     }
 }

@@ -37,8 +37,8 @@ public class V1PushController {
     }
 
     @GetMapping
-    public ResponseEntity ownPushList(@RequestParam String userId) {
-        return new ResponseEntity(this.pushService.getOwnPushLogs(userId), HttpStatus.OK);
+    public ResponseEntity ownPushList(@RequestParam String userId, @RequestParam String index, @RequestParam String size) {
+        return new ResponseEntity(this.pushService.getOwnPushLogs(userId, index, size), HttpStatus.OK);
     }
 
     @PostMapping("/delete")

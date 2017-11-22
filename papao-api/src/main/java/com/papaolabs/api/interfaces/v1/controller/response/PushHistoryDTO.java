@@ -1,11 +1,16 @@
 package com.papaolabs.api.interfaces.v1.controller.response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
 public class PushHistoryDTO {
     private Long userId;
+    private Long totalElements;
+    private Integer totalPages;
     private List<PushLog> pushLogs;
 
     public static class PushLog {
@@ -140,6 +145,22 @@ public class PushHistoryDTO {
         this.userId = userId;
     }
 
+    public Long getTotalElements() {
+        return totalElements;
+    }
+
+    public void setTotalElements(Long totalElements) {
+        this.totalElements = totalElements;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
+
     public List<PushLog> getPushLogs() {
         return pushLogs;
     }
@@ -156,25 +177,32 @@ public class PushHistoryDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PushHistoryDTO that = (PushHistoryDTO) o;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
-            return false;
-        }
-        return pushLogs != null ? pushLogs.equals(that.pushLogs) : that.pushLogs == null;
+        PushHistory that = (PushHistory) o;
+        return new EqualsBuilder()
+            .append(userId, that.userId)
+            .append(totalElements, that.totalElements)
+            .append(totalPages, that.totalPages)
+            .append(pushLogs, that.pushLogs)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (pushLogs != null ? pushLogs.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(userId)
+            .append(totalElements)
+            .append(totalPages)
+            .append(pushLogs)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "PushHistoryDTO{" +
-            "userId=" + userId +
-            ", pushLogs=" + pushLogs +
-            '}';
+        return new ToStringBuilder(this)
+            .append("userId", userId)
+            .append("totalElements", totalElements)
+            .append("totalPages", totalPages)
+            .append("pushLogs", pushLogs)
+            .toString();
     }
 }

@@ -20,6 +20,8 @@ public interface PushApiClient {
                            @Param(value = "message") String message,
                            @Param(value = "postId") String postId);
 
-    @RequestLine("GET /api/v1/push?userId={userId}")
-    PushHistoryDTO ownPushList(@Param(value = "userId") String userId);
+    @RequestLine("GET /api/v1/push?userId={userId}&index={index}&size={size}")
+    PushHistoryDTO ownPushList(@Param(value = "userId") String userId,
+                               @Param(value = "index") String index,
+                               @Param(value = "size") String size);
 }

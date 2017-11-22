@@ -10,7 +10,7 @@ public interface PushService {
 
     void sendPush(List<PushRequest> requests, String postId);
 
-    PushHistory getOwnPushLogs(String userId);
+    PushHistory getOwnPushLogs(String userId, String index, String size);
 
     void deletePushLog(String pushId);
 }

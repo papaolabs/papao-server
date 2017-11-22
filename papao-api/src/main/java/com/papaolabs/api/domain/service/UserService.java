@@ -14,5 +14,5 @@ public interface UserService {
 
     String generateNickname();
 
-    PushHistoryDTO getPushHistory(String userId);
+    PushHistoryDTO getPushHistory(String userId, String index, String size);
 }

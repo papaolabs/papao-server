@@ -8,6 +8,8 @@ import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushLogRepos
 import com.papaolabs.push.infrastructure.persistence.jpa.repository.PushUserRepository;
 import com.papaolabs.push.interfaces.dto.PushHistory;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -76,26 +78,30 @@ public class PushServiceImpl implements PushService {
     }
 
     @Override
-    public PushHistory getOwnPushLogs(String userId) {
+    public PushHistory getOwnPushLogs(String userId, String index, String size) {
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
+        Page<PushLog> pushLogs = pushLogRepository.findByUserId(Long.valueOf(userId), pageRequest);
         PushHistory pushHistory = new PushHistory();
         pushHistory.setUserId(Long.valueOf(userId));
-        pushHistory.setPushLogs(pushLogRepository.findByUserId(Long.valueOf(userId))
-                                                 .stream()
-                                                 .map(x -> {
-                                                     PushHistory.PushLog pushLog = new PushHistory.PushLog();
-                                                     pushLog.setId(x.getId());
-                                                     pushLog.setType(PushHistory.PushLog.PushType.getType(x.getType()
-                                                                                                           .name()));
-                                                     pushLog.setPostId(x.getPostId());
-                                                     pushLog.setMessage(x.getMessage());
-                                                     pushLog.setCreatedDate(x.getCreatedDateTime()
-                                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                                                     pushLog.setUpdatedDate(x.getLastModifiedDateTime()
-                                                                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                                                     return pushLog;
-                                                 })
-                                                 .sorted(Comparator.comparing(PushHistory.PushLog::getCreatedDate))
-                                                 .collect(Collectors.toList()));
+        pushHistory.setTotalElements(pushLogs.getTotalElements());
+        pushHistory.setTotalPages(pushLogs.getTotalPages());
+        pushHistory.setPushLogs(pushLogs.getContent()
+                                        .stream()
+                                        .map(x -> {
+                                            PushHistory.PushLog pushLog = new PushHistory.PushLog();
+                                            pushLog.setId(x.getId());
+                                            pushLog.setType(PushHistory.PushLog.PushType.getType(x.getType()
+                                                                                                  .name()));
+                                            pushLog.setPostId(x.getPostId());
+                                            pushLog.setMessage(x.getMessage());
+                                            pushLog.setCreatedDate(x.getCreatedDateTime()
+                                                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                            pushLog.setUpdatedDate(x.getLastModifiedDateTime()
+                                                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                                            return pushLog;
+                                        })
+                                        .sorted(Comparator.comparing(PushHistory.PushLog::getCreatedDate))
+                                        .collect(Collectors.toList()));
         return pushHistory;
     }
 
