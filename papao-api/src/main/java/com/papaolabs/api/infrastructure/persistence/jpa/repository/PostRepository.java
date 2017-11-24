@@ -1,9 +1,7 @@
 package com.papaolabs.api.infrastructure.persistence.jpa.repository;
 
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -17,5 +15,4 @@ public interface PostRepository extends JpaRepository<Post, Long>, QueryDslPredi
     List<Post> findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(Date beginDate, Date endDate);
     Page<Post> findByHappenDateGreaterThanEqualAndHappenDateLessThanEqual(Date beginDate, Date endDate, Pageable pageable);
     Page<Post> findByHappenDateGreaterThanEqualAndHappenDateLessThanEqualAndPostType(Date beginDate, Date endDate, Post.PostType postType, Pageable pageable);
-    Page<Post> findAllOrderByHappenDateDesc(BooleanBuilder booleanBuilder, PageRequest pageRequest);
 }
