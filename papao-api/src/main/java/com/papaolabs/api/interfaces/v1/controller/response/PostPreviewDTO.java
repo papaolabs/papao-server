@@ -2,6 +2,9 @@ package com.papaolabs.api.interfaces.v1.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -11,6 +14,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class PostPreviewDTO {
     private Long totalElements;
     private Integer totalPages;
+    private Integer currentPage;
     private List<Element> elements;
 
     public static class Element {
@@ -271,6 +275,14 @@ public class PostPreviewDTO {
         this.totalPages = totalPages;
     }
 
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
     public List<Element> getElements() {
         return elements;
     }
@@ -288,29 +300,31 @@ public class PostPreviewDTO {
             return false;
         }
         PostPreviewDTO that = (PostPreviewDTO) o;
-        if (totalElements != null ? !totalElements.equals(that.totalElements) : that.totalElements != null) {
-            return false;
-        }
-        if (totalPages != null ? !totalPages.equals(that.totalPages) : that.totalPages != null) {
-            return false;
-        }
-        return elements != null ? elements.equals(that.elements) : that.elements == null;
+        return new EqualsBuilder()
+            .append(totalElements, that.totalElements)
+            .append(totalPages, that.totalPages)
+            .append(currentPage, that.currentPage)
+            .append(elements, that.elements)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = totalElements != null ? totalElements.hashCode() : 0;
-        result = 31 * result + (totalPages != null ? totalPages.hashCode() : 0);
-        result = 31 * result + (elements != null ? elements.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(totalElements)
+            .append(totalPages)
+            .append(currentPage)
+            .append(elements)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "PostPreviewDTO{" +
-            "totalElements=" + totalElements +
-            ", totalPages=" + totalPages +
-            ", elements=" + elements +
-            '}';
+        return new ToStringBuilder(this)
+            .append("totalElements", totalElements)
+            .append("totalPages", totalPages)
+            .append("currentPage", currentPage)
+            .append("elements", elements)
+            .toString();
     }
 }

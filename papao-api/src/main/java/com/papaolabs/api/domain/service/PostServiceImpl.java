@@ -232,6 +232,7 @@ public class PostServiceImpl implements PostService {
         PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
         postPreviewDTO.setTotalElements(results.getTotalElements());
         postPreviewDTO.setTotalPages(results.getTotalPages());
+        postPreviewDTO.setCurrentPage(Integer.valueOf(page));
         postPreviewDTO.setElements(results.getContent()
                                           .stream()
                                           .map(post -> {
