@@ -213,7 +213,7 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "happendate"));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "happenDate"));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
