@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
@@ -212,7 +213,7 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size), Sort.Direction.DESC);
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
