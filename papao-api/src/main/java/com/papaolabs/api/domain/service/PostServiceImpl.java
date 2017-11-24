@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
@@ -213,20 +212,20 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size), Sort.Direction.DESC);
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        Page<Post> results = postRepository.findAll(generateQuery(postType,
-                                                                  userId,
-                                                                  beginDate,
-                                                                  endDate,
-                                                                  upKindCode,
-                                                                  kindCode,
-                                                                  uprCode,
-                                                                  orgCode,
-                                                                  genderType,
-                                                                  neuterType),
-                                                    pageRequest);
+        Page<Post> results = postRepository.findAllOrderByHappenDateDesc(generateQuery(postType,
+                                                                                       userId,
+                                                                                       beginDate,
+                                                                                       endDate,
+                                                                                       upKindCode,
+                                                                                       kindCode,
+                                                                                       uprCode,
+                                                                                       orgCode,
+                                                                                       genderType,
+                                                                                       neuterType),
+                                                                         pageRequest);
         stopWatch.stop();
         log.debug("query get time :: {} ", stopWatch.getLastTaskTimeMillis());
         PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
@@ -449,13 +448,14 @@ public class PostServiceImpl implements PostService {
                                                                                               .size());
                                                                  // Comment 세팅
                                                                  stopWatch.stop();
-                                                                 log.debug("readPostRanking ...1 :: {} ", stopWatch.getLastTaskTimeMillis());
+                                                                 log.debug("readPostRanking ...1 :: {} ",
+                                                                           stopWatch.getLastTaskTimeMillis());
                                                                  stopWatch.start();
                                                                  element.setCommentCount(post.getComments()
                                                                                              .size());
                                                                  stopWatch.stop();
-                                                                 log.debug("readPostRanking ...2 :: {} ", stopWatch.getLastTaskTimeMillis());
-
+                                                                 log.debug("readPostRanking ...2 :: {} ",
+                                                                           stopWatch.getLastTaskTimeMillis());
                                                                  // Breed 세팅
                                                                  Breed breed = breedMap.get(post.getKindCode());
                                                                  element.setKindName(breed.getKindName());
