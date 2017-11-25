@@ -122,12 +122,12 @@ public class V1PostController {
         Comments
      */
     @PostMapping(value = "/{postId}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<ResponseType> createComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
         return new ResponseEntity<>(commentService.create(postId, commentRequest.getUserId(), commentRequest.getText()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/comments/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("commentId") String commentId) {
+    public ResponseEntity<ResponseType> deleteComment(@PathVariable("commentId") String commentId) {
         commentService.delete(commentId);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -141,12 +141,12 @@ public class V1PostController {
         Bookmark
      */
     @PostMapping(value = "/{postId}/bookmarks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> registBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.registerBookmark(postId, userId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{postId}/bookmarks/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
     }
 

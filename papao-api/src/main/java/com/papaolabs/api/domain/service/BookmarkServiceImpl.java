@@ -8,18 +8,15 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.BookmarkRepos
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.BookmarkDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -49,28 +46,42 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public Long registerBookmark(String postId, String userId) {
+    public ResponseType registerBookmark(String postId, String userId) {
         Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
-        if (Objects.isNull(bookmark)) {
-            bookmark = new Bookmark();
-            bookmark.setPostId(Long.valueOf(postId));
-            bookmark.setUserId(Long.valueOf(userId));
-            this.bookmarkRepository.save(bookmark);
+        if (!Objects.isNull(bookmark)) {
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.DUPLICATED.getCode())
+                               .name(ResponseType.ResponseCode.DUPLICATED.name())
+                               .build();
         }
+        bookmark = new Bookmark();
+        bookmark.setPostId(Long.valueOf(postId));
+        bookmark.setUserId(Long.valueOf(userId));
+        this.bookmarkRepository.save(bookmark);
         Post post = postRepository.findOne(Long.valueOf(postId));
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
         String message = StringUtils.join(user.getNickName(), "님이 내 포스트를 북마크 했습니다\\ud83d\\udc36");
         pushApiClient.sendPush("POST", String.valueOf(post.getUid()), message, postId);
-        return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
-    public Long cancelBookmark(String postId, String userId) {
+    public ResponseType cancelBookmark(String postId, String userId) {
         Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
-        if (!Objects.isNull(bookmark)) {
-            this.bookmarkRepository.delete(bookmark.getId());
+        if (Objects.isNull(bookmark)) {
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                               .name(ResponseType.ResponseCode.NOTFOUND.name())
+                               .build();
         }
-        return this.bookmarkRepository.countByPostId(Long.valueOf(postId));
+        this.bookmarkRepository.delete(bookmark.getId());
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
@@ -82,7 +93,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public BookmarkDTO readBookmarkByUserId(String userId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(Long.valueOf(userId), pageRequest);
-        if(bookmarks == null) {
+        if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();
             bookmarkDTO.setTotalPages(0);
             bookmarkDTO.setTotalElements(0L);
@@ -96,7 +107,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public BookmarkDTO readBookmarkByPostId(String postId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByPostId(Long.valueOf(postId), pageRequest);
-        if(bookmarks == null) {
+        if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();
             bookmarkDTO.setTotalPages(0);
             bookmarkDTO.setTotalElements(0L);

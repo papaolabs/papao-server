@@ -1,13 +1,12 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.interfaces.v1.controller.response.BookmarkDTO;
-
-import java.util.List;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 
 public interface BookmarkService {
-    Long registerBookmark(String postId, String userId);
+    ResponseType registerBookmark(String postId, String userId);
 
-    Long cancelBookmark(String postId, String userId);
+    ResponseType cancelBookmark(String postId, String userId);
 
     Long countBookmark(String postId);
 

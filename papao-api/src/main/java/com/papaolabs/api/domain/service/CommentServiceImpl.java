@@ -9,6 +9,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO create(String postId, String userId, String text) {
+    public ResponseType create(String postId, String userId, String text) {
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
@@ -68,7 +69,10 @@ public class CommentServiceImpl implements CommentService {
             pushApiClient.sendPush("POST", String.valueOf(post.getUid()), message, postId);
         } catch (FeignException fe) {
         }
-        return commentDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     /*@Override
@@ -85,10 +89,20 @@ public class CommentServiceImpl implements CommentService {
     }*/
 
     @Override
-    public void delete(String commentId) {
+    public ResponseType delete(String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
+        if(comment == null) {
+            return ResponseType.builder()
+                        .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                        .name(ResponseType.ResponseCode.NOTFOUND.name())
+                        .build();
+        }
         comment.setDisplay(FALSE);
         commentRepository.save(comment);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
