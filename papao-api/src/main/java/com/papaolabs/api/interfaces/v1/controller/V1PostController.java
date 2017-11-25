@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class V1PostController {
         Posts
     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseType> createPost(@RequestBody PostRequest postRequest
+    public ResponseEntity<ResponseType> createPost(@RequestBody @Valid PostRequest postRequest
     ) {
         return new ResponseEntity<>(postService.create(postRequest.getHappenDate(),
                                                        postRequest.getHappenPlace(),

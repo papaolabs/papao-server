@@ -1,11 +1,14 @@
 package com.papaolabs.batch.infrastructure.feign.openapi.dto;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
 public class PushHistoryDTO {
-    private Long userId;
+    private String userId;
     private List<PushLog> pushLogs;
 
     public static class PushLog {
@@ -132,11 +135,11 @@ public class PushHistoryDTO {
         }
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -157,24 +160,25 @@ public class PushHistoryDTO {
             return false;
         }
         PushHistoryDTO that = (PushHistoryDTO) o;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) {
-            return false;
-        }
-        return pushLogs != null ? pushLogs.equals(that.pushLogs) : that.pushLogs == null;
+        return new EqualsBuilder()
+            .append(userId, that.userId)
+            .append(pushLogs, that.pushLogs)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (pushLogs != null ? pushLogs.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(userId)
+            .append(pushLogs)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "PushHistoryDTO{" +
-            "userId=" + userId +
-            ", pushLogs=" + pushLogs +
-            '}';
+        return new ToStringBuilder(this)
+            .append("userId", userId)
+            .append("pushLogs", pushLogs)
+            .toString();
     }
 }

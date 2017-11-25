@@ -58,7 +58,7 @@ public class PushServiceImpl implements PushService {
             PushLog pushLog = new PushLog();
             pushLog.setType(PushLog.PushType.getType(request.getType()
                                                             .name()));
-            pushLog.setUserId(Long.valueOf(pushUser.getUserId()));
+            pushLog.setUserId(pushUser.getUserId());
             pushLog.setPostId(StringUtils.isNotEmpty(postId) ? Long.valueOf(postId) : -1L);
             pushLog.setMessage(p.matcher(request.getMessage())
                                 .replaceAll(" "));
@@ -95,7 +95,7 @@ public class PushServiceImpl implements PushService {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
         Page<PushLog> pushLogs = pushLogRepository.findByUserIdOrderByIdDesc(Long.valueOf(userId), pageRequest);
         PushHistory pushHistory = new PushHistory();
-        pushHistory.setUserId(Long.valueOf(userId));
+        pushHistory.setUserId(userId);
         pushHistory.setTotalElements(pushLogs.getTotalElements());
         pushHistory.setTotalPages(pushLogs.getTotalPages());
         pushHistory.setPushLogs(pushLogs.getContent()

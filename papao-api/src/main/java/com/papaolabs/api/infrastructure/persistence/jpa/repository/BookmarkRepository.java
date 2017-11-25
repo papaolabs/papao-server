@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     Long countByPostId(Long postId);
-    Long deleteByPostIdAndUserId(Long postId, Long userId);
-    Bookmark findByPostIdAndUserId(Long postId, Long userId);
+    Long deleteByPostIdAndUserId(Long postId, String userId);
+    Bookmark findByPostIdAndUserId(Long postId, String userId);
     List<Bookmark> findByPostId(Long postId);
     Page<Bookmark> findByPostId(Long postId, Pageable pageable);
-    Page<Bookmark> findByUserId(Long userId, Pageable pageable);
+    Page<Bookmark> findByUserId(String userId, Pageable pageable);
 }

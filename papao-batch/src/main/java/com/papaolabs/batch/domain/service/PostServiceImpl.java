@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     private final BookmarkRepository bookmarkRepository;
     @NotNull
     private final PushApiClient pushApiClient;
-    public final static Long BATCH_USER_ID = 9999L;
+    public final static String BATCH_USER_ID = "9999";
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
 

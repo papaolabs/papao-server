@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @CrossOrigin(origins = "*")
@@ -32,7 +33,7 @@ public class V1UserController {
     }
 
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseType> join(@RequestBody JoinRequest joinRequest) {
+    public ResponseEntity<ResponseType> join(@RequestBody @Valid JoinRequest joinRequest) {
         return new ResponseEntity(userService.join(joinRequest.getUserId(),
                                                    joinRequest.getUserToken(),
                                                    joinRequest.getPhone()), HttpStatus.OK);

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 
 public class PushHistory {
-    private Long userId;
+    private String userId;
     private Long totalElements;
     private Integer totalPages;
     private List<PushLog> pushLogs;
@@ -137,11 +137,11 @@ public class PushHistory {
         }
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

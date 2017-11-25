@@ -1,5 +1,9 @@
 package com.papaolabs.api.interfaces.v1.controller.response;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.List;
 
 public class BookmarkDTO {
@@ -8,16 +12,16 @@ public class BookmarkDTO {
     private List<Element> elements;
 
     public static class Element {
-        private Long userId;
+        private String userId;
         private Long postId;
         private String createdDate;
         private String updatedDate;
 
-        public Long getUserId() {
+        public String getUserId() {
             return userId;
         }
 
-        public void setUserId(Long userId) {
+        public void setUserId(String userId) {
             this.userId = userId;
         }
 
@@ -54,35 +58,32 @@ public class BookmarkDTO {
                 return false;
             }
             Element element = (Element) o;
-            if (userId != null ? !userId.equals(element.userId) : element.userId != null) {
-                return false;
-            }
-            if (postId != null ? !postId.equals(element.postId) : element.postId != null) {
-                return false;
-            }
-            if (createdDate != null ? !createdDate.equals(element.createdDate) : element.createdDate != null) {
-                return false;
-            }
-            return updatedDate != null ? updatedDate.equals(element.updatedDate) : element.updatedDate == null;
+            return new EqualsBuilder()
+                .append(userId, element.userId)
+                .append(postId, element.postId)
+                .append(createdDate, element.createdDate)
+                .append(updatedDate, element.updatedDate)
+                .isEquals();
         }
 
         @Override
         public int hashCode() {
-            int result = userId != null ? userId.hashCode() : 0;
-            result = 31 * result + (postId != null ? postId.hashCode() : 0);
-            result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-            result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-            return result;
+            return new HashCodeBuilder(17, 37)
+                .append(userId)
+                .append(postId)
+                .append(createdDate)
+                .append(updatedDate)
+                .toHashCode();
         }
 
         @Override
         public String toString() {
-            return "Element{" +
-                "userId=" + userId +
-                ", postId=" + postId +
-                ", createdDate='" + createdDate + '\'' +
-                ", updatedDate='" + updatedDate + '\'' +
-                '}';
+            return new ToStringBuilder(this)
+                .append("userId", userId)
+                .append("postId", postId)
+                .append("createdDate", createdDate)
+                .append("updatedDate", updatedDate)
+                .toString();
         }
     }
 

@@ -112,7 +112,7 @@ public class PostServiceImpl implements PostService {
                                Long sidoCode,
                                Long gunguCode) {
         Post post = new Post();
-        post.setUid(Long.valueOf(uid));
+        post.setUid(uid);
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(happenPlace);
         post.setPostType(Post.PostType.getType(postType));

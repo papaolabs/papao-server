@@ -47,7 +47,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public ResponseType registerBookmark(String postId, String userId) {
-        Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), userId);
         if (!Objects.isNull(bookmark)) {
             return ResponseType.builder()
                                .code(ResponseType.ResponseCode.DUPLICATED.getCode())
@@ -56,7 +56,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
         bookmark = new Bookmark();
         bookmark.setPostId(Long.valueOf(postId));
-        bookmark.setUserId(Long.valueOf(userId));
+        bookmark.setUserId(userId);
         this.bookmarkRepository.save(bookmark);
         Post post = postRepository.findOne(Long.valueOf(postId));
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
@@ -70,7 +70,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public ResponseType cancelBookmark(String postId, String userId) {
-        Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        Bookmark bookmark = bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), userId);
         if (Objects.isNull(bookmark)) {
             return ResponseType.builder()
                                .code(ResponseType.ResponseCode.NOTFOUND.getCode())
@@ -92,7 +92,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public BookmarkDTO readBookmarkByUserId(String userId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
-        Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(Long.valueOf(userId), pageRequest);
+        Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(userId, pageRequest);
         if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();
             bookmarkDTO.setTotalPages(0);
@@ -119,7 +119,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Boolean checkBookmark(String postId, String userId) {
-        Bookmark bookmark = this.bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), Long.valueOf(userId));
+        Bookmark bookmark = this.bookmarkRepository.findByPostIdAndUserId(Long.valueOf(postId), userId);
         return Objects.isNull(bookmark) ? FALSE : TRUE;
     }
 

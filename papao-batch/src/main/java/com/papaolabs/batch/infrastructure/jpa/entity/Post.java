@@ -1,6 +1,9 @@
 package com.papaolabs.batch.infrastructure.jpa.entity;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,7 +25,7 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private Long uid;
+    private String uid;
     @Enumerated(EnumType.STRING)
     private PostType postType;
     @Enumerated(EnumType.STRING)
@@ -147,11 +150,11 @@ public class Post extends BaseEntity {
         this.id = id;
     }
 
-    public Long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
@@ -388,164 +391,109 @@ public class Post extends BaseEntity {
             return false;
         }
         Post post = (Post) o;
-        if (id != null ? !id.equals(post.id) : post.id != null) {
-            return false;
-        }
-        if (uid != null ? !uid.equals(post.uid) : post.uid != null) {
-            return false;
-        }
-        if (postType != post.postType) {
-            return false;
-        }
-        if (genderType != post.genderType) {
-            return false;
-        }
-        if (neuterType != post.neuterType) {
-            return false;
-        }
-        if (stateType != post.stateType) {
-            return false;
-        }
-        if (desertionId != null ? !desertionId.equals(post.desertionId) : post.desertionId != null) {
-            return false;
-        }
-        if (noticeId != null ? !noticeId.equals(post.noticeId) : post.noticeId != null) {
-            return false;
-        }
-        if (noticeBeginDate != null ? !noticeBeginDate.equals(post.noticeBeginDate) : post.noticeBeginDate != null) {
-            return false;
-        }
-        if (noticeEndDate != null ? !noticeEndDate.equals(post.noticeEndDate) : post.noticeEndDate != null) {
-            return false;
-        }
-        if (happenDate != null ? !happenDate.equals(post.happenDate) : post.happenDate != null) {
-            return false;
-        }
-        if (happenSidoCode != null ? !happenSidoCode.equals(post.happenSidoCode) : post.happenSidoCode != null) {
-            return false;
-        }
-        if (happenGunguCode != null ? !happenGunguCode.equals(post.happenGunguCode) : post.happenGunguCode != null) {
-            return false;
-        }
-        if (happenPlace != null ? !happenPlace.equals(post.happenPlace) : post.happenPlace != null) {
-            return false;
-        }
-        if (feature != null ? !feature.equals(post.feature) : post.feature != null) {
-            return false;
-        }
-        if (helperName != null ? !helperName.equals(post.helperName) : post.helperName != null) {
-            return false;
-        }
-        if (helperContact != null ? !helperContact.equals(post.helperContact) : post.helperContact != null) {
-            return false;
-        }
-        if (age != null ? !age.equals(post.age) : post.age != null) {
-            return false;
-        }
-        if (weight != null ? !weight.equals(post.weight) : post.weight != null) {
-            return false;
-        }
-        if (hitCount != null ? !hitCount.equals(post.hitCount) : post.hitCount != null) {
-            return false;
-        }
-        if (upKindCode != null ? !upKindCode.equals(post.upKindCode) : post.upKindCode != null) {
-            return false;
-        }
-        if (kindCode != null ? !kindCode.equals(post.kindCode) : post.kindCode != null) {
-            return false;
-        }
-        if (kindName != null ? !kindName.equals(post.kindName) : post.kindName != null) {
-            return false;
-        }
-        if (shelterCode != null ? !shelterCode.equals(post.shelterCode) : post.shelterCode != null) {
-            return false;
-        }
-        if (shelterName != null ? !shelterName.equals(post.shelterName) : post.shelterName != null) {
-            return false;
-        }
-        if (shelterContact != null ? !shelterContact.equals(post.shelterContact) : post.shelterContact != null) {
-            return false;
-        }
-        if (comments != null ? !comments.equals(post.comments) : post.comments != null) {
-            return false;
-        }
-        if (images != null ? !images.equals(post.images) : post.images != null) {
-            return false;
-        }
-        if (bookmarks != null ? !bookmarks.equals(post.bookmarks) : post.bookmarks != null) {
-            return false;
-        }
-        return isDisplay != null ? isDisplay.equals(post.isDisplay) : post.isDisplay == null;
+        return new EqualsBuilder()
+            .append(id, post.id)
+            .append(uid, post.uid)
+            .append(postType, post.postType)
+            .append(genderType, post.genderType)
+            .append(neuterType, post.neuterType)
+            .append(stateType, post.stateType)
+            .append(desertionId, post.desertionId)
+            .append(noticeId, post.noticeId)
+            .append(noticeBeginDate, post.noticeBeginDate)
+            .append(noticeEndDate, post.noticeEndDate)
+            .append(happenDate, post.happenDate)
+            .append(happenSidoCode, post.happenSidoCode)
+            .append(happenGunguCode, post.happenGunguCode)
+            .append(happenPlace, post.happenPlace)
+            .append(feature, post.feature)
+            .append(helperName, post.helperName)
+            .append(helperContact, post.helperContact)
+            .append(age, post.age)
+            .append(weight, post.weight)
+            .append(hitCount, post.hitCount)
+            .append(upKindCode, post.upKindCode)
+            .append(kindCode, post.kindCode)
+            .append(kindName, post.kindName)
+            .append(shelterCode, post.shelterCode)
+            .append(shelterName, post.shelterName)
+            .append(shelterContact, post.shelterContact)
+            .append(comments, post.comments)
+            .append(images, post.images)
+            .append(bookmarks, post.bookmarks)
+            .append(isDisplay, post.isDisplay)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (uid != null ? uid.hashCode() : 0);
-        result = 31 * result + (postType != null ? postType.hashCode() : 0);
-        result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
-        result = 31 * result + (neuterType != null ? neuterType.hashCode() : 0);
-        result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
-        result = 31 * result + (desertionId != null ? desertionId.hashCode() : 0);
-        result = 31 * result + (noticeId != null ? noticeId.hashCode() : 0);
-        result = 31 * result + (noticeBeginDate != null ? noticeBeginDate.hashCode() : 0);
-        result = 31 * result + (noticeEndDate != null ? noticeEndDate.hashCode() : 0);
-        result = 31 * result + (happenDate != null ? happenDate.hashCode() : 0);
-        result = 31 * result + (happenSidoCode != null ? happenSidoCode.hashCode() : 0);
-        result = 31 * result + (happenGunguCode != null ? happenGunguCode.hashCode() : 0);
-        result = 31 * result + (happenPlace != null ? happenPlace.hashCode() : 0);
-        result = 31 * result + (feature != null ? feature.hashCode() : 0);
-        result = 31 * result + (helperName != null ? helperName.hashCode() : 0);
-        result = 31 * result + (helperContact != null ? helperContact.hashCode() : 0);
-        result = 31 * result + (age != null ? age.hashCode() : 0);
-        result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (hitCount != null ? hitCount.hashCode() : 0);
-        result = 31 * result + (upKindCode != null ? upKindCode.hashCode() : 0);
-        result = 31 * result + (kindCode != null ? kindCode.hashCode() : 0);
-        result = 31 * result + (kindName != null ? kindName.hashCode() : 0);
-        result = 31 * result + (shelterCode != null ? shelterCode.hashCode() : 0);
-        result = 31 * result + (shelterName != null ? shelterName.hashCode() : 0);
-        result = 31 * result + (shelterContact != null ? shelterContact.hashCode() : 0);
-        result = 31 * result + (comments != null ? comments.hashCode() : 0);
-        result = 31 * result + (images != null ? images.hashCode() : 0);
-        result = 31 * result + (bookmarks != null ? bookmarks.hashCode() : 0);
-        result = 31 * result + (isDisplay != null ? isDisplay.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(id)
+            .append(uid)
+            .append(postType)
+            .append(genderType)
+            .append(neuterType)
+            .append(stateType)
+            .append(desertionId)
+            .append(noticeId)
+            .append(noticeBeginDate)
+            .append(noticeEndDate)
+            .append(happenDate)
+            .append(happenSidoCode)
+            .append(happenGunguCode)
+            .append(happenPlace)
+            .append(feature)
+            .append(helperName)
+            .append(helperContact)
+            .append(age)
+            .append(weight)
+            .append(hitCount)
+            .append(upKindCode)
+            .append(kindCode)
+            .append(kindName)
+            .append(shelterCode)
+            .append(shelterName)
+            .append(shelterContact)
+            .append(comments)
+            .append(images)
+            .append(bookmarks)
+            .append(isDisplay)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "Post{" +
-            "id=" + id +
-            ", uid=" + uid +
-            ", postType=" + postType +
-            ", genderType=" + genderType +
-            ", neuterType=" + neuterType +
-            ", stateType=" + stateType +
-            ", desertionId='" + desertionId + '\'' +
-            ", noticeId='" + noticeId + '\'' +
-            ", noticeBeginDate=" + noticeBeginDate +
-            ", noticeEndDate=" + noticeEndDate +
-            ", happenDate=" + happenDate +
-            ", happenSidoCode=" + happenSidoCode +
-            ", happenGunguCode=" + happenGunguCode +
-            ", happenPlace='" + happenPlace + '\'' +
-            ", feature='" + feature + '\'' +
-            ", helperName='" + helperName + '\'' +
-            ", helperContact='" + helperContact + '\'' +
-            ", age=" + age +
-            ", weight=" + weight +
-            ", hitCount=" + hitCount +
-            ", upKindCode=" + upKindCode +
-            ", kindCode=" + kindCode +
-            ", kindName='" + kindName + '\'' +
-            ", shelterCode=" + shelterCode +
-            ", shelterName='" + shelterName + '\'' +
-            ", shelterContact='" + shelterContact + '\'' +
-            ", comments=" + comments +
-            ", images=" + images +
-            ", bookmarks=" + bookmarks +
-            ", isDisplay=" + isDisplay +
-            '}';
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("uid", uid)
+            .append("postType", postType)
+            .append("genderType", genderType)
+            .append("neuterType", neuterType)
+            .append("stateType", stateType)
+            .append("desertionId", desertionId)
+            .append("noticeId", noticeId)
+            .append("noticeBeginDate", noticeBeginDate)
+            .append("noticeEndDate", noticeEndDate)
+            .append("happenDate", happenDate)
+            .append("happenSidoCode", happenSidoCode)
+            .append("happenGunguCode", happenGunguCode)
+            .append("happenPlace", happenPlace)
+            .append("feature", feature)
+            .append("helperName", helperName)
+            .append("helperContact", helperContact)
+            .append("age", age)
+            .append("weight", weight)
+            .append("hitCount", hitCount)
+            .append("upKindCode", upKindCode)
+            .append("kindCode", kindCode)
+            .append("kindName", kindName)
+            .append("shelterCode", shelterCode)
+            .append("shelterName", shelterName)
+            .append("shelterContact", shelterContact)
+            .append("comments", comments)
+            .append("images", images)
+            .append("bookmarks", bookmarks)
+            .append("isDisplay", isDisplay)
+            .toString();
     }
 }
