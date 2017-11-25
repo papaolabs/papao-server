@@ -4,9 +4,8 @@ import com.papaolabs.api.domain.service.UserService;
 import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.interfaces.v1.controller.request.JoinRequest;
 import com.papaolabs.api.interfaces.v1.controller.request.PushRequest;
-import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
-import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,14 +32,14 @@ public class V1UserController {
     }
 
     @PostMapping(value = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JoinDTO> join(@RequestBody JoinRequest joinRequest) {
+    public ResponseEntity<ResponseType> join(@RequestBody JoinRequest joinRequest) {
         return new ResponseEntity(userService.join(joinRequest.getUserId(),
                                                    joinRequest.getUserToken(),
                                                    joinRequest.getPhone()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/push", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PushDTO> setPush(@RequestBody PushRequest pushRequest) {
+    public ResponseEntity<ResponseType> setPush(@RequestBody PushRequest pushRequest) {
         return new ResponseEntity(userService.setPush(pushRequest.getType(), pushRequest.getUserId(), pushRequest.getDeviceId()),
                                   HttpStatus.OK);
     }

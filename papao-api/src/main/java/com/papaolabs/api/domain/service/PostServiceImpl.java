@@ -18,6 +18,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterReposi
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.querydsl.core.BooleanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -94,22 +95,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO create(String happenDate,
-                          String happenPlace,
-                          String uid,
-                          String postType,
-                          String stateType,
-                          List<String> imageUrls,
-                          Long kindUpCode,
-                          Long kindCode,
-                          String contact,
-                          String gender,
-                          String neuter,
-                          Integer age,
-                          Float weight,
-                          String feature,
-                          Long sidoCode,
-                          Long gunguCode) {
+    public ResponseType create(String happenDate,
+                               String happenPlace,
+                               String uid,
+                               String postType,
+                               String stateType,
+                               List<String> imageUrls,
+                               Long kindUpCode,
+                               Long kindCode,
+                               String contact,
+                               String gender,
+                               String neuter,
+                               Integer age,
+                               Float weight,
+                               String feature,
+                               Long sidoCode,
+                               Long gunguCode) {
         Post post = new Post();
         post.setUid(Long.valueOf(uid));
         post.setHappenDate(convertStringToDate(happenDate));
@@ -154,38 +155,11 @@ public class PostServiceImpl implements PostService {
                                            .toString();
             pushApiClient.sendPush("ALARM", "-9999", message, String.valueOf(postDTO.getId()));
         }
-        return postDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
-
-    /*@Override
-    public List<PostPreviewDTO> readPosts(List<String> postType,
-                                          String beginDate,
-                                          String endDate,
-                                          String upKindCode,
-                                          String kindCode,
-                                          String uprCode,
-                                          String orgCode,
-                                          String genderType,
-                                          String neuterType) {
-        if (isEmpty(beginDate)) {
-            beginDate = getDefaultDate(DATE_FORMAT);
-        }
-        if (isEmpty(endDate)) {
-            endDate = getDefaultDate(DATE_FORMAT);
-        }
-        Iterable<Post> results = postRepository.findAll(generateQuery(postType,
-                                                                      beginDate,
-                                                                      endDate,
-                                                                      upKindCode,
-                                                                      kindCode,
-                                                                      uprCode,
-                                                                      orgCode, genderType, neuterType));
-        return StreamSupport.stream(results.spliterator(), false)
-                            .filter(Post::getDisplay)
-                            .map(this::previewTransform)
-                            .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
-                            .collect(Collectors.toList());
-    }*/
 
     @Override
     public PostPreviewDTO readPostsByPage(List<String> postType,
@@ -213,7 +187,9 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "happenDate"));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page),
+                                                  Integer.valueOf(size),
+                                                  new Sort(Sort.Direction.DESC, "happenDate"));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
@@ -338,26 +314,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO delete(String postId, String userId) {
+    public ResponseType delete(String postId, String userId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
             log.debug("[NotFound] delete - id : {id}", postId);
-            PostDTO postDTO = new PostDTO();
-            postDTO.setId(-1L);
-            return postDTO;
-        } else if (!post.getDisplay()) {
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                               .name(ResponseType.ResponseCode.NOTFOUND.name())
+                               .build();
+        } else if (post.getDisplay() == FALSE) {
             log.debug("[NotValid] delete - isDisplay : {isDisplay}, id : {id}", post.getDisplay(), postId);
-            PostDTO postDTO = new PostDTO();
-            postDTO.setId(-1L);
-            return postDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.FAIL.getCode())
+                               .name(ResponseType.ResponseCode.FAIL.name())
+                               .build();
         }
         post.setDisplay(FALSE);
         postRepository.save(post);
-        return transform(post);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
-    public PostDTO setState(String postId, String userId, Post.StateType state) {
+    public ResponseType setState(String postId, String userId, Post.StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         post.setStateType(state);
         KorStringUtils korStringUtils = new KorStringUtils();
@@ -391,7 +372,10 @@ public class PostServiceImpl implements PostService {
             }
         }
         postRepository.save(post);
-        return transform(post);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override

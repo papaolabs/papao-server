@@ -4,26 +4,27 @@ import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 
 import java.util.List;
 
 public interface PostService {
-    PostDTO create(String happenDate,
-                   String happenPlace,
-                   String uid,
-                   String postType,
-                   String stateType,
-                   List<String> imageUrls,
-                   Long kindUpCode,
-                   Long kindCode,
-                   String contact,
-                   String gender,
-                   String neuter,
-                   Integer age,
-                   Float weight,
-                   String feature,
-                   Long sidoCode,
-                   Long gunguCode
+    ResponseType create(String happenDate,
+                        String happenPlace,
+                        String uid,
+                        String postType,
+                        String stateType,
+                        List<String> imageUrls,
+                        Long kindUpCode,
+                        Long kindCode,
+                        String contact,
+                        String gender,
+                        String neuter,
+                        Integer age,
+                        Float weight,
+                        String feature,
+                        Long sidoCode,
+                        Long gunguCode
     );
 
 /*    List<PostPreviewDTO> readPosts(List<String> postType,
@@ -51,9 +52,9 @@ public interface PostService {
 
     PostDTO readPost(String postId);
 
-    PostDTO delete(String postId, String userId);
+    ResponseType delete(String postId, String userId);
 
-    PostDTO setState(String postId, String userId, Post.StateType state);
+    ResponseType setState(String postId, String userId, Post.StateType state);
 
     PostRankingDTO readPostRanking(String beginDate, String endDate);
 

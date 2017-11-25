@@ -1,15 +1,14 @@
 package com.papaolabs.api.domain.service;
 
 import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
-import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
-import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 
 public interface UserService {
-    JoinDTO join(String userId, String userToken, String phone);
+    ResponseType join(String userId, String userToken, String phone);
 
-    PushDTO setPush(String type, String uid, String deviceToken);
+    ResponseType setPush(String type, String uid, String deviceToken);
 
     UserDTO profile(String uid);
 

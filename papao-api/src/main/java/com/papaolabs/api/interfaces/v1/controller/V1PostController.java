@@ -5,10 +5,11 @@ import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.controller.request.CommentRequest;
+import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
-import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class V1PostController {
         Posts
     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostRequest postRequest
+    public ResponseEntity<ResponseType> createPost(@RequestBody PostRequest postRequest
     ) {
         return new ResponseEntity<>(postService.create(postRequest.getHappenDate(),
                                                        postRequest.getHappenPlace(),
@@ -106,14 +107,14 @@ public class V1PostController {
     }
 
     @PostMapping(value = "/{postId}/state", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId,
+    public ResponseEntity<ResponseType> setStatus(@PathVariable("postId") String postId,
                                              @RequestBody String userId,
                                              @RequestParam Post.StateType stateType) {
         return new ResponseEntity<>(postService.setState(postId, userId, stateType), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> deletePost(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity<>(postService.delete(postId, userId), HttpStatus.OK);
     }
 

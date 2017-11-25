@@ -11,6 +11,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepositor
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,12 +53,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JoinDTO join(String userId, String userToken, String phone) {
+    public ResponseType join(String userId, String userToken, String phone) {
         User userByUid = userRepository.findByUid(userId);
         if (userByUid != null) {
-            JoinDTO joinDTO = new JoinDTO();
-            joinDTO.setId("-1");
-            return joinDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.DUPLICATED.getCode())
+                               .name(ResponseType.ResponseCode.DUPLICATED.name())
+                               .build();
         }
         User user = new User();
         user.setUid(userId);
@@ -73,22 +75,20 @@ public class UserServiceImpl implements UserService {
         joinDTO.setNickName(result.getNickName());
         joinDTO.setPhone(result.getPhone());
         joinDTO.setPush(FALSE);
-        return joinDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
-    public PushDTO setPush(String type, String userId, String deviceId) {
+    public ResponseType setPush(String type, String userId, String deviceId) {
         PushUser pushUser = pushUserRepository.findByDeviceId(deviceId);
         if (pushUser != null) {
-            PushDTO pushDTO = new PushDTO();
-            pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
-            pushDTO.setDeviceIds(pushUserRepository.findByUserId(userId)
-                                                   .stream()
-                                                   .map(PushUser::getDeviceId)
-                                                   .collect(Collectors.toList()));
-            pushDTO.setType(pushUser.getType()
-                                    .name());
-            return pushDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.DUPLICATED.getCode())
+                               .name(ResponseType.ResponseCode.DUPLICATED.name())
+                               .build();
         }
         PushUser.UserType userType = PushUser.UserType.getType(type);
         pushUser = new PushUser();
@@ -104,7 +104,10 @@ public class UserServiceImpl implements UserService {
                                                .stream()
                                                .map(PushUser::getDeviceId)
                                                .collect(Collectors.toList()));
-        return pushDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
