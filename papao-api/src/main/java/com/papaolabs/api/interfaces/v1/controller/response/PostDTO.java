@@ -2,6 +2,9 @@ package com.papaolabs.api.interfaces.v1.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
@@ -36,6 +39,9 @@ public class PostDTO {
     private String updatedDate;
     private Long commentCount;
     private Long bookmarkCount;
+    private String noticeBeginDate;
+    private String noticeEndDate;
+    private Integer deadlineDay;
 
     public static class ImageUrl {
         private Long key;
@@ -296,6 +302,30 @@ public class PostDTO {
         this.bookmarkCount = bookmarkCount;
     }
 
+    public String getNoticeBeginDate() {
+        return noticeBeginDate;
+    }
+
+    public void setNoticeBeginDate(String noticeBeginDate) {
+        this.noticeBeginDate = noticeBeginDate;
+    }
+
+    public String getNoticeEndDate() {
+        return noticeEndDate;
+    }
+
+    public void setNoticeEndDate(String noticeEndDate) {
+        this.noticeEndDate = noticeEndDate;
+    }
+
+    public Integer getDeadlineDay() {
+        return deadlineDay;
+    }
+
+    public void setDeadlineDay(Integer deadlineDay) {
+        this.deadlineDay = deadlineDay;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -305,144 +335,106 @@ public class PostDTO {
             return false;
         }
         PostDTO postDTO = (PostDTO) o;
-        if (id != null ? !id.equals(postDTO.id) : postDTO.id != null) {
-            return false;
-        }
-        if (desertionId != null ? !desertionId.equals(postDTO.desertionId) : postDTO.desertionId != null) {
-            return false;
-        }
-        if (stateType != postDTO.stateType) {
-            return false;
-        }
-        if (postType != postDTO.postType) {
-            return false;
-        }
-        if (genderType != postDTO.genderType) {
-            return false;
-        }
-        if (neuterType != postDTO.neuterType) {
-            return false;
-        }
-        if (imageUrls != null ? !imageUrls.equals(postDTO.imageUrls) : postDTO.imageUrls != null) {
-            return false;
-        }
-        if (feature != null ? !feature.equals(postDTO.feature) : postDTO.feature != null) {
-            return false;
-        }
-        if (shelterName != null ? !shelterName.equals(postDTO.shelterName) : postDTO.shelterName != null) {
-            return false;
-        }
-        if (managerId != null ? !managerId.equals(postDTO.managerId) : postDTO.managerId != null) {
-            return false;
-        }
-        if (managerName != null ? !managerName.equals(postDTO.managerName) : postDTO.managerName != null) {
-            return false;
-        }
-        if (managerAddress != null ? !managerAddress.equals(postDTO.managerAddress) : postDTO.managerAddress != null) {
-            return false;
-        }
-        if (managerContact != null ? !managerContact.equals(postDTO.managerContact) : postDTO.managerContact != null) {
-            return false;
-        }
-        if (happenDate != null ? !happenDate.equals(postDTO.happenDate) : postDTO.happenDate != null) {
-            return false;
-        }
-        if (happenPlace != null ? !happenPlace.equals(postDTO.happenPlace) : postDTO.happenPlace != null) {
-            return false;
-        }
-        if (upKindName != null ? !upKindName.equals(postDTO.upKindName) : postDTO.upKindName != null) {
-            return false;
-        }
-        if (kindName != null ? !kindName.equals(postDTO.kindName) : postDTO.kindName != null) {
-            return false;
-        }
-        if (sidoName != null ? !sidoName.equals(postDTO.sidoName) : postDTO.sidoName != null) {
-            return false;
-        }
-        if (gunguName != null ? !gunguName.equals(postDTO.gunguName) : postDTO.gunguName != null) {
-            return false;
-        }
-        if (age != null ? !age.equals(postDTO.age) : postDTO.age != null) {
-            return false;
-        }
-        if (weight != null ? !weight.equals(postDTO.weight) : postDTO.weight != null) {
-            return false;
-        }
-        if (hitCount != null ? !hitCount.equals(postDTO.hitCount) : postDTO.hitCount != null) {
-            return false;
-        }
-        if (createdDate != null ? !createdDate.equals(postDTO.createdDate) : postDTO.createdDate != null) {
-            return false;
-        }
-        if (updatedDate != null ? !updatedDate.equals(postDTO.updatedDate) : postDTO.updatedDate != null) {
-            return false;
-        }
-        if (commentCount != null ? !commentCount.equals(postDTO.commentCount) : postDTO.commentCount != null) {
-            return false;
-        }
-        return bookmarkCount != null ? bookmarkCount.equals(postDTO.bookmarkCount) : postDTO.bookmarkCount == null;
+        return new EqualsBuilder()
+            .append(id, postDTO.id)
+            .append(desertionId, postDTO.desertionId)
+            .append(stateType, postDTO.stateType)
+            .append(postType, postDTO.postType)
+            .append(genderType, postDTO.genderType)
+            .append(neuterType, postDTO.neuterType)
+            .append(imageUrls, postDTO.imageUrls)
+            .append(feature, postDTO.feature)
+            .append(shelterName, postDTO.shelterName)
+            .append(managerId, postDTO.managerId)
+            .append(managerName, postDTO.managerName)
+            .append(managerAddress, postDTO.managerAddress)
+            .append(managerContact, postDTO.managerContact)
+            .append(happenDate, postDTO.happenDate)
+            .append(happenPlace, postDTO.happenPlace)
+            .append(upKindName, postDTO.upKindName)
+            .append(kindName, postDTO.kindName)
+            .append(sidoName, postDTO.sidoName)
+            .append(gunguName, postDTO.gunguName)
+            .append(age, postDTO.age)
+            .append(weight, postDTO.weight)
+            .append(hitCount, postDTO.hitCount)
+            .append(createdDate, postDTO.createdDate)
+            .append(updatedDate, postDTO.updatedDate)
+            .append(commentCount, postDTO.commentCount)
+            .append(bookmarkCount, postDTO.bookmarkCount)
+            .append(noticeBeginDate, postDTO.noticeBeginDate)
+            .append(noticeEndDate, postDTO.noticeEndDate)
+            .append(deadlineDay, postDTO.deadlineDay)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (desertionId != null ? desertionId.hashCode() : 0);
-        result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
-        result = 31 * result + (postType != null ? postType.hashCode() : 0);
-        result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
-        result = 31 * result + (neuterType != null ? neuterType.hashCode() : 0);
-        result = 31 * result + (imageUrls != null ? imageUrls.hashCode() : 0);
-        result = 31 * result + (feature != null ? feature.hashCode() : 0);
-        result = 31 * result + (shelterName != null ? shelterName.hashCode() : 0);
-        result = 31 * result + (managerId != null ? managerId.hashCode() : 0);
-        result = 31 * result + (managerName != null ? managerName.hashCode() : 0);
-        result = 31 * result + (managerAddress != null ? managerAddress.hashCode() : 0);
-        result = 31 * result + (managerContact != null ? managerContact.hashCode() : 0);
-        result = 31 * result + (happenDate != null ? happenDate.hashCode() : 0);
-        result = 31 * result + (happenPlace != null ? happenPlace.hashCode() : 0);
-        result = 31 * result + (upKindName != null ? upKindName.hashCode() : 0);
-        result = 31 * result + (kindName != null ? kindName.hashCode() : 0);
-        result = 31 * result + (sidoName != null ? sidoName.hashCode() : 0);
-        result = 31 * result + (gunguName != null ? gunguName.hashCode() : 0);
-        result = 31 * result + (age != null ? age.hashCode() : 0);
-        result = 31 * result + (weight != null ? weight.hashCode() : 0);
-        result = 31 * result + (hitCount != null ? hitCount.hashCode() : 0);
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (commentCount != null ? commentCount.hashCode() : 0);
-        result = 31 * result + (bookmarkCount != null ? bookmarkCount.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(id)
+            .append(desertionId)
+            .append(stateType)
+            .append(postType)
+            .append(genderType)
+            .append(neuterType)
+            .append(imageUrls)
+            .append(feature)
+            .append(shelterName)
+            .append(managerId)
+            .append(managerName)
+            .append(managerAddress)
+            .append(managerContact)
+            .append(happenDate)
+            .append(happenPlace)
+            .append(upKindName)
+            .append(kindName)
+            .append(sidoName)
+            .append(gunguName)
+            .append(age)
+            .append(weight)
+            .append(hitCount)
+            .append(createdDate)
+            .append(updatedDate)
+            .append(commentCount)
+            .append(bookmarkCount)
+            .append(noticeBeginDate)
+            .append(noticeEndDate)
+            .append(deadlineDay)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "PostDTO{" +
-            "id=" + id +
-            ", desertionId='" + desertionId + '\'' +
-            ", stateType=" + stateType +
-            ", postType=" + postType +
-            ", genderType=" + genderType +
-            ", neuterType=" + neuterType +
-            ", imageUrls=" + imageUrls +
-            ", feature='" + feature + '\'' +
-            ", shelterName='" + shelterName + '\'' +
-            ", managerId='" + managerId + '\'' +
-            ", managerName='" + managerName + '\'' +
-            ", managerAddress='" + managerAddress + '\'' +
-            ", managerContact='" + managerContact + '\'' +
-            ", happenDate='" + happenDate + '\'' +
-            ", happenPlace='" + happenPlace + '\'' +
-            ", upKindName='" + upKindName + '\'' +
-            ", kindName='" + kindName + '\'' +
-            ", sidoName='" + sidoName + '\'' +
-            ", gunguName='" + gunguName + '\'' +
-            ", age=" + age +
-            ", weight=" + weight +
-            ", hitCount=" + hitCount +
-            ", createdDate='" + createdDate + '\'' +
-            ", updatedDate='" + updatedDate + '\'' +
-            ", commentCount=" + commentCount +
-            ", bookmarkCount=" + bookmarkCount +
-            '}';
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("desertionId", desertionId)
+            .append("stateType", stateType)
+            .append("postType", postType)
+            .append("genderType", genderType)
+            .append("neuterType", neuterType)
+            .append("imageUrls", imageUrls)
+            .append("feature", feature)
+            .append("shelterName", shelterName)
+            .append("managerId", managerId)
+            .append("managerName", managerName)
+            .append("managerAddress", managerAddress)
+            .append("managerContact", managerContact)
+            .append("happenDate", happenDate)
+            .append("happenPlace", happenPlace)
+            .append("upKindName", upKindName)
+            .append("kindName", kindName)
+            .append("sidoName", sidoName)
+            .append("gunguName", gunguName)
+            .append("age", age)
+            .append("weight", weight)
+            .append("hitCount", hitCount)
+            .append("createdDate", createdDate)
+            .append("updatedDate", updatedDate)
+            .append("commentCount", commentCount)
+            .append("bookmarkCount", bookmarkCount)
+            .append("noticeBeginDate", noticeBeginDate)
+            .append("noticeEndDate", noticeEndDate)
+            .append("deadlineDay", deadlineDay)
+            .toString();
     }
 }
