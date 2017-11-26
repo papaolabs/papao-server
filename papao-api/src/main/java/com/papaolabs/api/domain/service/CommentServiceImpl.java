@@ -60,8 +60,10 @@ public class CommentServiceImpl implements CommentService {
         comment.setUserId(userId);
         comment.setText(text);
         comment.setDisplay(TRUE);
-        commentRepository.save(comment);
         Post post = postRepository.findOne(Long.valueOf(postId));
+        post.getComments()
+            .add(comment);
+        postRepository.save(post);
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
         String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), "...");
         try {
@@ -90,11 +92,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseType delete(String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
-        if(comment == null) {
+        if (comment == null) {
             return ResponseType.builder()
-                        .code(ResponseType.ResponseCode.NOTFOUND.getCode())
-                        .name(ResponseType.ResponseCode.NOTFOUND.name())
-                        .build();
+                               .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                               .name(ResponseType.ResponseCode.NOTFOUND.name())
+                               .build();
         }
         comment.setDisplay(FALSE);
         commentRepository.save(comment);
