@@ -275,7 +275,7 @@ public class PostServiceImpl implements PostService {
             }
         }
         if (isNotEmpty(userId)) {
-            builder.and(post.uid.eq(Long.valueOf(userId)));
+            builder.and(post.uid.eq(userId));
         }
         if (isNotEmpty(uprCode)) {
             builder.and(post.happenSidoCode.eq(Long.valueOf(uprCode)));

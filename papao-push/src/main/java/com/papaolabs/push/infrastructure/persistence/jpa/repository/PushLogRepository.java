@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PushLogRepository extends JpaRepository<PushLog, Long> {
-    Page<PushLog> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
+    Page<PushLog> findByUserIdOrderByIdDesc(String userId, Pageable pageable);
 }
