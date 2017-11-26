@@ -546,6 +546,7 @@ public class PostServiceImpl implements PostService {
             e.printStackTrace();
         }
         postDTO.setDeadlineDay(day);
+        postDTO.setUserId(post.getUid());
         return postDTO;
     }
 

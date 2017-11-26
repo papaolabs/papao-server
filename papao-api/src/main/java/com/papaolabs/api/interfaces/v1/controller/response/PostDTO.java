@@ -42,6 +42,7 @@ public class PostDTO {
     private String noticeBeginDate;
     private String noticeEndDate;
     private Integer deadlineDay;
+    private String userId;
 
     public static class ImageUrl {
         private Long key;
@@ -326,6 +327,14 @@ public class PostDTO {
         this.deadlineDay = deadlineDay;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -365,6 +374,7 @@ public class PostDTO {
             .append(noticeBeginDate, postDTO.noticeBeginDate)
             .append(noticeEndDate, postDTO.noticeEndDate)
             .append(deadlineDay, postDTO.deadlineDay)
+            .append(userId, postDTO.userId)
             .isEquals();
     }
 
@@ -400,6 +410,7 @@ public class PostDTO {
             .append(noticeBeginDate)
             .append(noticeEndDate)
             .append(deadlineDay)
+            .append(userId)
             .toHashCode();
     }
 
@@ -435,6 +446,7 @@ public class PostDTO {
             .append("noticeBeginDate", noticeBeginDate)
             .append("noticeEndDate", noticeEndDate)
             .append("deadlineDay", deadlineDay)
+            .append("userId", userId)
             .toString();
     }
 }
