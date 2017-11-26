@@ -5,10 +5,11 @@ import com.papaolabs.api.domain.service.CommentService;
 import com.papaolabs.api.domain.service.PostService;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
 import com.papaolabs.api.interfaces.v1.controller.request.CommentRequest;
+import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
-import com.papaolabs.api.interfaces.v1.controller.request.PostRequest;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class V1PostController {
         Posts
     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostRequest postRequest
+    public ResponseEntity<ResponseType> createPost(@RequestBody @Valid PostRequest postRequest
     ) {
         return new ResponseEntity<>(postService.create(postRequest.getHappenDate(),
                                                        postRequest.getHappenPlace(),
@@ -84,6 +86,7 @@ public class V1PostController {
 
     @GetMapping("/pages")
     public ResponseEntity<PostPreviewDTO> readPostsByPage(@RequestParam(required = false) List<String> postType,
+                                                          @RequestParam(required = false) String userId,
                                                           @RequestParam(required = false) String beginDate,
                                                           @RequestParam(required = false) String endDate,
                                                           @RequestParam(required = false) String upKindCode,
@@ -95,7 +98,7 @@ public class V1PostController {
                                                           @RequestParam(defaultValue = "0", required = false) String index,
                                                           @RequestParam(defaultValue = "100", required = false) String size
     ) {
-        return new ResponseEntity(postService.readPostsByPage(postType, beginDate, endDate, upKindCode
+        return new ResponseEntity(postService.readPostsByPage(postType, userId, beginDate, endDate, upKindCode
             , kindCode, sidoCode, gunguCode, genderType, neuterType, index, size), HttpStatus.OK);
     }
 
@@ -105,12 +108,14 @@ public class V1PostController {
     }
 
     @PostMapping(value = "/{postId}/state", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> setStatus(@PathVariable("postId") String postId, @RequestBody String userId, @RequestParam Post.StateType stateType) {
+    public ResponseEntity<ResponseType> setStatus(@PathVariable("postId") String postId,
+                                             @RequestBody String userId,
+                                             @RequestParam Post.StateType stateType) {
         return new ResponseEntity<>(postService.setState(postId, userId, stateType), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDTO> deletePost(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> deletePost(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity<>(postService.delete(postId, userId), HttpStatus.OK);
     }
 
@@ -118,12 +123,12 @@ public class V1PostController {
         Comments
      */
     @PostMapping(value = "/{postId}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentDTO> createComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<ResponseType> createComment(@PathVariable("postId") String postId, @RequestBody CommentRequest commentRequest) {
         return new ResponseEntity<>(commentService.create(postId, commentRequest.getUserId(), commentRequest.getText()), HttpStatus.OK);
     }
 
     @PostMapping(value = "/comments/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommentDTO> deleteComment(@PathVariable("commentId") String commentId) {
+    public ResponseEntity<ResponseType> deleteComment(@PathVariable("commentId") String commentId) {
         commentService.delete(commentId);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -137,13 +142,29 @@ public class V1PostController {
         Bookmark
      */
     @PostMapping(value = "/{postId}/bookmarks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> registBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> registBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.registerBookmark(postId, userId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{postId}/bookmarks/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
+    public ResponseEntity<ResponseType> cancelBookmark(@PathVariable("postId") String postId, @RequestBody String userId) {
         return new ResponseEntity(bookmarkService.cancelBookmark(postId, userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{postId}/bookmarks")
+    public ResponseEntity<PostPreviewDTO> readBookmarkByPostId(@PathVariable String postId,
+                                                               @RequestParam(defaultValue = "0", required = false) String index,
+                                                               @RequestParam(defaultValue = "100", required = false) String size
+    ) {
+        return new ResponseEntity(bookmarkService.readBookmarkByPostId(postId, index, size), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}/bookmarks")
+    public ResponseEntity<PostPreviewDTO> readBookmarkByUserId(@PathVariable String userId,
+                                                               @RequestParam(defaultValue = "0", required = false) String index,
+                                                               @RequestParam(defaultValue = "100", required = false) String size
+    ) {
+        return new ResponseEntity(bookmarkService.readBookmarkByUserId(userId, index, size), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/bookmarks/count")

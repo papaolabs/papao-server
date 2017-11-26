@@ -1,4 +1,4 @@
-package com.papaolabs.push.interfaces.dto;
+package com.papaolabs.batch.infrastructure.feign.openapi.dto;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -7,10 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
-public class PushHistory {
+public class PushHistoryDTO {
     private String userId;
-    private Long totalElements;
-    private Integer totalPages;
     private List<PushLog> pushLogs;
 
     public static class PushLog {
@@ -145,22 +143,6 @@ public class PushHistory {
         this.userId = userId;
     }
 
-    public Long getTotalElements() {
-        return totalElements;
-    }
-
-    public void setTotalElements(Long totalElements) {
-        this.totalElements = totalElements;
-    }
-
-    public Integer getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(Integer totalPages) {
-        this.totalPages = totalPages;
-    }
-
     public List<PushLog> getPushLogs() {
         return pushLogs;
     }
@@ -177,11 +159,9 @@ public class PushHistory {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PushHistory that = (PushHistory) o;
+        PushHistoryDTO that = (PushHistoryDTO) o;
         return new EqualsBuilder()
             .append(userId, that.userId)
-            .append(totalElements, that.totalElements)
-            .append(totalPages, that.totalPages)
             .append(pushLogs, that.pushLogs)
             .isEquals();
     }
@@ -190,8 +170,6 @@ public class PushHistory {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
             .append(userId)
-            .append(totalElements)
-            .append(totalPages)
             .append(pushLogs)
             .toHashCode();
     }
@@ -200,8 +178,6 @@ public class PushHistory {
     public String toString() {
         return new ToStringBuilder(this)
             .append("userId", userId)
-            .append("totalElements", totalElements)
-            .append("totalPages", totalPages)
             .append("pushLogs", pushLogs)
             .toString();
     }

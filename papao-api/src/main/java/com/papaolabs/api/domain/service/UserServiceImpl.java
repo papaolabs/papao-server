@@ -1,5 +1,7 @@
 package com.papaolabs.api.domain.service;
 
+import com.papaolabs.api.infrastructure.feign.openapi.PushApiClient;
+import com.papaolabs.api.infrastructure.feign.openapi.dto.PushTypeDTO;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Breed;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.User;
@@ -8,6 +10,8 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.PushUserRepos
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.JoinDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PushDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PushHistoryDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.papaolabs.api.interfaces.v1.controller.response.UserDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,25 +38,28 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PushUserRepository pushUserRepository;
     private final BreedRepository breedRepository;
-    private final static String[] imageList = {"https://photos.app.goo.gl/JG1eawv9DMcyDcnh2",
-                                               "https://photos.app.goo.gl/mj6DHEEsbQYFfCfK2",
-                                               "https://photos.app.goo.gl/chc59jr6ooVyZTWh1"};
+    private final static String[] imageList = {"http://220.230.121.76:8000/v1/download/86d5b5dca78b4d908f7032df35d53c9e.png",
+                                               "http://220.230.121.76:8000/v1/download/f7cdf7a82056462383f4a4e96651f9dd.png",
+                                               "http://220.230.121.76:8000/v1/download/2d0e043d0fae488da5cec48c68ce71c0.png"};
+    private final PushApiClient pushApiClient;
 
     public UserServiceImpl(UserRepository userRepository,
                            PushUserRepository pushUserRepository,
-                           BreedRepository breedRepository) {
+                           BreedRepository breedRepository, PushApiClient pushApiClient) {
         this.userRepository = userRepository;
         this.pushUserRepository = pushUserRepository;
         this.breedRepository = breedRepository;
+        this.pushApiClient = pushApiClient;
     }
 
     @Override
-    public JoinDTO join(String userId, String userToken, String phone) {
+    public ResponseType join(String userId, String userToken, String phone) {
         User userByUid = userRepository.findByUid(userId);
         if (userByUid != null) {
-            JoinDTO joinDTO = new JoinDTO();
-            joinDTO.setId("-1");
-            return joinDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.DUPLICATED.getCode())
+                               .name(ResponseType.ResponseCode.DUPLICATED.name())
+                               .build();
         }
         User user = new User();
         user.setUid(userId);
@@ -68,22 +75,20 @@ public class UserServiceImpl implements UserService {
         joinDTO.setNickName(result.getNickName());
         joinDTO.setPhone(result.getPhone());
         joinDTO.setPush(FALSE);
-        return joinDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
-    public PushDTO setPush(String type, String userId, String deviceId) {
+    public ResponseType setPush(String type, String userId, String deviceId) {
         PushUser pushUser = pushUserRepository.findByDeviceId(deviceId);
         if (pushUser != null) {
-            PushDTO pushDTO = new PushDTO();
-            pushDTO.setUserId(String.valueOf(pushUser.getUserId()));
-            pushDTO.setDeviceIds(pushUserRepository.findByUserId(userId)
-                                                   .stream()
-                                                   .map(PushUser::getDeviceId)
-                                                   .collect(Collectors.toList()));
-            pushDTO.setType(pushUser.getType()
-                                    .name());
-            return pushDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.DUPLICATED.getCode())
+                               .name(ResponseType.ResponseCode.DUPLICATED.name())
+                               .build();
         }
         PushUser.UserType userType = PushUser.UserType.getType(type);
         pushUser = new PushUser();
@@ -99,7 +104,10 @@ public class UserServiceImpl implements UserService {
                                                .stream()
                                                .map(PushUser::getDeviceId)
                                                .collect(Collectors.toList()));
-        return pushDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
@@ -119,6 +127,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setUserId(user.getUid());
         userDTO.setNickname(user.getNickName());
         userDTO.setPhone(user.getPhone());
+        userDTO.setProfileUrl(user.getProfileUrl());
         userDTO.setDevicesToken(pushUserList
                                     .stream()
                                     .map(PushUser::getDeviceId)
@@ -148,5 +157,15 @@ public class UserServiceImpl implements UserService {
                                            .map(Breed::getKindName)
                                            .collect(Collectors.toList());
         return StringUtils.join(adjectives[n], StringUtils.SPACE, StringUtils.deleteWhitespace(list.get(random.nextInt(list.size()))));
+    }
+
+    @Override
+    public PushHistoryDTO getPushHistory(String userId, String index, String size) {
+        return pushApiClient.ownPushList(userId, index, size);
+    }
+
+    @Override
+    public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
+        return pushApiClient.setPushType(userId, deviceId, alarmYn, rescueAlarmYn, postAlarmYn);
     }
 }

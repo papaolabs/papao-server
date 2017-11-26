@@ -1,5 +1,9 @@
 package com.papaolabs.api.infrastructure.persistence.jpa.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,7 +15,7 @@ public class Bookmark extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
-    private Long userId;
+    private String userId;
     private Long postId;
 
     public Long getId() {
@@ -22,11 +26,11 @@ public class Bookmark extends BaseEntity {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -47,29 +51,28 @@ public class Bookmark extends BaseEntity {
             return false;
         }
         Bookmark bookmark = (Bookmark) o;
-        if (id != null ? !id.equals(bookmark.id) : bookmark.id != null) {
-            return false;
-        }
-        if (userId != null ? !userId.equals(bookmark.userId) : bookmark.userId != null) {
-            return false;
-        }
-        return postId != null ? postId.equals(bookmark.postId) : bookmark.postId == null;
+        return new EqualsBuilder()
+            .append(id, bookmark.id)
+            .append(userId, bookmark.userId)
+            .append(postId, bookmark.postId)
+            .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (postId != null ? postId.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+            .append(id)
+            .append(userId)
+            .append(postId)
+            .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "Bookmark{" +
-            "id=" + id +
-            ", userId=" + userId +
-            ", postId=" + postId +
-            '}';
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("userId", userId)
+            .append("postId", postId)
+            .toString();
     }
 }

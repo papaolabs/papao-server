@@ -17,12 +17,15 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionReposit
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.querydsl.core.BooleanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
@@ -32,13 +35,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -89,24 +95,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO create(String happenDate,
-                          String happenPlace,
-                          String uid,
-                          String postType,
-                          String stateType,
-                          List<String> imageUrls,
-                          Long kindUpCode,
-                          Long kindCode,
-                          String contact,
-                          String gender,
-                          String neuter,
-                          Integer age,
-                          Float weight,
-                          String feature,
-                          Long sidoCode,
-                          Long gunguCode) {
+    public ResponseType create(String happenDate,
+                               String happenPlace,
+                               String uid,
+                               String postType,
+                               String stateType,
+                               List<String> imageUrls,
+                               Long kindUpCode,
+                               Long kindCode,
+                               String contact,
+                               String gender,
+                               String neuter,
+                               Integer age,
+                               Float weight,
+                               String feature,
+                               Long sidoCode,
+                               Long gunguCode) {
         Post post = new Post();
-        post.setUid(Long.valueOf(uid));
+        post.setUid(uid);
         post.setHappenDate(convertStringToDate(happenDate));
         post.setHappenPlace(happenPlace);
         post.setPostType(Post.PostType.getType(postType));
@@ -136,41 +142,28 @@ public class PostServiceImpl implements PostService {
         post.setShelterName(shelter.getShelterName());
         post.setShelterContact(contact);
         post.setDisplay(TRUE);
-        return transform(postRepository.save(post));
+        PostDTO postDTO = transform(postRepository.save(post));
+        if (Post.PostType.getType(postType) == Post.PostType.ROADREPORT) {
+            KorStringUtils korStringUtils = new KorStringUtils();
+            String message = korStringUtils.append("[길거리제보] ")
+                                           .append(post.getKindName())
+                                           .appendJosa("가")
+                                           .append(StringUtils.join(StringUtils.SPACE, postDTO.getSidoName(),
+                                                                    StringUtils.SPACE,
+                                                                    postDTO.getGunguName(), "에서"))
+                                           .append(" 발견되었습니다\\ud83d\\udc3e")
+                                           .toString();
+            pushApiClient.sendPush("ALARM", "-9999", message, String.valueOf(postDTO.getId()));
+        }
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
-
-    /*@Override
-    public List<PostPreviewDTO> readPosts(List<String> postType,
-                                          String beginDate,
-                                          String endDate,
-                                          String upKindCode,
-                                          String kindCode,
-                                          String uprCode,
-                                          String orgCode,
-                                          String genderType,
-                                          String neuterType) {
-        if (isEmpty(beginDate)) {
-            beginDate = getDefaultDate(DATE_FORMAT);
-        }
-        if (isEmpty(endDate)) {
-            endDate = getDefaultDate(DATE_FORMAT);
-        }
-        Iterable<Post> results = postRepository.findAll(generateQuery(postType,
-                                                                      beginDate,
-                                                                      endDate,
-                                                                      upKindCode,
-                                                                      kindCode,
-                                                                      uprCode,
-                                                                      orgCode, genderType, neuterType));
-        return StreamSupport.stream(results.spliterator(), false)
-                            .filter(Post::getDisplay)
-                            .map(this::previewTransform)
-                            .sorted(Comparator.comparing(PostPreviewDTO::getHappenDate))
-                            .collect(Collectors.toList());
-    }*/
 
     @Override
     public PostPreviewDTO readPostsByPage(List<String> postType,
+                                          String userId,
                                           String beginDate,
                                           String endDate,
                                           String upKindCode,
@@ -194,10 +187,13 @@ public class PostServiceImpl implements PostService {
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(page), Integer.valueOf(size));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(page),
+                                                  Integer.valueOf(size),
+                                                  new Sort(Sort.Direction.DESC, "happenDate"));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
+                                                                  userId,
                                                                   beginDate,
                                                                   endDate,
                                                                   upKindCode,
@@ -212,6 +208,7 @@ public class PostServiceImpl implements PostService {
         PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
         postPreviewDTO.setTotalElements(results.getTotalElements());
         postPreviewDTO.setTotalPages(results.getTotalPages());
+        postPreviewDTO.setCurrentPage(Integer.valueOf(page));
         postPreviewDTO.setElements(results.getContent()
                                           .stream()
                                           .map(post -> {
@@ -254,6 +251,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private BooleanBuilder generateQuery(List<String> postType,
+                                         String userId,
                                          String beginDate,
                                          String endDate,
                                          String upKindCode,
@@ -275,6 +273,9 @@ public class PostServiceImpl implements PostService {
                     }
                 }
             }
+        }
+        if (isNotEmpty(userId)) {
+            builder.and(post.uid.eq(userId));
         }
         if (isNotEmpty(uprCode)) {
             builder.and(post.happenSidoCode.eq(Long.valueOf(uprCode)));
@@ -313,26 +314,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDTO delete(String postId, String userId) {
+    public ResponseType delete(String postId, String userId) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         if (post == null) {
             log.debug("[NotFound] delete - id : {id}", postId);
-            PostDTO postDTO = new PostDTO();
-            postDTO.setId(-1L);
-            return postDTO;
-        } else if (!post.getDisplay()) {
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                               .name(ResponseType.ResponseCode.NOTFOUND.name())
+                               .build();
+        } else if (post.getDisplay() == FALSE) {
             log.debug("[NotValid] delete - isDisplay : {isDisplay}, id : {id}", post.getDisplay(), postId);
-            PostDTO postDTO = new PostDTO();
-            postDTO.setId(-1L);
-            return postDTO;
+            return ResponseType.builder()
+                               .code(ResponseType.ResponseCode.FAIL.getCode())
+                               .name(ResponseType.ResponseCode.FAIL.name())
+                               .build();
         }
         post.setDisplay(FALSE);
         postRepository.save(post);
-        return transform(post);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
-    public PostDTO setState(String postId, String userId, Post.StateType state) {
+    public ResponseType setState(String postId, String userId, Post.StateType state) {
         Post post = postRepository.findOne(Long.valueOf(postId));
         post.setStateType(state);
         KorStringUtils korStringUtils = new KorStringUtils();
@@ -362,15 +368,110 @@ public class PostServiceImpl implements PostService {
                                            .toString();
             List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(postId));
             for (Bookmark bookmark : bookmarks) {
-                pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message, postId);
+                pushApiClient.sendPush("ALARM", String.valueOf(bookmark.getUserId()), message, postId);
             }
         }
         postRepository.save(post);
-        return transform(post);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
-    private PostPreviewDTO previewTransform(Post post) {
-        return null;
+    @Override
+    public PostRankingDTO readPostRanking(String beginDate, String endDate) {
+        if (isEmpty(beginDate)) {
+            beginDate = getDefaultDate(DATE_FORMAT);
+        }
+        if (isEmpty(endDate)) {
+            endDate = getDefaultDate(DATE_FORMAT);
+        }
+        Map<Long, Shelter> shelterMap = shelterRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getShelterCode(),
+                                                                                   Function.identity()));
+        Map<Long, Breed> breedMap = breedRepository.findAll()
+                                                   .stream()
+                                                   .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
+        BooleanBuilder booleanBuilder = this.generateQuery(null, null, beginDate, endDate, null, null, null, null, null, null);
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Iterable<Post> results = postRepository.findAll(booleanBuilder);
+        stopWatch.stop();
+        log.debug("readPostRanking time :: {} ", stopWatch.getLastTaskTimeMillis());
+        PostRankingDTO postRankingDTO = new PostRankingDTO();
+        postRankingDTO.setBeginDate(beginDate);
+        postRankingDTO.setEndDate(endDate);
+        List<PostRankingDTO.Element> systemList = new ArrayList<>();
+        List<PostRankingDTO.Element> protectingList = new ArrayList<>();
+        List<PostRankingDTO.Element> roadReportList = new ArrayList<>();
+        List<PostRankingDTO.Element> missingList = new ArrayList<>();
+        Map<Post.PostType, List<PostRankingDTO.Element>> elementsMap = new HashMap<>();
+        List<PostRankingDTO.Element> elements = StreamSupport.stream(results.spliterator(), false)
+                                                             .map(post -> {
+                                                                 PostRankingDTO.Element element = new PostRankingDTO.Element();
+                                                                 element.setId(post.getId());
+                                                                 element.setPostType(post.getPostType());
+                                                                 element.setStateType(post.getStateType());
+                                                                 element.setGenderType(post.getGenderType());
+                                                                 element.setHappenDate(convertDateToString(post.getHappenDate()));
+                                                                 element.setHitCount(post.getHitCount());
+                                                                 element.setCreatedDate(post.getCreatedDateTime()
+                                                                                            .format(DateTimeFormatter.ofPattern(
+                                                                                                "yyyy-MM-dd HH:mm:ss")));
+                                                                 element.setUpdatedDate(post.getLastModifiedDateTime()
+                                                                                            .format(DateTimeFormatter.ofPattern(
+                                                                                                "yyyy-MM-dd HH:mm:ss")));
+                                                                 Image image = post.getImages()
+                                                                                   .get(0);
+                                                                 PostPreviewDTO.Element.ImageUrl imageUrl = new PostPreviewDTO.Element
+                                                                     .ImageUrl();
+                                                                 imageUrl.setKey(image.getId());
+                                                                 imageUrl.setUrl(image.getUrl());
+                                                                 element.setImageUrls(Arrays.asList(imageUrl));
+                                                                 stopWatch.start();
+                                                                 element.setBookmarkCount(post.getBookmarks()
+                                                                                              .size());
+                                                                 // Comment 세팅
+                                                                 stopWatch.stop();
+                                                                 log.debug("readPostRanking ...1 :: {} ",
+                                                                           stopWatch.getLastTaskTimeMillis());
+                                                                 stopWatch.start();
+                                                                 element.setCommentCount(post.getComments()
+                                                                                             .size());
+                                                                 stopWatch.stop();
+                                                                 log.debug("readPostRanking ...2 :: {} ",
+                                                                           stopWatch.getLastTaskTimeMillis());
+                                                                 // Breed 세팅
+                                                                 Breed breed = breedMap.get(post.getKindCode());
+                                                                 element.setKindName(breed.getKindName());
+                                                                 // Region/Shelter 세팅
+                                                                 Shelter shelter = shelterMap.get(post.getShelterCode());
+                                                                 element.setHappenPlace(StringUtils.join(shelter.getSidoName(),
+                                                                                                         SPACE,
+                                                                                                         shelter.getGunguName()));
+                                                                 Integer score = Math.toIntExact(element.getHitCount() + (element
+                                                                     .getCommentCount() *
+                                                                     10) + element.getBookmarkCount());
+                                                                 element.setScore(score);
+                                                                 return element;
+                                                             })
+                                                             .sorted(Comparator.comparing(PostRankingDTO.Element::getScore))
+                                                             .map(x -> {
+                                                                 if (x.getPostType() == Post.PostType.SYSTEM) {
+                                                                     systemList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.PROTECTING) {
+                                                                     protectingList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.ROADREPORT) {
+                                                                     roadReportList.add(x);
+                                                                 } else if (x.getPostType() == Post.PostType.MISSING) {
+                                                                     missingList.add(x);
+                                                                 }
+                                                                 return x;
+                                                             })
+                                                             .collect(Collectors.toList());
+        postRankingDTO.setElementsMap(elementsMap);
+        return postRankingDTO;
     }
 
     private PostDTO transform(Post post) {

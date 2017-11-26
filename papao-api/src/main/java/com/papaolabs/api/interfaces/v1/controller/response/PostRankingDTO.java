@@ -1,86 +1,30 @@
 package com.papaolabs.api.interfaces.v1.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.papaolabs.api.infrastructure.persistence.jpa.entity.Post;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
+import java.util.Map;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
-@JsonInclude(NON_NULL)
-public class PostPreviewDTO {
-    private Long totalElements;
-    private Integer totalPages;
-    private Integer currentPage;
-    private List<Element> elements;
+public class PostRankingDTO {
+    private String beginDate;
+    private String endDate;
+    private Map<Post.PostType, List<Element>> elementsMap;
 
     public static class Element {
         private Long id;
         private Post.PostType postType;
         private Post.StateType stateType;
         private Post.GenderType genderType;
-        private List<ImageUrl> imageUrls;
+        private List<PostPreviewDTO.Element.ImageUrl> imageUrls;
         private String happenDate;
         private String happenPlace;
         private String kindName;
         private Long hitCount;
         private Integer commentCount;
+        private Integer bookmarkCount;
+        private Integer score;
         private String createdDate;
         private String updatedDate;
-
-        public static class ImageUrl {
-            private Long key;
-            private String url;
-
-            public Long getKey() {
-                return key;
-            }
-
-            public void setKey(Long key) {
-                this.key = key;
-            }
-
-            public String getUrl() {
-                return url;
-            }
-
-            public void setUrl(String url) {
-                this.url = url;
-            }
-
-            @Override
-            public boolean equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || getClass() != o.getClass()) {
-                    return false;
-                }
-                ImageUrl imageUrl = (ImageUrl) o;
-                if (key != null ? !key.equals(imageUrl.key) : imageUrl.key != null) {
-                    return false;
-                }
-                return url != null ? url.equals(imageUrl.url) : imageUrl.url == null;
-            }
-
-            @Override
-            public int hashCode() {
-                int result = key != null ? key.hashCode() : 0;
-                result = 31 * result + (url != null ? url.hashCode() : 0);
-                return result;
-            }
-
-            @Override
-            public String toString() {
-                return "ImageUrl{" +
-                    "key=" + key +
-                    ", url='" + url + '\'' +
-                    '}';
-            }
-        }
 
         public Long getId() {
             return id;
@@ -114,11 +58,11 @@ public class PostPreviewDTO {
             this.genderType = genderType;
         }
 
-        public List<ImageUrl> getImageUrls() {
+        public List<PostPreviewDTO.Element.ImageUrl> getImageUrls() {
             return imageUrls;
         }
 
-        public void setImageUrls(List<ImageUrl> imageUrls) {
+        public void setImageUrls(List<PostPreviewDTO.Element.ImageUrl> imageUrls) {
             this.imageUrls = imageUrls;
         }
 
@@ -160,6 +104,22 @@ public class PostPreviewDTO {
 
         public void setCommentCount(Integer commentCount) {
             this.commentCount = commentCount;
+        }
+
+        public Integer getBookmarkCount() {
+            return bookmarkCount;
+        }
+
+        public void setBookmarkCount(Integer bookmarkCount) {
+            this.bookmarkCount = bookmarkCount;
+        }
+
+        public Integer getScore() {
+            return score;
+        }
+
+        public void setScore(Integer score) {
+            this.score = score;
         }
 
         public String getCreatedDate() {
@@ -217,6 +177,12 @@ public class PostPreviewDTO {
             if (commentCount != null ? !commentCount.equals(element.commentCount) : element.commentCount != null) {
                 return false;
             }
+            if (bookmarkCount != null ? !bookmarkCount.equals(element.bookmarkCount) : element.bookmarkCount != null) {
+                return false;
+            }
+            if (score != null ? !score.equals(element.score) : element.score != null) {
+                return false;
+            }
             if (createdDate != null ? !createdDate.equals(element.createdDate) : element.createdDate != null) {
                 return false;
             }
@@ -235,6 +201,8 @@ public class PostPreviewDTO {
             result = 31 * result + (kindName != null ? kindName.hashCode() : 0);
             result = 31 * result + (hitCount != null ? hitCount.hashCode() : 0);
             result = 31 * result + (commentCount != null ? commentCount.hashCode() : 0);
+            result = 31 * result + (bookmarkCount != null ? bookmarkCount.hashCode() : 0);
+            result = 31 * result + (score != null ? score.hashCode() : 0);
             result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
             result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
             return result;
@@ -253,42 +221,36 @@ public class PostPreviewDTO {
                 ", kindName='" + kindName + '\'' +
                 ", hitCount=" + hitCount +
                 ", commentCount=" + commentCount +
+                ", bookmarkCount=" + bookmarkCount +
+                ", score=" + score +
                 ", createdDate='" + createdDate + '\'' +
                 ", updatedDate='" + updatedDate + '\'' +
                 '}';
         }
     }
 
-    public Long getTotalElements() {
-        return totalElements;
+    public String getBeginDate() {
+        return beginDate;
     }
 
-    public void setTotalElements(Long totalElements) {
-        this.totalElements = totalElements;
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
     }
 
-    public Integer getTotalPages() {
-        return totalPages;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setTotalPages(Integer totalPages) {
-        this.totalPages = totalPages;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
-    public Integer getCurrentPage() {
-        return currentPage;
+    public Map<Post.PostType, List<Element>> getElementsMap() {
+        return elementsMap;
     }
 
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public List<Element> getElements() {
-        return elements;
-    }
-
-    public void setElements(List<Element> elements) {
-        this.elements = elements;
+    public void setElementsMap(Map<Post.PostType, List<Element>> elementsMap) {
+        this.elementsMap = elementsMap;
     }
 
     @Override
@@ -299,32 +261,30 @@ public class PostPreviewDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PostPreviewDTO that = (PostPreviewDTO) o;
-        return new EqualsBuilder()
-            .append(totalElements, that.totalElements)
-            .append(totalPages, that.totalPages)
-            .append(currentPage, that.currentPage)
-            .append(elements, that.elements)
-            .isEquals();
+        PostRankingDTO that = (PostRankingDTO) o;
+        if (beginDate != null ? !beginDate.equals(that.beginDate) : that.beginDate != null) {
+            return false;
+        }
+        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) {
+            return false;
+        }
+        return elementsMap != null ? elementsMap.equals(that.elementsMap) : that.elementsMap == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(totalElements)
-            .append(totalPages)
-            .append(currentPage)
-            .append(elements)
-            .toHashCode();
+        int result = beginDate != null ? beginDate.hashCode() : 0;
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (elementsMap != null ? elementsMap.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("totalElements", totalElements)
-            .append("totalPages", totalPages)
-            .append("currentPage", currentPage)
-            .append("elements", elements)
-            .toString();
+        return "PushRankingDTO{" +
+            "beginDate='" + beginDate + '\'' +
+            ", endDate='" + endDate + '\'' +
+            ", elementsMap=" + elementsMap +
+            '}';
     }
 }

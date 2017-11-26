@@ -1,4 +1,4 @@
-package com.papaolabs.push.interfaces.dto;
+package com.papaolabs.api.interfaces.v1.controller.response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
-public class PushHistory {
+public class PushHistoryDTO {
     private String userId;
     private Long totalElements;
     private Integer totalPages;
@@ -177,7 +177,7 @@ public class PushHistory {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PushHistory that = (PushHistory) o;
+        PushHistoryDTO that = (PushHistoryDTO) o;
         return new EqualsBuilder()
             .append(userId, that.userId)
             .append(totalElements, that.totalElements)

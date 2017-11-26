@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     private final BookmarkRepository bookmarkRepository;
     @NotNull
     private final PushApiClient pushApiClient;
-    public final static Long BATCH_USER_ID = 9999L;
+    public final static String BATCH_USER_ID = "9999";
     public final static String DATE_FORMAT = "yyyyMMdd";
     public final static String ETC_KIND_CODE = "429900";
 
@@ -193,7 +193,7 @@ public class PostServiceImpl implements PostService {
                                                                               .append(emoji)
                                                                               .toString();
                                                List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
-                                               pushApiClient.sendPush("9999", message,
+                                               pushApiClient.sendPush("ALARM", "9999", message,
                                                                       String.valueOf(x.getId()));
                                                /*for (Bookmark bookmark : bookmarks) {
                                                    pushApiClient.sendPush(String.valueOf(bookmark.getUserId()), message,

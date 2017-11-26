@@ -9,6 +9,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.CommentDTO;
+import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO create(String postId, String userId, String text) {
+    public ResponseType create(String postId, String userId, String text) {
         Comment comment = new Comment();
         comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
@@ -65,10 +66,13 @@ public class CommentServiceImpl implements CommentService {
         User user = userRepository.findByUid(String.valueOf(post.getUid()));
         String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), "...");
         try {
-            pushApiClient.sendPush(String.valueOf(post.getUid()), message, postId);
+            pushApiClient.sendPush("POST", String.valueOf(post.getUid()), message, postId);
         } catch (FeignException fe) {
         }
-        return commentDTO;
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     /*@Override
@@ -85,10 +89,20 @@ public class CommentServiceImpl implements CommentService {
     }*/
 
     @Override
-    public void delete(String commentId) {
+    public ResponseType delete(String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
+        if(comment == null) {
+            return ResponseType.builder()
+                        .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                        .name(ResponseType.ResponseCode.NOTFOUND.name())
+                        .build();
+        }
         comment.setDisplay(FALSE);
         commentRepository.save(comment);
+        return ResponseType.builder()
+                           .code(ResponseType.ResponseCode.SUCCESS.getCode())
+                           .name(ResponseType.ResponseCode.SUCCESS.name())
+                           .build();
     }
 
     @Override
@@ -123,7 +137,7 @@ public class CommentServiceImpl implements CommentService {
         if (user == null) {
             user = new User();
             user.setNickName("탈퇴회원");
-            user.setProfileUrl("https://photos.app.goo.gl/JG1eawv9DMcyDcnh2");
+            user.setProfileUrl("http://220.230.121.76:8000/v1/download/86d5b5dca78b4d908f7032df35d53c9e.png");
         }
         CommentDTO.Content content = new CommentDTO.Content();
         content.setId(comment.getId());
