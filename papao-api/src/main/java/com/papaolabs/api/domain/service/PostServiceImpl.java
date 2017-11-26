@@ -15,6 +15,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
@@ -37,8 +38,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +62,7 @@ public class PostServiceImpl implements PostService {
     @Value("${seoul.api.animal.appKey}")
     private String appKey;
     private static final String DATE_FORMAT = "yyyyMMdd";
+    private static final Integer DEADLINE_LIMIT = 20;
     @NotNull
     private final PostRepository postRepository;
     @NotNull
@@ -75,6 +79,8 @@ public class PostServiceImpl implements PostService {
     private final BookmarkRepository bookmarkRepository;
     @NotNull
     private final PushApiClient pushApiClient;
+    @NotNull
+    private final UserRepository userRepository;
 
     public PostServiceImpl(PostRepository postRepository,
                            RegionRepository regionRepository,
@@ -83,7 +89,8 @@ public class PostServiceImpl implements PostService {
                            CommentRepository commentRepository,
                            BookmarkService bookmarkService,
                            BookmarkRepository bookmarkRepository,
-                           PushApiClient pushApiClient) {
+                           PushApiClient pushApiClient,
+                           UserRepository userRepository) {
         this.postRepository = postRepository;
         this.regionRepository = regionRepository;
         this.breedRepository = breedRepository;
@@ -92,6 +99,7 @@ public class PostServiceImpl implements PostService {
         this.bookmarkService = bookmarkService;
         this.bookmarkRepository = bookmarkRepository;
         this.pushApiClient = pushApiClient;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -142,6 +150,13 @@ public class PostServiceImpl implements PostService {
         post.setShelterName(shelter.getShelterName());
         post.setShelterContact(contact);
         post.setDisplay(TRUE);
+        post.setDesertionId("-1");
+        post.setHelperName(userRepository.findByUid(uid).getNickName());
+        post.setHitCount(0L);
+        post.setNoticeBeginDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
+        post.setNoticeEndDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
+        post.setNoticeId("-1");
+        post.setStateType(Post.StateType.PROCESS);
         PostDTO postDTO = transform(postRepository.save(post));
         if (Post.PostType.getType(postType) == Post.PostType.ROADREPORT) {
             KorStringUtils korStringUtils = new KorStringUtils();
@@ -183,6 +198,10 @@ public class PostServiceImpl implements PostService {
         Map<Long, Shelter> shelterMap = shelterRepository.findAll()
                                                          .stream()
                                                          .collect(Collectors.toMap(x -> x.getShelterCode(),
+                                                                                   Function.identity()));
+        Map<Long, Region> regionMap = regionRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getGunguCode(),
                                                                                    Function.identity()));
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
@@ -240,12 +259,12 @@ public class PostServiceImpl implements PostService {
                                               element.setKindName(breed.getKindName());
                                               // Region/Shelter 세팅
                                               Shelter shelter = shelterMap.get(post.getShelterCode());
-                                              element.setHappenPlace(StringUtils.join(shelter.getSidoName(),
+                                              Region region = regionMap.get(post.getHappenGunguCode());
+                                              element.setHappenPlace(StringUtils.join(region.getSidoName(),
                                                                                       SPACE,
-                                                                                      shelter.getGunguName()));
+                                                                                      region.getGunguName()));
                                               return element;
                                           })
-                                          .sorted(Comparator.comparing(PostPreviewDTO.Element::getHappenDate))
                                           .collect(Collectors.toList()));
         return postPreviewDTO;
     }
@@ -515,6 +534,19 @@ public class PostServiceImpl implements PostService {
         postDTO.setGunguName(region.getGunguName());
         postDTO.setShelterName(shelter.getShelterName());
         postDTO.setBookmarkCount(bookmarkService.countBookmark(String.valueOf(post.getId())));
+        postDTO.setNoticeBeginDate(convertDateToString(post.getNoticeBeginDate()));
+        postDTO.setNoticeEndDate(convertDateToString(post.getNoticeEndDate()));
+        Calendar deadLineCalendar = new GregorianCalendar(/* remember about timezone! */);
+        deadLineCalendar.setTime(post.getNoticeBeginDate());
+        deadLineCalendar.add(Calendar.DATE, DEADLINE_LIMIT);
+        Integer day = 0;
+        try {
+            day = diffOfDate(getDefaultDate(DATE_FORMAT), convertDateToString(deadLineCalendar.getTime()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        postDTO.setDeadlineDay(day);
+        postDTO.setUserId(post.getUid());
         return postDTO;
     }
 
@@ -537,5 +569,19 @@ public class PostServiceImpl implements PostService {
             e.printStackTrace();
         }
         return new Date();
+    }
+
+    private static Integer diffOfDate(String begin, String end) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        Date beginDate = formatter.parse(begin);
+        Date endDate = formatter.parse(end);
+        Long diff = endDate.getTime() - beginDate.getTime();
+        Long diffDays = diff / (24 * 60 * 60 * 1000);
+/*
+        if (diffDays < 0) {
+            diffDays = 0L;
+        }
+*/
+        return diffDays.intValue();
     }
 }

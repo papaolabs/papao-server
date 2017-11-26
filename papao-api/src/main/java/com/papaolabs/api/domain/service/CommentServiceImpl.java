@@ -18,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Slf4j
 @Service
@@ -59,11 +59,12 @@ public class CommentServiceImpl implements CommentService {
         comment.setPostId(Long.valueOf(postId));
         comment.setUserId(userId);
         comment.setText(text);
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setPostId(Long.valueOf(postId));
-        commentDTO.setContents(Arrays.asList(transform(commentRepository.save(comment))));
+        comment.setDisplay(TRUE);
         Post post = postRepository.findOne(Long.valueOf(postId));
-        User user = userRepository.findByUid(String.valueOf(post.getUid()));
+        post.getComments()
+            .add(comment);
+        postRepository.save(post);
+        User user = userRepository.findByUid(userId);
         String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), "...");
         try {
             pushApiClient.sendPush("POST", String.valueOf(post.getUid()), message, postId);
@@ -91,11 +92,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ResponseType delete(String commentId) {
         Comment comment = commentRepository.findOne(Long.valueOf(commentId));
-        if(comment == null) {
+        if (comment == null) {
             return ResponseType.builder()
-                        .code(ResponseType.ResponseCode.NOTFOUND.getCode())
-                        .name(ResponseType.ResponseCode.NOTFOUND.name())
-                        .build();
+                               .code(ResponseType.ResponseCode.NOTFOUND.getCode())
+                               .name(ResponseType.ResponseCode.NOTFOUND.name())
+                               .build();
         }
         comment.setDisplay(FALSE);
         commentRepository.save(comment);
