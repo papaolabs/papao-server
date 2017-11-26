@@ -167,6 +167,8 @@ public class PostServiceImpl implements PostService {
                                            x.setId(post.getId());
                                            // system batch 의 경우 image update 될 일이 전혀 없음
                                            x.setImages(imageRepository.findByPostId(x.getId()));
+                                           x.setComments(post.getComments());
+                                           x.setBookmarks(post.getBookmarks());
                                            if (x.getStateType() != post.getStateType() && x.getStateType() != Post.StateType.PROCESS) {
                                                KorStringUtils korStringUtils = new KorStringUtils();
                                                String stateCode = x.getStateType()
