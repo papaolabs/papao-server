@@ -1,0 +1,2 @@
+insert into push_user_tb (user_id, device_id, created_date, updated_date) values (-1, '3C6076592D5A7E847B252DD8186C326FEF0E98E88E4061ABDDE0081E135A7237', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into push_user_tb (user_id, device_id, created_date, updated_date) values (-2, '98DB238F27DF949AD49929159E8EA0541C917F9DAA728CA883720CF714F8498A', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

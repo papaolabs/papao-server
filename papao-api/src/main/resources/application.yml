@@ -1,0 +1,62 @@
+server:
+  port: 9010
+
+###
+#   Database Settings
+###
+spring:
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    username: sa
+    initialize: true
+
+spring.jpa:
+  database: MYSQL
+  showSql: false
+  properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  properties.hibernate.hbm2ddl.auto: update
+  properties.hibernate.format_sql: true
+  properties.hibernate.use_sql_comments: true
+
+logging.level:
+  com.papaolabs.api: DEBUG
+  org.springframework: INFO
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
+  org.hibernate.type.BasicTypeRegistry: WARN
+
+openapi:
+  url: http://localhost:9040
+  ribbon:
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 5000
+    ConnectTimeout: 500
+---
+spring.profiles: dev
+
+spring:
+  jpa:
+    database: MYSQL
+    showSql: false
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate.hbm2ddl.auto: update
+    properties.hibernate.format_sql: true
+    properties.hibernate.use_sql_comments: true
+
+spring.datasource:
+  url: jdbc:mysql://220.230.124.9:3306/papao
+  username: papao_dev
+  password: ENC(YaInVeeV06ihtU2G3TxBlw==)
+  driverClassName: org.mariadb.jdbc.Driver
+  initialize: false
+  ## Pool Info ##
+  maxActive: 100
+  initialSize: 10
+  minIdle: 10
+  validationQuery: select 1
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 5000 #5 second
+  minEvictableIdleTimeMillis: 10000  #10 second
+  validationQueryTimeout: 5

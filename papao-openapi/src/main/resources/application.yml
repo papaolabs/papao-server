@@ -1,0 +1,78 @@
+server:
+  port: 9030
+
+spring:
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:papao;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    username: sa
+    initialize: true
+  jpa:
+    database: MYSQL
+    showSql: false
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate.hbm2ddl.auto: create-drop
+    properties.hibernate.format_sql: true
+    properties.hibernate.use_sql_comments: true
+  social:
+    facebook:
+      appId: ENC(bmM4wK0OyFwBf9J3bqCUkryKm4Fqg87h)
+      appSecret: ENC(82Yj6Tb7NN5eTl4a7lSBuo74CyUVM54w1kHf+LzD85cm918Rq7QMhgA/nm4/8+1q)
+
+logging.level:
+  com.papaolabs.api: DEBUG
+  org.springframework: INFO
+  org.hibernate: ERROR
+  org.hibernate.SQL: ERROR
+  org.hibernate.type.BasicTypeRegistry: WARN
+
+ribbon:
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 0
+  ReadTimeout: 2500
+  ConnectTimeout: 500
+
+govdata:
+  ribbon:
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 2000
+    ConnectTimeout: 500
+
+vision:
+  ribbon:
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 0
+    ReadTimeout: 2000
+    ConnectTimeout: 500
+
+jasypt:
+  encryptor:
+    password:
+
+seoul:
+  api:
+    animal:
+      appKey: ENC(xOX84cNWVjfcMoTpV2n8ntEmkOqwAGzHJlS3s+QVz7ZOcLmBLJNScqUEH9KzYnW9K/4tdVLRCIM8u11Ij59cQoXgCvkwoMfeDj/XkRA+Ley+AXMbsoVVuTPds0z7SjLd7t4RSFdx9dE=)
+      url: http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc
+
+facebook:
+  application:
+    apiUrl: https://graph.accountkit.com/
+    apiVersion: v1.1
+    apiKey: ENC(owKDvYkpHj5DLc56wRxs7GFeCRL8Iz+1EngPP2e+go9mZ81r1WZ2StAipmutICrzC/S+x/weX4YsGGyNdI7FLw==)
+---
+spring.profiles: dev
+
+spring.datasource:
+  url: jdbc:mysql://220.230.114.180:3306/papao
+  username: papao_dev
+  password: ENC(YaInVeeV06ihtU2G3TxBlw==)
+  driverClassName: com.mysql.jdbc.Driver
+  initialize: false
+  connection-test-query: SELECT 1
+  test-while-idle: true
+  test-on-borrow: true
+  validation-interval: 10000
+  log-validation-errors: true
+  validation-query: SELECT 1

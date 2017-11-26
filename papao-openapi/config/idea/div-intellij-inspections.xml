@@ -1,0 +1,11 @@
+<profile version="1.0">
+    <option name="myName" value="DIV"/>
+    <inspection_tool class="Convert2streamapi" enabled="true" level="WARNING" enabled_by_default="true"/>
+    <inspection_tool class="NonSerializableWithSerialVersionUIDField" enabled="true" level="WARNING"
+                     enabled_by_default="true"/>
+    <inspection_tool class="SerializableHasSerialVersionUIDField" enabled="true" level="WARNING"
+                     enabled_by_default="true">
+        <option name="ignoreAnonymousInnerClasses" value="false"/>
+        <option name="superClassString" value=""/>
+    </inspection_tool>
+</profile>

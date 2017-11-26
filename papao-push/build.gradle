@@ -1,0 +1,46 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.8.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+group = 'com.papaolabs'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter:1.5.6.RELEASE',
+            'org.springframework.boot:spring-boot-starter-validation:1.5.6.RELEASE',
+            'org.springframework.boot:spring-boot-starter-web:1.5.6.RELEASE',
+            'org.springframework.boot:spring-boot-starter-data-jpa:1.5.6.RELEASE',
+            'com.github.ulisesbocchio:jasypt-spring-boot-starter:1.14',
+            'io.springfox:springfox-swagger2:2.5.0',
+            'io.springfox:springfox-swagger-ui:2.5.0'
+
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+
+    compile 'org.apache.commons:commons-lang3:3.6'
+
+    compile 'com.clevertap.apns:apns-http2:1.0.2'
+
+    compile group: 'org.mortbay.jetty.alpn', name: 'alpn-boot', version: '8.1.7.v20160121'
+
+    runtime 'com.h2database:h2'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
