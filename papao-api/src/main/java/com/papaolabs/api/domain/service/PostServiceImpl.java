@@ -199,6 +199,10 @@ public class PostServiceImpl implements PostService {
                                                          .stream()
                                                          .collect(Collectors.toMap(x -> x.getShelterCode(),
                                                                                    Function.identity()));
+        Map<Long, Region> regionMap = regionRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getGunguCode(),
+                                                                                   Function.identity()));
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
@@ -255,9 +259,10 @@ public class PostServiceImpl implements PostService {
                                               element.setKindName(breed.getKindName());
                                               // Region/Shelter 세팅
                                               Shelter shelter = shelterMap.get(post.getShelterCode());
-                                              element.setHappenPlace(StringUtils.join(shelter.getSidoName(),
+                                              Region region = regionMap.get(post.getHappenGunguCode());
+                                              element.setHappenPlace(StringUtils.join(region.getSidoName(),
                                                                                       SPACE,
-                                                                                      shelter.getGunguName()));
+                                                                                      region.getGunguName()));
                                               return element;
                                           })
                                           .collect(Collectors.toList()));
