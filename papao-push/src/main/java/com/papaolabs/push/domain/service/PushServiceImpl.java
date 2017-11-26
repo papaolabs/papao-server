@@ -63,16 +63,16 @@ public class PushServiceImpl implements PushService {
             pushLog.setMessage(p.matcher(request.getMessage())
                                 .replaceAll(" "));
             if (pushUser.getAlarmYn() != PushUser.YesNoType.N) {
-                pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
                 pushLogs.add(pushLog);
             } else if (request.getType() == PushRequest.PushType.ALARM || request.getType() == PushRequest.PushType.SEARCH) {
                 if (pushUser.getRescueAlarmYn() != PushUser.YesNoType.N) {
-                    pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                    pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
                     pushLogs.add(pushLog);
                 }
             } else if (request.getType() == PushRequest.PushType.POST) {
                 if (pushUser.getPostAlarmYn() != PushUser.YesNoType.N) {
-                    pushClient.send(pushUser.getDeviceId(), request.getMessage());
+                    pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
                     pushLogs.add(pushLog);
                 }
             }

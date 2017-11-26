@@ -43,8 +43,10 @@ public class PushClient {
         }
     }
 
-    public void send(String deviceId, String message) {
+    public void send(String deviceId, String message, String type, String postId) {
         Notification n = new Notification.Builder(deviceId)
+            .customField("type", type)
+            .customField("postId", postId)
             .alertBody(message)
             .build();
         client.push(n, new NotificationResponseListener() {
