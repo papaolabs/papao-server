@@ -15,6 +15,7 @@ import com.papaolabs.api.infrastructure.persistence.jpa.repository.CommentReposi
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.PostRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.RegionRepository;
 import com.papaolabs.api.infrastructure.persistence.jpa.repository.ShelterRepository;
+import com.papaolabs.api.infrastructure.persistence.jpa.repository.UserRepository;
 import com.papaolabs.api.interfaces.v1.controller.response.PostDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
@@ -78,6 +79,8 @@ public class PostServiceImpl implements PostService {
     private final BookmarkRepository bookmarkRepository;
     @NotNull
     private final PushApiClient pushApiClient;
+    @NotNull
+    private final UserRepository userRepository;
 
     public PostServiceImpl(PostRepository postRepository,
                            RegionRepository regionRepository,
@@ -86,7 +89,8 @@ public class PostServiceImpl implements PostService {
                            CommentRepository commentRepository,
                            BookmarkService bookmarkService,
                            BookmarkRepository bookmarkRepository,
-                           PushApiClient pushApiClient) {
+                           PushApiClient pushApiClient,
+                           UserRepository userRepository) {
         this.postRepository = postRepository;
         this.regionRepository = regionRepository;
         this.breedRepository = breedRepository;
@@ -95,6 +99,7 @@ public class PostServiceImpl implements PostService {
         this.bookmarkService = bookmarkService;
         this.bookmarkRepository = bookmarkRepository;
         this.pushApiClient = pushApiClient;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -145,6 +150,13 @@ public class PostServiceImpl implements PostService {
         post.setShelterName(shelter.getShelterName());
         post.setShelterContact(contact);
         post.setDisplay(TRUE);
+        post.setDesertionId("-1");
+        post.setHelperName(userRepository.findByUid(uid).getNickName());
+        post.setHitCount(0L);
+        post.setNoticeBeginDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
+        post.setNoticeEndDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
+        post.setNoticeId("-1");
+        post.setStateType(Post.StateType.PROCESS);
         PostDTO postDTO = transform(postRepository.save(post));
         if (Post.PostType.getType(postType) == Post.PostType.ROADREPORT) {
             KorStringUtils korStringUtils = new KorStringUtils();
@@ -248,7 +260,6 @@ public class PostServiceImpl implements PostService {
                                                                                       shelter.getGunguName()));
                                               return element;
                                           })
-                                          .sorted(Comparator.comparing(PostPreviewDTO.Element::getHappenDate))
                                           .collect(Collectors.toList()));
         return postPreviewDTO;
     }
