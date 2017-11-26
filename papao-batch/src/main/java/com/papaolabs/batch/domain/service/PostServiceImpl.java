@@ -170,6 +170,7 @@ public class PostServiceImpl implements PostService {
                                            x.setComments(post.getComments());
                                            x.setBookmarks(post.getBookmarks());
                                            x.setHitCount(post.getHitCount());
+                                           x.setUid(post.getUid());
                                            if (x.getStateType() != post.getStateType() && x.getStateType() != Post.StateType.PROCESS) {
                                                KorStringUtils korStringUtils = new KorStringUtils();
                                                String stateCode = x.getStateType()
