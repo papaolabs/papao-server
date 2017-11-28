@@ -151,7 +151,8 @@ public class PostServiceImpl implements PostService {
         post.setShelterContact(contact);
         post.setDisplay(TRUE);
         post.setDesertionId("-1");
-        post.setHelperName(userRepository.findByUid(uid).getNickName());
+        post.setHelperName(userRepository.findByUid(uid)
+                                         .getNickName());
         post.setHitCount(0L);
         post.setNoticeBeginDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
         post.setNoticeEndDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
@@ -200,9 +201,9 @@ public class PostServiceImpl implements PostService {
                                                          .collect(Collectors.toMap(x -> x.getShelterCode(),
                                                                                    Function.identity()));
         Map<Long, Region> regionMap = regionRepository.findAll()
-                                                         .stream()
-                                                         .collect(Collectors.toMap(x -> x.getGunguCode(),
-                                                                                   Function.identity()));
+                                                      .stream()
+                                                      .collect(Collectors.toMap(x -> x.getGunguCode(),
+                                                                                Function.identity()));
         Map<Long, Breed> breedMap = breedRepository.findAll()
                                                    .stream()
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
@@ -491,6 +492,70 @@ public class PostServiceImpl implements PostService {
                                                              .collect(Collectors.toList());
         postRankingDTO.setElementsMap(elementsMap);
         return postRankingDTO;
+    }
+
+    @Override
+    public PostPreviewDTO readBookmarkByUserId(String userId, String index, String size) {
+        Map<Long, Shelter> shelterMap = shelterRepository.findAll()
+                                                         .stream()
+                                                         .collect(Collectors.toMap(x -> x.getShelterCode(),
+                                                                                   Function.identity()));
+        Map<Long, Region> regionMap = regionRepository.findAll()
+                                                      .stream()
+                                                      .collect(Collectors.toMap(x -> x.getGunguCode(),
+                                                                                Function.identity()));
+        Map<Long, Breed> breedMap = breedRepository.findAll()
+                                                   .stream()
+                                                   .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index),
+                                                  Integer.valueOf(size),
+                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
+        Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(userId, pageRequest);
+        List<PostPreviewDTO.Element> elements = bookmarks.getContent()
+                                                         .stream()
+                                                         .map(x -> this.postRepository.findOne(x.getPostId()))
+                                                         .map(post -> {
+                                                             PostPreviewDTO.Element element = new PostPreviewDTO.Element();
+                                                             element.setId(post.getId());
+                                                             element.setPostType(post.getPostType());
+                                                             element.setStateType(post.getStateType());
+                                                             element.setGenderType(post.getGenderType());
+                                                             element.setHappenDate(convertDateToString(post.getHappenDate()));
+                                                             element.setHitCount(post.getHitCount());
+                                                             element.setCreatedDate(post.getCreatedDateTime()
+                                                                                        .format(DateTimeFormatter.ofPattern(
+                                                                                            "yyyy-MM-dd HH:mm:ss")));
+                                                             element.setUpdatedDate(post.getLastModifiedDateTime()
+                                                                                        .format(DateTimeFormatter.ofPattern(
+                                                                                            "yyyy-MM-dd HH:mm:ss")));
+                                                             Image image = post.getImages()
+                                                                               .get(0);
+                                                             PostPreviewDTO.Element.ImageUrl imageUrl = new PostPreviewDTO.Element
+                                                                 .ImageUrl();
+                                                             imageUrl.setKey(image.getId());
+                                                             imageUrl.setUrl(image.getUrl());
+                                                             element.setImageUrls(Arrays.asList(imageUrl));
+                                                             // Comment 세팅
+                                                             element.setCommentCount(post.getComments()
+                                                                                         .size());
+                                                             // Breed 세팅
+                                                             Breed breed = breedMap.get(post.getKindCode());
+                                                             element.setKindName(breed.getKindName());
+                                                             // Region/Shelter 세팅
+                                                             Shelter shelter = shelterMap.get(post.getShelterCode());
+                                                             Region region = regionMap.get(post.getHappenGunguCode());
+                                                             element.setHappenPlace(StringUtils.join(region.getSidoName(),
+                                                                                                     SPACE,
+                                                                                                     region.getGunguName()));
+                                                             return element;
+                                                         })
+                                                         .collect(Collectors.toList());
+        PostPreviewDTO postPreviewDTO = new PostPreviewDTO();
+        postPreviewDTO.setCurrentPage(Integer.valueOf(index));
+        postPreviewDTO.setTotalElements(bookmarks.getTotalElements());
+        postPreviewDTO.setTotalPages(bookmarks.getTotalPages());
+        postPreviewDTO.setElements(elements);
+        return postPreviewDTO;
     }
 
     private PostDTO transform(Post post) {

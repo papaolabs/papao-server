@@ -164,7 +164,7 @@ public class V1PostController {
                                                                @RequestParam(defaultValue = "0", required = false) String index,
                                                                @RequestParam(defaultValue = "100", required = false) String size
     ) {
-        return new ResponseEntity(bookmarkService.readBookmarkByUserId(userId, index, size), HttpStatus.OK);
+        return new ResponseEntity(postService.readBookmarkByUserId(userId, index, size), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/bookmarks/count")

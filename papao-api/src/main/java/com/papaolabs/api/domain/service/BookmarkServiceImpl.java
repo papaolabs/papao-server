@@ -91,20 +91,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public BookmarkDTO readBookmarkByUserId(String userId, String index, String size) {
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "createdDateTime"));
-        Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(userId, pageRequest);
-        if (bookmarks == null) {
-            BookmarkDTO bookmarkDTO = new BookmarkDTO();
-            bookmarkDTO.setTotalPages(0);
-            bookmarkDTO.setTotalElements(0L);
-            bookmarkDTO.setElements(Arrays.asList());
-            return bookmarkDTO;
-        }
-        return createBookmarkDTO(bookmarks);
-    }
-
-    @Override
     public BookmarkDTO readBookmarkByPostId(String postId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "createdDateTime"));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByPostId(Long.valueOf(postId), pageRequest);
