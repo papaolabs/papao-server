@@ -237,6 +237,8 @@ public class PostServiceImpl implements PostService {
                                               element.setPostType(post.getPostType());
                                               element.setStateType(post.getStateType());
                                               element.setGenderType(post.getGenderType());
+                                              element.setNoticeBeginDate(convertDateToString(post.getNoticeBeginDate()));
+                                              element.setNoticeEndDate(convertDateToString(post.getNoticeEndDate()));
                                               element.setHappenDate(convertDateToString(post.getHappenDate()));
                                               element.setHitCount(post.getHitCount());
                                               element.setCreatedDate(post.getCreatedDateTime()
