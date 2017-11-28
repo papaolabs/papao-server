@@ -25,11 +25,12 @@ public class AnimalJob {
 
     @Scheduled(cron = "0 0 2 1 1/1 ?") // 매달 1일 02시에 실행
     public void year() {
-        for (int i = 0; i < 120; i++) { // 최근 10년간
+        for (int i = 120; i >= 0; i--) { // 최근 10년간
             batch(BatchType.MONTH, i);
         }
     }
 
+/*
     @Scheduled(cron = "0 0/10 * 1/1 * ?") // 10분마다 한달치 실행
     public void month() {
         batch(BatchType.MONTH, 0);
@@ -40,6 +41,7 @@ public class AnimalJob {
     public void day() {
         batch(BatchType.DAY, 0);
     }
+*/
 
     public void batch(BatchType type, Integer minus) {
         StopWatch stopWatch = new StopWatch();
