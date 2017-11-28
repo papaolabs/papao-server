@@ -211,7 +211,7 @@ public class PostServiceImpl implements PostService {
                                        }
                                        return x;
                                    })
-                                   .sorted(Comparator.comparing(x -> x.getDesertionId()))
+                                   .sorted(Comparator.comparing(x -> x.getHappenDate()))
                                    .collect(Collectors.toList());
         postRepository.save(results);
         stopWatch.stop();
