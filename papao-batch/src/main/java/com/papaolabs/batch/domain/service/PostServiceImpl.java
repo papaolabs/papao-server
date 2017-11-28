@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +211,7 @@ public class PostServiceImpl implements PostService {
                                        }
                                        return x;
                                    })
+                                   .sorted(Comparator.comparing(x -> x.getDesertionId()))
                                    .collect(Collectors.toList());
         postRepository.save(results);
         stopWatch.stop();
