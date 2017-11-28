@@ -24,6 +24,8 @@ import org.springframework.util.StopWatch;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -198,7 +200,6 @@ public class PostServiceImpl implements PostService {
                                                                               .append(Post.StateType.NATURALDEATH.name().equals(stateCode) ? "하였습니다" : "되었습니다")
                                                                               .append(emoji)
                                                                               .toString();
-                                               List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
                                                pushApiClient.sendPush("ALARM", "9999", message,
                                                                       String.valueOf(x.getId()));
                                                /*for (Bookmark bookmark : bookmarks) {
@@ -225,7 +226,16 @@ public class PostServiceImpl implements PostService {
         return transFormat.format(date);
     }
 
+    private String getDefaultDate(String format) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return now.format(formatter);
+    }
+
     private Date convertStringToDate(String from) {
+        if(isEmpty(from)) {
+            return convertStringToDate(getDefaultDate(DATE_FORMAT));
+        }
         SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
             return transFormat.parse(from);
