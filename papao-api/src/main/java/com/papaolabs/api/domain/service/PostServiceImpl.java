@@ -281,9 +281,9 @@ public class PostServiceImpl implements PostService {
                                          String genderType,
                                          String neuterType) {
         QPost post = QPost.post;
-        BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
-                                                                                  convertStringToDate(endDate))
-                                                                         .and(post.isDisplay.eq(TRUE)));
+        BooleanBuilder builder = new BooleanBuilder().and(post.noticeBeginDate.between(convertStringToDate(beginDate),
+                                                                                       convertStringToDate(endDate))
+                                                                              .and(post.isDisplay.eq(TRUE)));
         if (postType != null) {
             if (postType.size() > 0) {
                 builder.and(post.postType.eq(Post.PostType.getType(postType.get(0))));
