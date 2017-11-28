@@ -209,7 +209,7 @@ public class PostServiceImpl implements PostService {
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page),
                                                   Integer.valueOf(size),
-                                                  new Sort(Sort.Direction.DESC, "happenDate"));
+                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
