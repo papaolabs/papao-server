@@ -11,12 +11,12 @@ import com.papaolabs.push.interfaces.dto.PushTypeDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +48,8 @@ public class PushServiceImpl implements PushService {
     @Override
     public void sendPush(PushRequest request, String postId) {
         List<PushUser> pushUsers = new ArrayList<>();
-        if (request.getUserId().equals("-9999")) {
+        if (request.getUserId()
+                   .equals("-9999")) {
             pushUsers = pushUserRepository.findAll();
         } else {
             pushUsers = pushUserRepository.findByUserId(String.valueOf(request.getUserId()));
@@ -63,16 +64,28 @@ public class PushServiceImpl implements PushService {
             pushLog.setMessage(p.matcher(request.getMessage())
                                 .replaceAll(" "));
             if (pushUser.getAlarmYn() != PushUser.YesNoType.N) {
-                pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
+                pushClient.send(pushUser.getDeviceId(),
+                                request.getMessage(),
+                                request.getType()
+                                       .name(),
+                                postId);
                 pushLogs.add(pushLog);
             } else if (request.getType() == PushRequest.PushType.ALARM || request.getType() == PushRequest.PushType.SEARCH) {
                 if (pushUser.getRescueAlarmYn() != PushUser.YesNoType.N) {
-                    pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
+                    pushClient.send(pushUser.getDeviceId(),
+                                    request.getMessage(),
+                                    request.getType()
+                                           .name(),
+                                    postId);
                     pushLogs.add(pushLog);
                 }
             } else if (request.getType() == PushRequest.PushType.POST) {
                 if (pushUser.getPostAlarmYn() != PushUser.YesNoType.N) {
-                    pushClient.send(pushUser.getDeviceId(), request.getMessage(), request.getType().name(), postId);
+                    pushClient.send(pushUser.getDeviceId(),
+                                    request.getMessage(),
+                                    request.getType()
+                                           .name(),
+                                    postId);
                     pushLogs.add(pushLog);
                 }
             }
@@ -92,7 +105,9 @@ public class PushServiceImpl implements PushService {
 
     @Override
     public PushHistory getOwnPushLogs(String userId, String index, String size) {
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index),
+                                                  Integer.valueOf(size),
+                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
         Page<PushLog> pushLogs = pushLogRepository.findByUserIdOrderByIdDesc(userId, pageRequest);
         PushHistory pushHistory = new PushHistory();
         pushHistory.setUserId(userId);
@@ -113,7 +128,6 @@ public class PushServiceImpl implements PushService {
                                                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                                             return pushLog;
                                         })
-                                        .sorted(Comparator.comparing(PushHistory.PushLog::getCreatedDate))
                                         .collect(Collectors.toList()));
         return pushHistory;
     }
