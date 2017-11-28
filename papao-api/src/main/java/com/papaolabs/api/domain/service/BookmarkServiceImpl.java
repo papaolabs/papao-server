@@ -12,6 +12,7 @@ import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -91,7 +92,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public BookmarkDTO readBookmarkByUserId(String userId, String index, String size) {
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "createdDateTime"));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(userId, pageRequest);
         if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();
@@ -105,7 +106,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public BookmarkDTO readBookmarkByPostId(String postId, String index, String size) {
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "createdDateTime"));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByPostId(Long.valueOf(postId), pageRequest);
         if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();
