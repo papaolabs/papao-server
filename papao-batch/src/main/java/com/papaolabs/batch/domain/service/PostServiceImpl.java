@@ -195,7 +195,7 @@ public class PostServiceImpl implements PostService {
                                                                               .appendJosa("이")
                                                                               .append(" ")
                                                                               .append(stateCode)
-                                                                              .append("되었습니다")
+                                                                              .append(Post.StateType.NATURALDEATH.name().equals(stateCode) ? "하였습니다" : "되었습니다")
                                                                               .append(emoji)
                                                                               .toString();
                                                List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
