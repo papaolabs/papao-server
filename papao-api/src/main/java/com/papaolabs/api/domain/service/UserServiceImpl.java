@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
                                                "http://220.230.121.76:8000/v1/download/f7cdf7a82056462383f4a4e96651f9dd.png",
                                                "http://220.230.121.76:8000/v1/download/2d0e043d0fae488da5cec48c68ce71c0.png"};
     private final PushApiClient pushApiClient;
+    private final static String ZERO_STR = "0";
 
     public UserServiceImpl(UserRepository userRepository,
                            PushUserRepository pushUserRepository,
@@ -60,6 +61,9 @@ public class UserServiceImpl implements UserService {
                                .code(ResponseType.ResponseCode.DUPLICATED.getCode())
                                .name(ResponseType.ResponseCode.DUPLICATED.name())
                                .build();
+        }
+        if(!phone.startsWith(ZERO_STR)){
+            StringUtils.join(ZERO_STR, phone);
         }
         User user = new User();
         user.setUid(userId);
