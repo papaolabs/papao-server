@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUid());
         userDTO.setNickname(user.getNickName());
-        userDTO.setPhone(user.getPhone());
+        userDTO.setPhone(phoneNumberHyphenAdd(user.getPhone(), "-"));
         userDTO.setProfileUrl(user.getProfileUrl());
         userDTO.setDevicesToken(pushUserList
                                     .stream()
@@ -171,5 +171,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
         return pushApiClient.setPushType(userId, deviceId, alarmYn, rescueAlarmYn, postAlarmYn);
+    }
+
+    private static String phoneNumberHyphenAdd(String num, String mask) {
+
+        String formatNum = "";
+        if (StringUtils.isEmpty(num)) return formatNum;
+        num = num.replaceAll("-","");
+
+        if (num.length() == 11) {
+            if (mask.equals("Y")) {
+                formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-****-$3");
+            }else{
+                formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+            }
+        }else if(num.length()==8){
+            formatNum = num.replaceAll("(\\d{4})(\\d{4})", "$1-$2");
+        }else{
+            if(num.indexOf("02")==0){
+                if(mask.equals("Y")){
+                    formatNum = num.replaceAll("(\\d{2})(\\d{3,4})(\\d{4})", "$1-****-$3");
+                }else{
+                    formatNum = num.replaceAll("(\\d{2})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+                }
+            }else{
+                if(mask.equals("Y")){
+                    formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-****-$3");
+                }else{
+                    formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+                }
+            }
+        }
+        return formatNum;
     }
 }
