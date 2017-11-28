@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser.YesNoType.Y;
 import static java.lang.Boolean.FALSE;
 
 @Service
@@ -99,6 +100,9 @@ public class UserServiceImpl implements UserService {
         pushUser.setType(userType);
         pushUser.setUserId(PushUser.UserType.GUEST == userType ? "-1" : userId);
         pushUser.setDeviceId(deviceId);
+        pushUser.setPostAlarmYn(Y);
+        pushUser.setAlarmYn(Y);
+        pushUser.setRescueAlarmYn(Y);
         pushUserRepository.save(pushUser);
         PushDTO pushDTO = new PushDTO();
         pushDTO.setType(pushUser.getType()
