@@ -92,7 +92,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public BookmarkDTO readBookmarkByPostId(String postId, String index, String size) {
-        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "createdDateTime"));
+        PageRequest pageRequest = new PageRequest(Integer.valueOf(index), Integer.valueOf(size), new Sort(Sort.Direction.DESC, "id"));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByPostId(Long.valueOf(postId), pageRequest);
         if (bookmarks == null) {
             BookmarkDTO bookmarkDTO = new BookmarkDTO();

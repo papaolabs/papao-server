@@ -209,7 +209,7 @@ public class PostServiceImpl implements PostService {
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
         PageRequest pageRequest = new PageRequest(Integer.valueOf(page),
                                                   Integer.valueOf(size),
-                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
+                                                  new Sort(Sort.Direction.DESC, "id"));
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Page<Post> results = postRepository.findAll(generateQuery(postType,
@@ -511,7 +511,7 @@ public class PostServiceImpl implements PostService {
                                                    .collect(Collectors.toMap(Breed::getKindCode, Function.identity()));
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index),
                                                   Integer.valueOf(size),
-                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
+                                                  new Sort(Sort.Direction.DESC, "id"));
         Page<Bookmark> bookmarks = this.bookmarkRepository.findByUserId(userId, pageRequest);
         List<PostPreviewDTO.Element> elements = bookmarks.getContent()
                                                          .stream()

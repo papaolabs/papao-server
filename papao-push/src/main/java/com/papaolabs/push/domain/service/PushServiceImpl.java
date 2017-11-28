@@ -107,7 +107,7 @@ public class PushServiceImpl implements PushService {
     public PushHistory getOwnPushLogs(String userId, String index, String size) {
         PageRequest pageRequest = new PageRequest(Integer.valueOf(index),
                                                   Integer.valueOf(size),
-                                                  new Sort(Sort.Direction.DESC, "createdDateTime"));
+                                                  new Sort(Sort.Direction.DESC, "id"));
         Page<PushLog> pushLogs = pushLogRepository.findByUserIdOrderByIdDesc(userId, pageRequest);
         PushHistory pushHistory = new PushHistory();
         pushHistory.setUserId(userId);
