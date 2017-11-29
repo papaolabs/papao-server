@@ -134,11 +134,12 @@
                     </div>
                     <div class="mdl-card__supporting-text no-left-padding">
                         <p>
-                            <a href="#" class="post-author">${post.managerName}</a> 님이 ${post.noticeBeginDate}에
+                            <a href="tel:${post.managerContact}" class="post-author">${post.managerName}</a>
+                            님이 ${post.noticeBeginDate}에
                             올린 정보입니다<br/>
                             <br/>발견 장소 : ${post.happenPlace}
                             <br/>발견 일자 : ${post.happenDate}
-                            <br/>TEL : ${post.managerContact}
+                            <br/>연락처 : ${post.managerContact}
                             <br/>특징 : ${post.feature}
                         </p>
                     </div>
