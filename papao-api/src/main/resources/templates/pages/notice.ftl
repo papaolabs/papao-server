@@ -91,7 +91,40 @@
                 <div class="demo-crumbs mdl-color-text--grey-500">
                     공지사항
                 </div>
-                <ul class="mdl-list">
+                <ul class="mdl-list" style="height: 480px;">
+                    <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
+                        <span class="mdl-list__item-primary-content">
+                          <span>4. 밤플이의 이름은 ??</span>
+                          <span class="mdl-list__item-text-body" style="margin-top: 10px;">
+                            밤비랑 플린이
+                          </span>
+                        </span>
+                        <span class="mdl-list__item-secondary-content"
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
+                        </span>
+                    </li>
+                    <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
+                        <span class="mdl-list__item-primary-content">
+                          <span>3. 안드로이드 개발 필요</span>
+                          <span class="mdl-list__item-text-body" style="margin-top: 10px;">
+                            안드로이드 파편화 지옥..
+                          </span>
+                        </span>
+                        <span class="mdl-list__item-secondary-content"
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
+                        </span>
+                    </li>
+                    <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
+                        <span class="mdl-list__item-primary-content">
+                          <span>2. 마감은 11/30일까지</span>
+                          <span class="mdl-list__item-text-body" style="margin-top: 10px;">
+                            테스트 환경에서의 마감임
+                          </span>
+                        </span>
+                        <span class="mdl-list__item-secondary-content"
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
+                        </span>
+                    </li>
                     <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
                         <span class="mdl-list__item-primary-content">
                           <span>1. 개발용 공지사항</span>
@@ -106,15 +139,6 @@
                 </ul>
             </div>
         </div>
-        <footer class="demo-footer mdl-mini-footer">
-            <div class="mdl-mini-footer--left-section">
-                <ul class="mdl-mini-footer--link-list">
-                    <li><a href="/dashboard/board/notice">Notice</a></li>
-                    <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
-                    <li><a href="/dashboard/board/opensource">Open source</a></li>
-                </ul>
-            </div>
-        </footer>
     </main>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>

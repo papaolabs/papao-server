@@ -164,9 +164,7 @@
         <footer class="demo-footer mdl-mini-footer">
             <div class="mdl-mini-footer--left-section">
                 <ul class="mdl-mini-footer--link-list">
-                    <li><a href="/dashboard/board/notice">Notice</a></li>
-                    <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
-                    <li><a href="/dashboard/board/opensource">Open source</a></li>
+                    <li><a href="#">Home</a></li>
                 </ul>
             </div>
         </footer>

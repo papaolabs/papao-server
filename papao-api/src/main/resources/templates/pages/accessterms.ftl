@@ -99,15 +99,6 @@
                 </p>
             </div>
         </div>
-        <footer class="demo-footer mdl-mini-footer">
-            <div class="mdl-mini-footer--left-section">
-                <ul class="mdl-mini-footer--link-list">
-                    <li><a href="/dashboard/board/notice">Notice</a></li>
-                    <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
-                    <li><a href="/dashboard/board/opensource">Open source</a></li>
-                </ul>
-            </div>
-        </footer>
     </main>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>

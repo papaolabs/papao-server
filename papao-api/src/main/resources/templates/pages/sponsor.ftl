@@ -79,6 +79,10 @@
         .demo-footer .mdl-mini-footer--link-list a {
             font-size: 13px;
         }
+
+        .none-header {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -89,35 +93,71 @@
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
             <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
                 <div class="demo-crumbs mdl-color-text--grey-500">
-                    오픈소스
+                    후원하기
                 </div>
-                <h4>LICENSE</h4>
-                <p>
-                    Copyright (c) 2017 the papao project
-                </p>
-                <p>
-                    Permission is hereby granted, free of charge, to any person obtaining
-                    a copy of this software and associated documentation files (the
-                    "Software"), to deal in the Software without restriction, including
-                    without limitation the rights to use, copy, modify, merge, publish,
-                    distribute, sublicense, and/or sell copies of the Software, and to
-                    permit persons to whom the Software is furnished to do so, subject to
-                    the following conditions:
-                    The above copyright notice and this permission notice shall be
-                    included in all copies or substantial portions of the Software.
-                </p>
-                <p> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-                    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-                    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-                    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-                    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-                    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-                    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                </p>
+                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp"
+                       style="white-space: normal;margin-top: 30px;">
+                    <thead class="none-header">
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">OOO 후원 타입 1</td>
+                        <td></td>
+                        <td>$1.09</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">OOO 후원 타입 2</td>
+                        <td></td>
+                        <td>$5.09</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 3</td>
+                        <td></td>
+                        <td>$1.09 / month</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 4</td>
+                        <td></td>
+                        <td>$5.09 / month</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 5</td>
+                        <td></td>
+                        <td>$10.09 / month</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="width: 50%;padding: 10px;margin: 80px auto auto;">
+                    <button id="demo-show-toast" class="mdl-button mdl-js-button mdl-button--raised" style="width:100%;background: #3f51b5;color: #fff;">
+                        후원하기
+                    </button>
+                    <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+                        <div class="mdl-snackbar__text"></div>
+                        <button class="mdl-snackbar__action" type="button"></button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<script>
+    (function() {
+        'use strict';
+        window['counter'] = 0;
+        var snackbarContainer = document.querySelector('#demo-toast-example');
+        var showToastButton = document.querySelector('#demo-show-toast');
+        showToastButton.addEventListener('click', function() {
+            'use strict';
+            var data = {message: 'testflight 환경에서는 결제할수 없습니다'};
+            snackbarContainer.MaterialSnackbar.showSnackbar(data);
+        });
+    }());
+</script>
 </body>
 </html>
