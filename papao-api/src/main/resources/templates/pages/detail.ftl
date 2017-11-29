@@ -32,14 +32,12 @@
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
-        <div class="mdl-layout__header-row">
-        <#--
-                    <span class="mdl-layout-title" style="cursor:default">papao</span>
-        -->
+        <div class="mdl-layout__header-row" style="padding-left:20px !important;">
+            <span class="mdl-layout-title" style="cursor:default">Milou</span>
             <div class="mdl-layout-spacer"></div>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="margin-bottom:25px;">
                 <a href="#" class="mdl-button mdl-js-button mdl-button--icon">
-                    <div id="tt1" class=" icon material-icons">touch_app</div>
+                    <div id="tt1" class=" icon material-icons">phone_iphone</div>
                     <div class="mdl-tooltip" for="tt1">
                         앱에서 보기
                     </div>
@@ -76,7 +74,7 @@
                             </span>
                         <#elseif post.postType == 'PROTECTING'>
                             <span class="mdl-chip">
-                                <span class="mdl-chip__text">보호중</span>
+                                <span class="mdl-chip__text">임시보호</span>
                             </span>
                         <#elseif post.postType == 'ROADREPORT'>
                             <span class="mdl-chip">
@@ -136,10 +134,12 @@
                     </div>
                     <div class="mdl-card__supporting-text no-left-padding">
                         <p>
-                        ${post.happenPlace} 에서 발견됨<br/>
-                            현재 <a href="#" class="post-author">${post.managerName}</a> 님이 보호중<br/>
-                            연락처 : ${post.managerContact}<br/>
-                        ${post.feature}<br/><br/>
+                            <a href="#" class="post-author">${post.managerName}</a> 님이 ${post.noticeBeginDate}에
+                            올린 정보입니다<br/>
+                            <br/>발견 장소 : ${post.happenPlace}
+                            <br/>발견 일자 : ${post.happenDate}
+                            <br/>TEL : ${post.managerContact}
+                            <br/>특징 : ${post.feature}
                         </p>
                     </div>
                 </div>
