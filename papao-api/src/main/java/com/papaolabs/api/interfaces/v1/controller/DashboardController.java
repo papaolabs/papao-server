@@ -28,10 +28,34 @@ public class DashboardController {
     }
 
     @GetMapping("/posts/{postId}/share")
-    public ModelAndView getDetailPage(@PathVariable("postId") String postId, HttpServletRequest request, ModelAndView model) {
+    public ModelAndView sharePage(@PathVariable("postId") String postId, HttpServletRequest request, ModelAndView model) {
         model.setViewName("pages/detail");
         model.addObject("post", postService.readPost(postId));
         model.addObject("comments", commentService.readComments(postId));
+        return model;
+    }
+
+    @GetMapping("/board/notice")
+    public ModelAndView noticePage(ModelAndView model) {
+        model.setViewName("pages/notice");
+        return model;
+    }
+
+    @GetMapping("/board/accessterms")
+    public ModelAndView accesstermsPage(HttpServletRequest request, ModelAndView model) {
+        model.setViewName("pages/accessterms");
+        return model;
+    }
+
+    @GetMapping("/board/opensource")
+    public ModelAndView opensourcePage(HttpServletRequest request, ModelAndView model) {
+        model.setViewName("pages/opensource");
+        return model;
+    }
+
+    @GetMapping("/board/sponsor")
+    public ModelAndView sponsorPage(HttpServletRequest request, ModelAndView model) {
+        model.setViewName("pages/sponsor");
         return model;
     }
 }

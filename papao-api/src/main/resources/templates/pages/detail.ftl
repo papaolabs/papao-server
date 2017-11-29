@@ -161,14 +161,13 @@
                 </div>
             </div>
         </div>
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer__left-section">
-            <#--                <div class="mdl-logo">papao</div>-->
-            </div>
-            <div class="mdl-mini-footer__right-section">
-                <ul class="mdl-mini-footer__link-list">
-                    <li><a href="#">Help</a></li>
-                    <li><a href="#">Privacy & Terms</a></li>
+        <footer class="demo-footer mdl-mini-footer">
+            <div class="mdl-mini-footer--left-section">
+                <ul class="mdl-mini-footer--link-list">
+                    <li><a href="/dashboard/board/notice">Notice</a></li>
+                    <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
+                    <li><a href="/dashboard/board/opensource">Open source</a></li>
+                    <li><a href="/dashboard/board/sponsor">Sponsor</a></li>
                 </ul>
             </div>
         </footer>
