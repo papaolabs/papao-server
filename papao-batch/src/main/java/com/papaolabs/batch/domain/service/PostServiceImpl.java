@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -123,8 +124,8 @@ public class PostServiceImpl implements PostService {
                                        post.setHappenDate(convertStringToDate(x.getHappenDate()));
                                        post.setHappenPlace(x.getHappenPlace());
                                        post.setFeature(x.getFeature());
-                                       post.setHelperName(x.getUserName());
-                                       post.setHelperContact(x.getUserContact());
+                                       post.setHelperName(Optional.of(x.getUserName()).orElse("알수없음"));
+                                       post.setHelperContact(Optional.of(x.getUserContact()).orElse("알수없음"));
                                        post.setAge(convertAge(x.getAge()));
                                        post.setWeight(convertWeight(x.getWeight()));
                                        post.setHitCount(0L);
