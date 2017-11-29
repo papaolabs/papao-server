@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
                                .build();
         }
         if(!phone.startsWith(ZERO_STR)){
-            StringUtils.join(ZERO_STR, phone);
+            phone = StringUtils.join(ZERO_STR, phone);
         }
         User user = new User();
         user.setUid(userId);
