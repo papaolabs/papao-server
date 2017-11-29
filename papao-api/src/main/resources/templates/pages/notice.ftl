@@ -94,7 +94,7 @@
                         <span class="mdl-list__item-primary-content">
                           <span>1. 개발용 공지사항</span>
                           <span class="mdl-list__item-text-body" style="margin-top: 10px;">
-                            이효리는 거꾸로해도 이효리는 거꾸로해도 이효리는 거꾸로해도 이효리는 거꾸로해도 이효리
+                            이효리는 거꾸로해도 이효리
                           </span>
                         </span>
                         <span class="mdl-list__item-secondary-content"
