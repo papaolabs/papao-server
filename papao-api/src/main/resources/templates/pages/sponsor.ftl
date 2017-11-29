@@ -120,16 +120,6 @@
                         <td></td>
                         <td>$1.09 / month</td>
                     </tr>
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 4</td>
-                        <td></td>
-                        <td>$5.09 / month</td>
-                    </tr>
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 5</td>
-                        <td></td>
-                        <td>$10.09 / month</td>
-                    </tr>
                     </tbody>
                 </table>
                 <div style="width: 50%;padding: 10px;margin: 80px auto auto;">

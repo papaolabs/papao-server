@@ -91,7 +91,7 @@
                 <div class="demo-crumbs mdl-color-text--grey-500">
                     공지사항
                 </div>
-                <ul class="mdl-list" style="height: 480px;">
+                <ul class="mdl-list">
                     <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
                         <span class="mdl-list__item-primary-content">
                           <span>4. 밤플이의 이름은 ??</span>
