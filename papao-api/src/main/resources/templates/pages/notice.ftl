@@ -98,7 +98,7 @@
                           </span>
                         </span>
                         <span class="mdl-list__item-secondary-content"
-                              style="font-size: 10px;color: darkgray;margin-top: 15px;width: 160px;">2017-11-26
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
                         </span>
                     </li>
                 </ul>
