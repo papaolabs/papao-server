@@ -50,7 +50,7 @@ spring.datasource:
   username: papao_dev
   password: ENC(YaInVeeV06ihtU2G3TxBlw==)
   driverClassName: org.mariadb.jdbc.Driver
-  initialize: false
+  initialize: true
   ## Pool Info ##
   maxActive: 100
   initialSize: 10
