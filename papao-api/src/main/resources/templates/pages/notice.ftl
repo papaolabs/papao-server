@@ -88,7 +88,9 @@
         <div class="demo-container mdl-grid">
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
             <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-                <h3>공지사항</h3>
+                <div class="demo-crumbs mdl-color-text--grey-500">
+                    공지사항
+                </div>
                 <ul class="mdl-list">
                     <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
                         <span class="mdl-list__item-primary-content">
@@ -110,7 +112,6 @@
                     <li><a href="/dashboard/board/notice">Notice</a></li>
                     <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
                     <li><a href="/dashboard/board/opensource">Open source</a></li>
-                    <li><a href="/dashboard/board/sponsor">Sponsor</a></li>
                 </ul>
             </div>
         </footer>

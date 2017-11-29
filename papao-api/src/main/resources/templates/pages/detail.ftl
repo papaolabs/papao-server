@@ -167,7 +167,6 @@
                     <li><a href="/dashboard/board/notice">Notice</a></li>
                     <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
                     <li><a href="/dashboard/board/opensource">Open source</a></li>
-                    <li><a href="/dashboard/board/sponsor">Sponsor</a></li>
                 </ul>
             </div>
         </footer>

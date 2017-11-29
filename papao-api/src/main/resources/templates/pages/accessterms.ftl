@@ -88,7 +88,9 @@
         <div class="demo-container mdl-grid">
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
             <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
-                <h3>이용약관</h3>
+                <div class="demo-crumbs mdl-color-text--grey-500">
+                    이용약관
+                </div>
                 <p>
                     ...
                 </p>
@@ -103,7 +105,6 @@
                     <li><a href="/dashboard/board/notice">Notice</a></li>
                     <li><a href="/dashboard/board/accessterms">User Agreement</a></li>
                     <li><a href="/dashboard/board/opensource">Open source</a></li>
-                    <li><a href="/dashboard/board/sponsor">Sponsor</a></li>
                 </ul>
             </div>
         </footer>

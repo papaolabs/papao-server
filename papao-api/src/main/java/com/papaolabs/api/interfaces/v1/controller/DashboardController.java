@@ -52,10 +52,4 @@ public class DashboardController {
         model.setViewName("pages/opensource");
         return model;
     }
-
-    @GetMapping("/board/sponsor")
-    public ModelAndView sponsorPage(HttpServletRequest request, ModelAndView model) {
-        model.setViewName("pages/sponsor");
-        return model;
-    }
 }
