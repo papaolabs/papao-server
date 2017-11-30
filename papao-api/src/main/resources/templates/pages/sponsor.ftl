@@ -88,7 +88,7 @@
 <body>
 <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
     <div class="demo-ribbon"></div>
-    <main class="demo-main mdl-layout__content">
+    <main class="demo-main mdl-layout__content" style="margin-top: -37vh;">
         <div class="demo-container mdl-grid">
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
             <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
@@ -106,24 +106,25 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">OOO 후원 타입 1</td>
+                        <td class="mdl-data-table__cell--non-numeric">Papao 에 후원하기</td>
                         <td></td>
                         <td>$1.09</td>
                     </tr>
                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">OOO 후원 타입 2</td>
+                        <td class="mdl-data-table__cell--non-numeric">보호소에 후원하기</td>
                         <td></td>
-                        <td>$5.09</td>
+                        <td>$1.09</td>
                     </tr>
                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">OOO 정기 후원 3</td>
+                        <td class="mdl-data-table__cell--non-numeric">정기 후원하기</td>
                         <td></td>
                         <td>$1.09 / month</td>
                     </tr>
                     </tbody>
                 </table>
                 <div style="width: 50%;padding: 10px;margin: 80px auto auto;">
-                    <button id="demo-show-toast" class="mdl-button mdl-js-button mdl-button--raised" style="width:100%;background: #3f51b5;color: #fff;">
+                    <button id="demo-show-toast" class="mdl-button mdl-js-button mdl-button--raised"
+                            style="width:100%;background: #3f51b5;color: #fff;">
                         후원하기
                     </button>
                     <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
@@ -137,12 +138,12 @@
 </div>
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script>
-    (function() {
+    (function () {
         'use strict';
         window['counter'] = 0;
         var snackbarContainer = document.querySelector('#demo-toast-example');
         var showToastButton = document.querySelector('#demo-show-toast');
-        showToastButton.addEventListener('click', function() {
+        showToastButton.addEventListener('click', function () {
             'use strict';
             var data = {message: 'testflight 환경에서는 결제할수 없습니다'};
             snackbarContainer.MaterialSnackbar.showSnackbar(data);

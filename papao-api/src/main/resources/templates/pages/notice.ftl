@@ -85,7 +85,7 @@
 <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
     <div class="demo-ribbon"></div>
     <main class="demo-main mdl-layout__content">
-        <div class="demo-container mdl-grid">
+        <div class="demo-container mdl-grid" style="height: 600px;">
             <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
             <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
                 <div class="demo-crumbs mdl-color-text--grey-500">
@@ -94,46 +94,24 @@
                 <ul class="mdl-list">
                     <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
                         <span class="mdl-list__item-primary-content">
-                          <span>4. 밤플이의 이름은 ??</span>
+                          <span>2. papao의 의미</span>
                           <span class="mdl-list__item-text-body" style="margin-top: 10px;">
-                            밤비랑 플린이
+                            papao는 Project for Abandoned Pets...
                           </span>
                         </span>
                         <span class="mdl-list__item-secondary-content"
-                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.30
                         </span>
                     </li>
                     <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
                         <span class="mdl-list__item-primary-content">
-                          <span>3. 안드로이드 개발 필요</span>
+                          <span>1. Milou 를 소개합니다.</span>
                           <span class="mdl-list__item-text-body" style="margin-top: 10px;">
-                            안드로이드 파편화 지옥..
+                            Milou 는 프랑스어로 Mille Loup...
                           </span>
                         </span>
                         <span class="mdl-list__item-secondary-content"
-                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
-                        </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
-                        <span class="mdl-list__item-primary-content">
-                          <span>2. 마감은 11/30일까지</span>
-                          <span class="mdl-list__item-text-body" style="margin-top: 10px;">
-                            테스트 환경에서의 마감임
-                          </span>
-                        </span>
-                        <span class="mdl-list__item-secondary-content"
-                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
-                        </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line" style="border-bottom: 1px solid #f5f5f5;border-top: 1px solid #f5f5f5;">
-                        <span class="mdl-list__item-primary-content">
-                          <span>1. 개발용 공지사항</span>
-                          <span class="mdl-list__item-text-body" style="margin-top: 10px;">
-                            이효리는 거꾸로해도 이효리
-                          </span>
-                        </span>
-                        <span class="mdl-list__item-secondary-content"
-                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.26
+                              style="font-size: 10px;color: darkgray;margin-top: 15px;">11.30
                         </span>
                     </li>
                 </ul>
