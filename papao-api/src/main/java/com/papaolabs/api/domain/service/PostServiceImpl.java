@@ -21,6 +21,7 @@ import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -287,13 +288,27 @@ public class PostServiceImpl implements PostService {
                                                                                        convertStringToDate(endDate))
                                                                               .and(post.isDisplay.eq(TRUE)));
         if (postType != null) {
-            if (postType.size() > 0) {
-                builder.and(post.postType.eq(Post.PostType.getType(postType.get(0))));
-                if (postType.size() > 1) {
-                    for (int i = 1; i < postType.size(); i++) {
-                        builder.or(post.postType.eq(Post.PostType.getType(postType.get(i))));
-                    }
-                }
+            switch (postType.size()) {
+                case 0:
+                    break;
+                case 1:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))));
+                    break;
+                case 2:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))));
+                    break;
+                case 3:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(2))));
+                    break;
+                case 4:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(2))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(3))));
+                    break;
             }
         }
         if (isNotEmpty(userId)) {
