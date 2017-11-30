@@ -47,6 +47,7 @@ public class PushClient {
         Notification n = new Notification.Builder(deviceId)
             .customField("type", type)
             .customField("postId", postId)
+            .badge(1)
             .alertBody(message)
             .build();
         client.push(n, new NotificationResponseListener() {

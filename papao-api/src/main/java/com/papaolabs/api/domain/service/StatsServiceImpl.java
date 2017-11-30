@@ -37,7 +37,7 @@ public class StatsServiceImpl implements StatsService {
             endDate = getDefaultDate(DATE_FORMAT);
         }
         QPost post = QPost.post;
-        BooleanBuilder builder = new BooleanBuilder().and(post.happenDate.between(convertStringToDate(beginDate),
+        BooleanBuilder builder = new BooleanBuilder().and(post.noticeBeginDate.between(convertStringToDate(beginDate),
                                                                                   convertStringToDate(endDate)));
         List<Post> results = Lists.newArrayList(postRepository.findAll(builder));
         StatsDTO statsDTO = new StatsDTO();

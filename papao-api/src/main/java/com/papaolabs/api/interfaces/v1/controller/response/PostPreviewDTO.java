@@ -23,6 +23,8 @@ public class PostPreviewDTO {
         private Post.StateType stateType;
         private Post.GenderType genderType;
         private List<ImageUrl> imageUrls;
+        private String noticeBeginDate;
+        private String noticeEndDate;
         private String happenDate;
         private String happenPlace;
         private String kindName;
@@ -122,6 +124,22 @@ public class PostPreviewDTO {
             this.imageUrls = imageUrls;
         }
 
+        public String getNoticeBeginDate() {
+            return noticeBeginDate;
+        }
+
+        public void setNoticeBeginDate(String noticeBeginDate) {
+            this.noticeBeginDate = noticeBeginDate;
+        }
+
+        public String getNoticeEndDate() {
+            return noticeEndDate;
+        }
+
+        public void setNoticeEndDate(String noticeEndDate) {
+            this.noticeEndDate = noticeEndDate;
+        }
+
         public String getHappenDate() {
             return happenDate;
         }
@@ -187,75 +205,62 @@ public class PostPreviewDTO {
                 return false;
             }
             Element element = (Element) o;
-            if (id != null ? !id.equals(element.id) : element.id != null) {
-                return false;
-            }
-            if (postType != element.postType) {
-                return false;
-            }
-            if (stateType != element.stateType) {
-                return false;
-            }
-            if (genderType != element.genderType) {
-                return false;
-            }
-            if (imageUrls != null ? !imageUrls.equals(element.imageUrls) : element.imageUrls != null) {
-                return false;
-            }
-            if (happenDate != null ? !happenDate.equals(element.happenDate) : element.happenDate != null) {
-                return false;
-            }
-            if (happenPlace != null ? !happenPlace.equals(element.happenPlace) : element.happenPlace != null) {
-                return false;
-            }
-            if (kindName != null ? !kindName.equals(element.kindName) : element.kindName != null) {
-                return false;
-            }
-            if (hitCount != null ? !hitCount.equals(element.hitCount) : element.hitCount != null) {
-                return false;
-            }
-            if (commentCount != null ? !commentCount.equals(element.commentCount) : element.commentCount != null) {
-                return false;
-            }
-            if (createdDate != null ? !createdDate.equals(element.createdDate) : element.createdDate != null) {
-                return false;
-            }
-            return updatedDate != null ? updatedDate.equals(element.updatedDate) : element.updatedDate == null;
+            return new EqualsBuilder()
+                .append(id, element.id)
+                .append(postType, element.postType)
+                .append(stateType, element.stateType)
+                .append(genderType, element.genderType)
+                .append(imageUrls, element.imageUrls)
+                .append(noticeBeginDate, element.noticeBeginDate)
+                .append(noticeEndDate, element.noticeEndDate)
+                .append(happenDate, element.happenDate)
+                .append(happenPlace, element.happenPlace)
+                .append(kindName, element.kindName)
+                .append(hitCount, element.hitCount)
+                .append(commentCount, element.commentCount)
+                .append(createdDate, element.createdDate)
+                .append(updatedDate, element.updatedDate)
+                .isEquals();
         }
 
         @Override
         public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (postType != null ? postType.hashCode() : 0);
-            result = 31 * result + (stateType != null ? stateType.hashCode() : 0);
-            result = 31 * result + (genderType != null ? genderType.hashCode() : 0);
-            result = 31 * result + (imageUrls != null ? imageUrls.hashCode() : 0);
-            result = 31 * result + (happenDate != null ? happenDate.hashCode() : 0);
-            result = 31 * result + (happenPlace != null ? happenPlace.hashCode() : 0);
-            result = 31 * result + (kindName != null ? kindName.hashCode() : 0);
-            result = 31 * result + (hitCount != null ? hitCount.hashCode() : 0);
-            result = 31 * result + (commentCount != null ? commentCount.hashCode() : 0);
-            result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-            result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-            return result;
+            return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(postType)
+                .append(stateType)
+                .append(genderType)
+                .append(imageUrls)
+                .append(noticeBeginDate)
+                .append(noticeEndDate)
+                .append(happenDate)
+                .append(happenPlace)
+                .append(kindName)
+                .append(hitCount)
+                .append(commentCount)
+                .append(createdDate)
+                .append(updatedDate)
+                .toHashCode();
         }
 
         @Override
         public String toString() {
-            return "Element{" +
-                "id=" + id +
-                ", postType=" + postType +
-                ", stateType=" + stateType +
-                ", genderType=" + genderType +
-                ", imageUrls=" + imageUrls +
-                ", happenDate='" + happenDate + '\'' +
-                ", happenPlace='" + happenPlace + '\'' +
-                ", kindName='" + kindName + '\'' +
-                ", hitCount=" + hitCount +
-                ", commentCount=" + commentCount +
-                ", createdDate='" + createdDate + '\'' +
-                ", updatedDate='" + updatedDate + '\'' +
-                '}';
+            return new ToStringBuilder(this)
+                .append("id", id)
+                .append("postType", postType)
+                .append("stateType", stateType)
+                .append("genderType", genderType)
+                .append("imageUrls", imageUrls)
+                .append("noticeBeginDate", noticeBeginDate)
+                .append("noticeEndDate", noticeEndDate)
+                .append("happenDate", happenDate)
+                .append("happenPlace", happenPlace)
+                .append("kindName", kindName)
+                .append("hitCount", hitCount)
+                .append("commentCount", commentCount)
+                .append("createdDate", createdDate)
+                .append("updatedDate", updatedDate)
+                .toString();
         }
     }
 

@@ -10,8 +10,6 @@ public interface BookmarkService {
 
     Long countBookmark(String postId);
 
-    BookmarkDTO readBookmarkByUserId(String userId, String index, String size);
-
     BookmarkDTO readBookmarkByPostId(String postId, String index, String size);
 
     Boolean checkBookmark(String postId, String userId);

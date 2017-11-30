@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static com.papaolabs.api.infrastructure.persistence.jpa.entity.PushUser.YesNoType.Y;
 import static java.lang.Boolean.FALSE;
 
 @Service
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
                                                "http://220.230.121.76:8000/v1/download/f7cdf7a82056462383f4a4e96651f9dd.png",
                                                "http://220.230.121.76:8000/v1/download/2d0e043d0fae488da5cec48c68ce71c0.png"};
     private final PushApiClient pushApiClient;
+    private final static String ZERO_STR = "0";
 
     public UserServiceImpl(UserRepository userRepository,
                            PushUserRepository pushUserRepository,
@@ -60,6 +62,9 @@ public class UserServiceImpl implements UserService {
                                .code(ResponseType.ResponseCode.DUPLICATED.getCode())
                                .name(ResponseType.ResponseCode.DUPLICATED.name())
                                .build();
+        }
+        if(!phone.startsWith(ZERO_STR)){
+            phone = StringUtils.join(ZERO_STR, phone);
         }
         User user = new User();
         user.setUid(userId);
@@ -95,6 +100,9 @@ public class UserServiceImpl implements UserService {
         pushUser.setType(userType);
         pushUser.setUserId(PushUser.UserType.GUEST == userType ? "-1" : userId);
         pushUser.setDeviceId(deviceId);
+        pushUser.setPostAlarmYn(Y);
+        pushUser.setAlarmYn(Y);
+        pushUser.setRescueAlarmYn(Y);
         pushUserRepository.save(pushUser);
         PushDTO pushDTO = new PushDTO();
         pushDTO.setType(pushUser.getType()
@@ -126,7 +134,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUid());
         userDTO.setNickname(user.getNickName());
-        userDTO.setPhone(user.getPhone());
+        userDTO.setPhone(phoneNumberHyphenAdd(user.getPhone(), "-"));
         userDTO.setProfileUrl(user.getProfileUrl());
         userDTO.setDevicesToken(pushUserList
                                     .stream()
@@ -167,5 +175,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public PushTypeDTO setPushType(String userId, String deviceId, String alarmYn, String rescueAlarmYn, String postAlarmYn) {
         return pushApiClient.setPushType(userId, deviceId, alarmYn, rescueAlarmYn, postAlarmYn);
+    }
+
+    private static String phoneNumberHyphenAdd(String num, String mask) {
+
+        String formatNum = "";
+        if (StringUtils.isEmpty(num)) return formatNum;
+        num = num.replaceAll("-","");
+
+        if (num.length() == 11) {
+            if (mask.equals("Y")) {
+                formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-****-$3");
+            }else{
+                formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+            }
+        }else if(num.length()==8){
+            formatNum = num.replaceAll("(\\d{4})(\\d{4})", "$1-$2");
+        }else{
+            if(num.indexOf("02")==0){
+                if(mask.equals("Y")){
+                    formatNum = num.replaceAll("(\\d{2})(\\d{3,4})(\\d{4})", "$1-****-$3");
+                }else{
+                    formatNum = num.replaceAll("(\\d{2})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+                }
+            }else{
+                if(mask.equals("Y")){
+                    formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-****-$3");
+                }else{
+                    formatNum = num.replaceAll("(\\d{3})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+                }
+            }
+        }
+        return formatNum;
     }
 }
