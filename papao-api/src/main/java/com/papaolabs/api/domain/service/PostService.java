@@ -58,5 +58,6 @@ public interface PostService {
 
     PostRankingDTO readPostRanking(String beginDate, String endDate);
 
+    PostPreviewDTO readBookmarkByUserId(String userId, String index, String size);
 /*    void syncPosts(String beginDate, String endDate);*/
 }

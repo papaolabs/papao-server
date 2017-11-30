@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
             .add(comment);
         postRepository.save(post);
         User user = userRepository.findByUid(userId);
-        String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), "...");
+        String message = StringUtils.join("\\ud83d\\udc36", user.getNickName(), "님이 댓글을 남겼습니다 : ", StringUtils.left(text, 20), text.length() > 20 ? "..." : "");
         try {
             pushApiClient.sendPush("POST", String.valueOf(post.getUid()), message, postId);
         } catch (FeignException fe) {

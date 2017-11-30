@@ -24,10 +24,14 @@ import org.springframework.util.StopWatch;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -120,8 +124,8 @@ public class PostServiceImpl implements PostService {
                                        post.setHappenDate(convertStringToDate(x.getHappenDate()));
                                        post.setHappenPlace(x.getHappenPlace());
                                        post.setFeature(x.getFeature());
-                                       post.setHelperName(x.getUserName());
-                                       post.setHelperContact(x.getUserContact());
+                                       post.setHelperName(Optional.of(x.getUserName()).orElse("알수없음"));
+                                       post.setHelperContact(Optional.of(x.getUserContact()).orElse("알수없음"));
                                        post.setAge(convertAge(x.getAge()));
                                        post.setWeight(convertWeight(x.getWeight()));
                                        post.setHitCount(0L);
@@ -171,6 +175,8 @@ public class PostServiceImpl implements PostService {
                                            x.setBookmarks(post.getBookmarks());
                                            x.setHitCount(post.getHitCount());
                                            x.setUid(post.getUid());
+                                           x.setHitCount(post.getHitCount());
+                                           x.setDisplay(post.getDisplay());
                                            if (x.getStateType() != post.getStateType() && x.getStateType() != Post.StateType.PROCESS) {
                                                KorStringUtils korStringUtils = new KorStringUtils();
                                                String stateCode = x.getStateType()
@@ -193,10 +199,9 @@ public class PostServiceImpl implements PostService {
                                                                               .appendJosa("이")
                                                                               .append(" ")
                                                                               .append(stateCode)
-                                                                              .append("되었습니다")
+                                                                              .append(Post.StateType.NATURALDEATH.name().equals(stateCode) ? "하였습니다" : "되었습니다")
                                                                               .append(emoji)
                                                                               .toString();
-                                               List<Bookmark> bookmarks = bookmarkRepository.findByPostId(Long.valueOf(x.getId()));
                                                pushApiClient.sendPush("ALARM", "9999", message,
                                                                       String.valueOf(x.getId()));
                                                /*for (Bookmark bookmark : bookmarks) {
@@ -207,6 +212,7 @@ public class PostServiceImpl implements PostService {
                                        }
                                        return x;
                                    })
+                                   .sorted(Comparator.comparing(x -> x.getHappenDate()))
                                    .collect(Collectors.toList());
         postRepository.save(results);
         stopWatch.stop();
@@ -223,7 +229,16 @@ public class PostServiceImpl implements PostService {
         return transFormat.format(date);
     }
 
+    private String getDefaultDate(String format) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return now.format(formatter);
+    }
+
     private Date convertStringToDate(String from) {
+        if(isEmpty(from)) {
+            return convertStringToDate(getDefaultDate(DATE_FORMAT));
+        }
         SimpleDateFormat transFormat = new SimpleDateFormat(DATE_FORMAT);
         try {
             return transFormat.parse(from);
