@@ -21,6 +21,7 @@ import com.papaolabs.api.interfaces.v1.controller.response.PostPreviewDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.PostRankingDTO;
 import com.papaolabs.api.interfaces.v1.controller.response.ResponseType;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +46,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -135,7 +137,7 @@ public class PostServiceImpl implements PostService {
         post.setUpKindCode(breed.getUpKindCode());
         post.setKindCode(breed.getKindCode());
         post.setKindName(breed.getKindName());
-        post.setHelperContact(contact);
+        post.setHelperContact(Optional.ofNullable(contact).orElse("-1"));
         post.setGenderType(Post.GenderType.getType(gender));
         post.setNeuterType(Post.NeuterType.getType(neuter));
         post.setStateType(Post.StateType.getType(stateType));
@@ -148,11 +150,11 @@ public class PostServiceImpl implements PostService {
         Shelter shelter = shelterRepository.findByShelterCode(-1L);
         post.setShelterCode(shelter.getShelterCode());
         post.setShelterName(shelter.getShelterName());
-        post.setShelterContact(contact);
+        post.setShelterContact(Optional.ofNullable(contact).orElse("-1"));
         post.setDisplay(TRUE);
         post.setDesertionId("-1");
-        post.setHelperName(userRepository.findByUid(uid)
-                                         .getNickName());
+        post.setHelperName(Optional.ofNullable(userRepository.findByUid(uid)
+                                                  .getNickName()).orElse("알수없음"));
         post.setHitCount(0L);
         post.setNoticeBeginDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
         post.setNoticeEndDate(convertStringToDate(getDefaultDate("yyyyMMdd hh:MM:ss")));
@@ -287,13 +289,27 @@ public class PostServiceImpl implements PostService {
                                                                                        convertStringToDate(endDate))
                                                                               .and(post.isDisplay.eq(TRUE)));
         if (postType != null) {
-            if (postType.size() > 0) {
-                builder.and(post.postType.eq(Post.PostType.getType(postType.get(0))));
-                if (postType.size() > 1) {
-                    for (int i = 1; i < postType.size(); i++) {
-                        builder.or(post.postType.eq(Post.PostType.getType(postType.get(i))));
-                    }
-                }
+            switch (postType.size()) {
+                case 0:
+                    break;
+                case 1:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))));
+                    break;
+                case 2:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))));
+                    break;
+                case 3:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(2))));
+                    break;
+                case 4:
+                    builder.andAnyOf(post.postType.eq(Post.PostType.getType(postType.get(0))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(1))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(2))),
+                                     post.postType.eq(Post.PostType.getType(postType.get(3))));
+                    break;
             }
         }
         if (isNotEmpty(userId)) {
